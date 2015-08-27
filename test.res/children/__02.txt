@@ -1,0 +1,19 @@
+Line 2
+Line 3 with changes
+Line 4
+Line 5 with changes and
+// MERGE
+//Line 5
+a new line
+Line 6
+new line 6.1
+Line 7
+Line 8
+// MERGE
+//Line 1
+// MERGE
+//Line 3
+Line 9
+Line 10 with changes
+// MERGE
+//Line 10

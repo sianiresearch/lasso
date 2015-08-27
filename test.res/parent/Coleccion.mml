@@ -1,0 +1,420 @@
+package coordinacion.incidencias {
+
+	["mp_aubg"]
+	definition Coleccion is collection {
+		label = "Archivo de incidencias";
+		description = "Todas las incidencias que se han producido";
+
+		is-singleton;
+		add {
+			node = ref Incidencia;
+		}
+		index = ref Index;
+
+		["mc2hbzq"]
+		operation RealizarIncidencia {
+			label = "Realizar informe";
+			execute() {
+				var tarea = coordinacion :: procesos :: infi :: Workmap :: createNew();
+				tarea.resume; 
+				ClientService :: redirectUserTo(tarea.toMonetLink());
+			}
+		}
+		
+		["mq1uioa"]
+		view {
+			label = "Notificadas";
+			filter {
+				attribute = ref Index.FiltroEstado;
+				value = "notificadas";
+			}
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.ObjetoActuacion;
+					sort-mode = ASC;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+				dimension {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+			}
+		}
+
+		["maklrkq"]
+		view {
+			label = "En trámite";
+			filter {
+				attribute = ref Index.FiltroEstado;
+				value = "abiertas";
+			}
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.ObjetoActuacion;
+					sort-mode = ASC;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Estado;
+					attribute = ref Index.ResultadoEjecucion;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+				dimension {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Estado;
+					attribute = ref Index.ResultadoEjecucion;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+			}
+		}
+
+		["mk4m4_g"]
+		view {
+			label = "Cerradas";
+			filter {
+				attribute = ref Index.FiltroEstado;
+				value = "cerradas";
+			}
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.ObjetoActuacion;
+					sort-mode = ASC;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Estado;
+					attribute = ref Index.ResultadoEjecucion;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+				dimension {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Estado;
+					attribute = ref Index.ResultadoEjecucion;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+			}
+		}
+
+		["mgo_oyq"]
+		view VistaIncidencias {
+			label = "Todas";
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.ObjetoActuacion;
+					sort-mode = ASC;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Estado;
+					attribute = ref Index.ResultadoEjecucion;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+				dimension {
+					attribute = ref Index.ObjetoActuacion;
+					attribute = ref Index.FechaIncidencia;
+					attribute = ref Index.FechaCierre;
+					attribute = ref Index.TipoIncidencia;
+					attribute = ref Index.Origen;
+					attribute = ref Index.Estado;
+					attribute = ref Index.ResultadoEjecucion;
+					attribute = ref Index.Unidad;
+					attribute = ref Index.LugarObjetoActuacion;
+					attribute = ref Index.ZonaObjetoActuacion;
+					attribute = ref Index.LugarComponente;
+					attribute = ref Index.ZonaComponente;
+				}
+			}
+		}
+
+		["mbpnmua"]
+		definition Index is index {
+			label = "incidencias";
+			reference {
+
+				["mcfl0na"]
+				attribute CodigoIncidencia {
+					label = "Código";
+					type = STRING;
+				}
+
+				["mis2nua"]
+				attribute FechaCreacion {
+					label = "Fecha de creación";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["msz_hvg"]
+				attribute TipoIncidencia {
+					label = "Tipo";
+					type = TERM;
+				}
+
+				["mugsiea"]
+				attribute TiposIncidencia {
+					label = "Tipos de incidencia";
+					type = STRING;
+				}
+
+				["mudws0w"]
+				attribute ImagenIncidencia {
+					label = "Imagen";
+					type = PICTURE;
+				}
+
+				["mlh7y1a"]
+				attribute Descripcion {
+					label = "Descripción";
+					type = STRING;
+				}
+
+				["mnxgkjg"]
+				attribute ObjetoActuacion {
+					label = "Objeto de actuación";
+					type = LINK;
+				}
+
+				["m_doi4q"]
+				attribute Estado {
+					label = "Estado";
+					type = TERM;
+					source = ref coordinacion.TesauroEstadosIncidencia;
+				}
+
+				["mqsdejg"]
+				attribute Origen {
+					label = "Origen";
+					type = TERM;
+				}
+
+				["myqz7hw"]
+				attribute Urgente {
+					label = "Urgente";
+					type = BOOLEAN;
+				}
+
+				["myeitfw"]
+				attribute Corregida {
+					label = "Corregida";
+					type = BOOLEAN;
+				}
+
+				["m4_wtqg"]
+				attribute FechaIncidencia {
+					label = "Fecha de notificación";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["msa3fww"]
+				attribute FechaEjecucion {
+					label = "Fecha de ejecución";
+					type = DATE;
+					precision = DAYS;
+				}				
+
+				["mkk5gba"]
+				attribute FechaCierre {
+					label = "Fecha de cierre";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["mbdting"]
+				attribute FechaModificacion {
+					label = "Fecha de modificación";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["m_fvjgg"]
+				attribute FechaUltimaOt {
+					label = "Fecha de última OT";
+					type = DATE;
+				}
+
+				["mcwemhq"]
+				attribute TipoIcc {
+					label = "Tipo de ICC";
+					type = STRING;
+				}
+
+				["mrjovdg"]
+				attribute FiltroEstado {
+					label = "FiltroEstado";
+					type = STRING;
+				}
+
+				["mysjwza"]
+				attribute Unidad {
+					label = "Unidad destino";
+					type = STRING;
+				}
+
+				["mff_vwa"]
+				attribute Prioridad {
+					label = "Prioridad";
+					type = TERM;
+				}
+
+				["mkl8sgq"]
+				attribute ObjetoPadre {
+					label = "Objeto de actuación";
+					type = STRING;
+				}
+
+				["mjswchw"]
+				attribute LugarObjetoActuacion {
+					label = "Lugar";
+					type = STRING;
+				}
+
+				["mdzwisg"]
+				attribute ZonaObjetoActuacion {
+					label = "Zona";
+					type = STRING;
+				}
+
+				["m9hltaw"]
+				attribute LugarComponente {
+					label = "Módulo";
+					type = STRING;
+				}
+
+				["mdokwfq"]
+				attribute ZonaComponente {
+					label = "Sección";
+					type = STRING;
+				}
+
+				["mfpe3lw"]
+				attribute CreadaPor {
+					label = "Creada por";
+					type = STRING;
+				}
+				
+				["m4_2o9q"]
+				attribute FechaIcc {
+					label = "Fecha de la primera OTAC";
+					type = DATE;
+				}
+				
+				["mg_ounw"]
+				attribute ResultadoEjecucion {
+					label = "Resultado de la ejecución";
+					type = STRING;
+				}				
+				
+				["m1gzbeg"]
+				attribute TiempoMedioActuacionLabel {
+					label = "Tiempo medio de actuación";
+					type = STRING;
+				}				
+				
+				["m9uaygw"]
+				attribute FechaEnvioOtac {
+					label = "Fecha de la última otac enviada";
+					type = DATE;
+					precision = DAYS;
+				}
+			}
+
+			["mofbd1q"]
+			view Vista {
+				is-default;
+				show {
+					picture = ref ImagenIncidencia;
+					title = ref CodigoIncidencia;
+					line = ref ObjetoActuacion;
+					line = ref TiposIncidencia;
+					line = ref Origen;
+					line = ref TiempoMedioActuacionLabel;					
+					line = ref Descripcion;
+					line-below = ref Unidad;
+					line-below = ref FechaIncidencia;
+					line-below = ref FechaEjecucion;
+					line-below = ref FechaCierre;
+					line-below = ref Prioridad;
+					line-below = ref ObjetoPadre;
+					line-below = ref CreadaPor;
+					highlight = ref Estado;
+					highlight = ref ResultadoEjecucion;
+				}
+			}
+
+		}
+
+	}
+}
+  
