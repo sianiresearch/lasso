@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -24,7 +25,7 @@ public class Synchronizer {
 		int blockSize;
 		for (blockSize = parent.linesSize(); blockSize >= 1; blockSize--)
 			matchBlocksInChild(parent.split(blockSize)).stream().
-				filter(b -> child.remove(child.findBlockInside(b))).
+				filter(child::remove).
 				forEach(parent::remove);
 		writeSyncedFile(propagateChanges());
 	}
@@ -38,8 +39,8 @@ public class Synchronizer {
 		List<List<Line>> changes = packConsecutiveChanges(parent.remainingLines());
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			final List<Line> changedLines = changes.get(i);
-			int position = calculatePositionOf(removedBlockOfNextLine(changedLines.get(changedLines.size() - 1)));
 			if (isEmptyContent(changedLines)) continue;
+			int position = calculatePositionOf(removedBlockOfNextLine(changedLines.get(changedLines.size() - 1)));
 			newLines.add(position++, "// MERGE");
 			newLines.addAll(position, changedLines.stream().map(line -> "//" + line.content()).collect(toList()));
 		}
@@ -74,18 +75,18 @@ public class Synchronizer {
 
 	private int calculatePositionOf(Block block) {
 		return block != null ?
-			block.getLines().get(block.size() - 1).number() - block.size() :
+			block.getLines().get(0).number() :
 			child.linesSize();
 	}
 
 	private Block removedBlockOfNextLine(Line line) {
-		for (Block block : child.removedBlocks().values())
-			if (isNextLine(line, block.getLines())) return block;
+		for (Map.Entry<Block, Block> entry : child.removedBlocks().entrySet())
+			if (isNextLine(line, entry.getKey().getLines().get(0))) return entry.getValue();
 		return null;
 	}
 
-	private boolean isNextLine(Line currentLine, List<Line> lines) {
-		return lines.get(0).number() == currentLine.number() + 1;
+	private boolean isNextLine(Line currentLine, Line next) {
+		return next.number() == currentLine.number() + 1;
 	}
 
 	private void writeSyncedFile(List<String> lines) {

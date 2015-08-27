@@ -14,7 +14,7 @@ public class SynchronizerFile {
 	private File file;
 	private List<String> lines = new ArrayList<>();
 	private List<Line> remainingLines = new ArrayList<>();
-	private Map<Integer, Block> removedBlocks = new LinkedHashMap<>();
+	private Map<Block, Block> removedBlocks = new LinkedHashMap<>();
 
 	public SynchronizerFile(File file) {
 		this.file = file;
@@ -24,7 +24,8 @@ public class SynchronizerFile {
 
 	private List<Line> buildRemainingLines(List<String> lines) {
 		List<Line> rLines = new ArrayList<>();
-		for (int i = 0; i < lines.size(); i++) rLines.add(new Line(i, lines.get(i)));
+		for (int i = 0; i < lines.size(); i++)
+			rLines.add(new Line(i, lines.get(i)));
 		return rLines;
 	}
 
@@ -40,7 +41,7 @@ public class SynchronizerFile {
 		return remainingLines;
 	}
 
-	public Map<Integer, Block> removedBlocks() {
+	public Map<Block, Block> removedBlocks() {
 		return removedBlocks;
 	}
 
@@ -90,8 +91,8 @@ public class SynchronizerFile {
 		if (block == null) return false;
 		int index = indexOf(block);
 		if (index < 0) return false;
+		removedBlocks.put(getClone(block), findBlockInside(block));
 		remainingLines().removeAll(block.getLines());
-		removedBlocks.put(index, getClone(block));
 		return true;
 	}
 
