@@ -1,13 +1,13 @@
-// MERGE
+//MERGE
 //Line 1
 Line 2
 Line 3 with changes
-// MERGE
+//MERGE
 //Line 3
 Line 4
 Line 5 with changes and
 a new line
-// MERGE
+//MERGE
 //Line 5
 Line 6
 new line 6.1
@@ -15,5 +15,5 @@ Line 7
 Line 8
 Line 9
 Line 10 with changes
-// MERGE
+//MERGE
 //Line 10

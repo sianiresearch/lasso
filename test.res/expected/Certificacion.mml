@@ -1,0 +1,99 @@
+package coordinacion.procesos.coca {
+
+	["mtsslbg"]
+	definition Certificacion is document {
+		label = "Certificacion";
+		template = template Certificacion;
+
+		schema {
+			FechaInicial Date;
+			FechaFinal Date;
+			many Indicadores{
+				TipoIncidencia String;
+				Icc String;
+				Estado String;
+				FechaNotificacion Date;
+				FechaCierre Date;
+			}
+		}
+
+		["muy_inq"]
+		definition Exportador is exporter {
+			label = "exporter";
+			target = ref Certificacion;
+			onExportItem(coordinacion.procesos.coca.certificacion.Schema i) {
+				
+ 				var incidencias = coordinacion::incidencias::Coleccion::getInstance();
+ 				
+ 				var ficha = this.scope as coordinacion.modulos.controlcalidad.Ficha;
+ 				var finicial = ficha.fechaInicial;
+ 				var ffinal = ficha.fechaFinal;
+ 				i.fechaInicial = finicial;
+ 				i.fechaFinal = ffinal;
+ 				
+//  	  Certificaciones certificaciones = (Certificaciones)((PaqueteCertificacion) ((FormFacturacion) scope.getOwner()).getOwner()).getOwner();
+//  	  String sfinicial = certificaciones.getNote("finicial");
+//  	  String sffinal = certificaciones.getNote("ffinal");
+//  	  
+
+//  	     this.label ="Certificación";
+  	  if (finicial != null && ffinal != null){  		
+//  		  DateTime finicial = new DateTime(new Date(Long.parseLong(sfinicial)),"dd/MM/yyyy");	  				  
+//		  DateTime ffinal = new DateTime(new Date(Long.parseLong(sffinal)),"dd/MM/yyyy");
+//		  this.label = "Certificación: " + finicial.toString() + " - " + ffinal.toString();
+//		  this.fechaInicial = finicial;
+//		  this.fechaFinal = ffinal;		  
+//MERGE
+////sumar un día		  
+	  	  for (referencia  : incidencias.get(Expression.And(coordinacion.incidencias.coleccion.Index.FechaIcc.Ge(finicial.getValue()),
+	  			  																	coordinacion.incidencias.coleccion.Index.FechaIcc.Le(ffinal.getValue()),coordinacion.incidencias.coleccion.Index.TiposIncidencia.Like("%ICC%")))) {
+	  		var indice  = referencia as coordinacion.incidencias.coleccion.Index;
+	  		var indicador = new coordinacion.procesos.coca.certificacion.^schema.Indicadores;
+	  		var incidencia = indice.indexedNode as coordinacion.incidencias.Incidencia;
+	  		indicador.setTipoIncidencia(referencia.getTiposIncidencia);
+	  		indicador.setIcc(incidencia.tipoIcc);
+	  		if (referencia.estado != null)
+	  		indicador.setEstado(referencia.getEstado().^label);
+	  		if (referencia.getFechaIncidencia() != null){
+	  			indicador.setFechaNotificacion(referencia.getFechaIncidencia);
+	  		}
+	  		if (referencia.fechaCierre != null){
+	  			indicador.setFechaCierre(referencia.fechaCierre);
+	  		}
+	  		
+	  		i.indicadores.^add(indicador);
+	  		//i.indicadores.;	  																			
+		  }
+		  /*
+	  		  if (referencia.getFechaIncidencia()!= null){
+	  			  DateTime fechaNotificacion = new DateTime(referencia.getFechaIncidencia().getValue(),"dd/MM/yyyy");
+	  		  	  indicador.setFechaNotificacion(fechaNotificacion);
+	  		  }
+	  		  if (referencia.getFechaCierre() != null){
+	  			DateTime fechaCierre = new DateTime(referencia.getFechaCierre().getValue(),"dd/MM/yyyy");
+	  			indicador.setFechaCierre(fechaCierre);
+	  		  }	  		  	  		    			  
+	  		  this.getIndicadores().add(indicador);		
+	  		  * 
+	  		  */
+	  	  }
+//	  	  
+//	  	  				
+			
+			}
+
+		}
+
+		["mflng4g"]
+		definition Importador is importer {
+			label = "importer";
+			target = ref Certificacion;
+			onImportItem(coordinacion.procesos.coca.certificacion.Schema item) {
+			
+			}
+			
+		}
+
+	}
+}
+  

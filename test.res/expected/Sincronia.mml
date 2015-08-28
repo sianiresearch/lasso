@@ -1,0 +1,226 @@
+import org.monet.bpi.Node
+
+package coordinacion.procesos.asi {
+
+	["mh5lmog"]
+	definition Sincronia is document {
+		label = "Sincronia";
+		schema {
+			Unidad String;
+			Bloqueo Boolean;
+			many ObjetoActuacion {
+				imagen Picture;
+				codigo String;
+				nombre String;
+				lugar String;
+				zona String;
+				direccion String;
+				inactivo Boolean;
+				padre String;
+				idExtranjera String;
+				coordenadaX String;
+				coordenadaY String;
+				many componente {
+					imagen Picture;
+					codigo String;
+					nombre String;
+					lugar String;
+					zona String;
+					inactivo Boolean;
+					direccion String;
+					padre String;
+					idExtranjera String;
+				}
+			}
+		}
+
+		["mqzhm2q"]
+		definition Importador is importer {
+			label = "Importador";
+			target = ref Sincronia;
+			onImportItem(coordinacion.procesos.asi.sincronia.Schema item) {
+				var objetos = coordinacion :: objetosactuacion :: Coleccion :: instance;
+				if (item.bloqueo == true){
+					objetos.lock;
+					objetos.setFlag("bloqueo", "true");					
+				}
+				for(objeto : item.objetoActuacion) anadirObjeto(objetos, objeto);
+			}
+
+			function anadirObjeto(coordinacion.objetosactuacion.Coleccion instalaciones, sincronia.^schema.ObjetoActuacion objeto) {
+				var instalacion = instalacionExiste(instalaciones, objeto);
+				if(instalacion != null) {
+					instalacion.lock;
+					modificarInstalacion(instalacion, objeto);
+				}
+				else {
+					crearInstalacion(instalaciones, objeto);
+				}
+			}
+
+			function instalacionExiste(coordinacion.objetosactuacion.Coleccion instalaciones, sincronia.^schema.ObjetoActuacion objetoSchema) : coordinacion.objetosactuacion.ObjetoActuacion {
+				for(instalacion : instalaciones.get(coordinacion :: objetosactuacion :: coleccion :: Index :: Codigo.Eq(objetoSchema.codigo))) return instalacion.indexedNode as
+						coordinacion.objetosactuacion.ObjetoActuacion;
+				return null;
+			}
+
+			function componenteExiste(coordinacion.modulos.componentes.Coleccion componentes, sincronia.^schema.objetoactuacion.Componente objetoSchema) : coordinacion.modulos.componentes.coleccion.Componente {
+				for(componente : componentes.get(coordinacion :: modulos :: componentes :: coleccion :: Index :: Codigo.Eq(objetoSchema.codigo))) return componente.indexedNode as
+						coordinacion.modulos.componentes.coleccion.Componente;
+				return null;
+			}
+
+			function crearInstalacion(coordinacion.objetosactuacion.Coleccion instalaciones, sincronia.^schema.ObjetoActuacion objetoSchema) {
+				var instalacion = coordinacion :: objetosactuacion :: ObjetoActuacion :: createNew(instalaciones);
+				instalacion.lock;
+				rellenarFichaInstalacion(instalacion.ficha, objetoSchema);
+				for(componenteSchema : objetoSchema.componente) anadirComponente(instalacion, componenteSchema);
+			}
+
+			function crearComponente(coordinacion.objetosactuacion.ObjetoActuacion instalacion, sincronia.^schema.objetoactuacion.Componente objetoSchema) {
+				var componente = coordinacion :: modulos :: componentes :: coleccion :: Componente :: createNew(instalacion.coleccionComponentes);
+				componente.lock;
+				rellenarFichaComponente(componente.ficha, objetoSchema);
+			}
+
+			function anadirComponente(coordinacion.objetosactuacion.ObjetoActuacion instalacion, sincronia.^schema.objetoactuacion.Componente componenteSchema) {
+				var componentes = instalacion.coleccionComponentes;
+				componentes.lock;
+				var componenteNodo = componenteExiste(componentes, componenteSchema);
+				if(componenteNodo != null) {
+					modificarComponente(componenteNodo, componenteSchema);
+				}
+				else {
+					crearComponente(instalacion, componenteSchema);
+				}
+			}
+
+			function modificarInstalacion(coordinacion.objetosactuacion.ObjetoActuacion instalacion, sincronia.^schema.ObjetoActuacion objeto) {
+				rellenarFichaInstalacion(instalacion.ficha, objeto);
+				for(componenteSchema : objeto.componente) anadirComponente(instalacion, componenteSchema);
+			}
+
+			function modificarComponente(coordinacion.modulos.componentes.coleccion.Componente componente, sincronia.^schema.objetoactuacion.Componente objetoSchema) {
+				rellenarFichaComponente(componente.ficha, objetoSchema);
+			}
+
+			function rellenarFichaInstalacion(coordinacion.objetosactuacion.objetoactuacion.Ficha ficha, sincronia.^schema.ObjetoActuacion objetoSchema) {
+				ficha.owner.setFlag("edificio", objetoSchema.padre);
+				ficha.owner.setFlag("idExtranjera", objetoSchema.idExtranjera);
+				ficha.imagen = objetoSchema.imagen;
+				ficha.codigo = objetoSchema.codigo;
+				ficha.nombre = objetoSchema.nombre;
+				var localizacion = ficha.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+//				localizacion.lugar = objetoSchema.lugar;
+//				localizacion.zona = objetoSchema.zona;
+				if (objetoSchema.lugar != null)
+//MERGE
+//					localizacion.lugar = new Term(null, objetoSchema.lugar);
+					localizacion.lugar = new Term( null, objetoSchema.lugar);
+				if (objetoSchema.zona != null)
+//MERGE
+//					localizacion.zona = new Term(null, objetoSchema.zona);
+					localizacion.zona = new Term( null, objetoSchema.zona);
+				localizacion.direccion = objetoSchema.direccion;
+				ficha.inactivo = objetoSchema.inactivo;
+				ficha.save;
+				ficha.lock;
+			}
+
+			function rellenarFichaComponente(coordinacion.modulos.componentes.Ficha ficha, sincronia.^schema.objetoactuacion.Componente objetoSchema) {
+				ficha.owner.setFlag("edificio", objetoSchema.padre);
+				ficha.owner.setFlag("idExtranjera", objetoSchema.idExtranjera);
+				ficha.imagen = objetoSchema.imagen;
+				ficha.codigo = objetoSchema.codigo;
+				ficha.nombre = objetoSchema.nombre;
+				var ubicacion = ficha.ubicacionField as coordinacion.modulos.componentes.ficha.Ubicacion;
+				ubicacion.lugar = objetoSchema.lugar;
+				ubicacion.zona = objetoSchema.zona;
+				ubicacion.direccion = objetoSchema.direccion;
+				ficha.inactivo = objetoSchema.inactivo;
+				ficha.save;				
+				ficha.lock;
+			}
+
+		}
+
+		["mevc3qa"]
+
+		definition Exportador is exporter {
+			label = "Exportador";
+			target = ref Sincronia;
+			onExportItem(coordinacion.procesos.asi.sincronia.Schema i) {
+				i.unidad = BusinessUnit :: ^name;
+				ExportarLugares(i);
+			}
+
+			function ExportarInstalaciones(sincronia.Schema i) {
+				return;
+			}
+
+			function ExportarLugares(sincronia.Schema i) {
+				var lugares = coordinacion :: objetosactuacion :: Coleccion :: instance;
+				if (lugares.getFlag("bloqueo") != null){
+					if (lugares.getFlag("bloqueo").equals("true")){
+						i.bloqueo = false;										
+					}else{
+						i.bloqueo = true;
+					}
+				}else{
+					i.bloqueo  = true;
+				}
+				for(ilugar : lugares.all) {
+					var lugar = ilugar.indexedNode as coordinacion.objetosactuacion.ObjetoActuacion;
+					var ficha = lugar.ficha;
+					var slugar = new sincronia.^schema.ObjetoActuacion;
+					slugar.imagen = ficha.imagen;
+					slugar.codigo = ficha.codigo;
+					slugar.nombre = ficha.nombre;
+					var localizacion = ficha.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+//MERGE
+//					if (localizacion.lugar != null)
+//					slugar.lugar = localizacion.lugar;
+//					slugar.zona = localizacion.zona;
+					if (localizacion.lugar != null){
+						slugar.lugar = localizacion.lugar.^label;						
+//MERGE
+//					if (localizacion.zona != null)
+					}
+					if (localizacion.zona != null){
+						slugar.zona = localizacion.zona.^label;						
+						}
+					slugar.direccion = localizacion.direccion;
+					slugar.inactivo = ficha.inactivo;
+					slugar.padre = coordinacion :: modulos :: utilidades :: ObjetoActuacionTools :: obtenerPadreLabel(lugar as Node);
+					slugar.idExtranjera = lugar.toLink.id;
+					if (lugar.location != null){
+						slugar.coordenadaX = lugar.location.geometry.centroid.x.toString;
+						slugar.coordenadaY = lugar.location.geometry.centroid.y.toString;
+					}
+					var componentes = lugar.coleccionComponentes;
+					for(icomponente : componentes.all) {
+						var componente = icomponente.indexedNode as coordinacion.modulos.componentes.coleccion.Componente;
+						var fichac = componente.ficha;
+						if(fichac != null) {
+							var scomponente = new sincronia.^schema.objetoactuacion.Componente;
+							scomponente.codigo = fichac.codigo;
+							scomponente.nombre = fichac.nombre;
+							scomponente.imagen = fichac.imagen;
+							var ubicacion = fichac.ubicacionField as coordinacion.modulos.componentes.ficha.Ubicacion;
+							scomponente.lugar = ubicacion.lugar;
+							scomponente.zona = ubicacion.zona;
+							scomponente.direccion = ubicacion.direccion;
+							scomponente.inactivo = fichac.inactivo;
+							scomponente.padre = coordinacion :: modulos :: utilidades :: ObjetoActuacionTools :: obtenerPadreLabel(componente as Node);
+							scomponente.idExtranjera = componente.toLink.id;
+							slugar.componente.^add(scomponente);
+						}
+					}
+					i.objetoActuacion.^add(slugar);
+				}
+			}
+
+		}
+
+	}
+}

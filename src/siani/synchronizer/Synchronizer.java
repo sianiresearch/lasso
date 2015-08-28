@@ -41,7 +41,7 @@ public class Synchronizer {
 			final List<Line> changedLines = changes.get(i);
 			if (isEmptyContent(changedLines)) continue;
 			int position = calculatePositionOf(removedBlockOfNextLine(changedLines.get(changedLines.size() - 1)));
-			newLines.add(position++, "// MERGE");
+			newLines.add(position++, "//MERGE");
 			newLines.addAll(position, changedLines.stream().map(line -> "//" + line.content()).collect(toList()));
 		}
 		return newLines;

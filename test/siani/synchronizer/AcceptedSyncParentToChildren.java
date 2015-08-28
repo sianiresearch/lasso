@@ -27,9 +27,60 @@ public class AcceptedSyncParentToChildren {
 
 	@Test
 	public void should_Sync_Collection() throws Exception {
-		new Synchronizer(new File(parentHome, "Coleccion.mml"), new File(childHome, "Coleccion.mml")).sync();
-		assertEquals(readFile(new File(expectedHome, "Coleccion.mml")), readFile(new File(childHome, "__Coleccion.mml")));
+		final String FILE = "Coleccion.mml";
+		assertSync(FILE);
 	}
+
+	@Test
+	public void should_Sync_Certificacion() throws Exception {
+		final String FILE = "Certificacion.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Cori_Workmap() throws Exception {
+		final String FILE = "cori.Workmap.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_DataStoreBuilderComponente() throws Exception {
+		final String FILE = "DataStoreBuilderComponente.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_EscritorioInspector() throws Exception {
+		final String FILE = "EscritorioInspector.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Expediente() throws Exception {
+		final String FILE = "Expediente.mml";
+		assertSync(FILE);
+	}
+
+
+	@Test
+	public void should_Sync_All() throws Exception {
+		for (File f : parentHome.listFiles((dir, name) -> !name.startsWith("__"))) {
+			new Synchronizer(new File(parentHome, f.getName()), new File(childHome, f.getName())).sync();
+			try {
+				System.out.print("Starting File " + f.getName() + ". ");
+				assertEquals(readFile(new File(expectedHome, f.getName())), readFile(new File(childHome, "__" + f.getName())));
+				System.out.println("File " + f.getName() + " was successfully updated");
+			} catch (AssertionError e) {
+				System.err.println("File " + f.getName() + " has differences.");
+			}
+		}
+	}
+
+	private void assertSync(String FILE) {
+		new Synchronizer(new File(parentHome, FILE), new File(childHome, FILE)).sync();
+		assertEquals("File " + FILE, readFile(new File(expectedHome, FILE)), readFile(new File(childHome, "__" + FILE)));
+	}
+
 
 	private String readFile(File file) {
 		try {

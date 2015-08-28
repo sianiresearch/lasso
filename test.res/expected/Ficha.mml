@@ -1,0 +1,312 @@
+import coordinacion.*
+
+package coordinacion.modulos.componentes {
+
+	["m_rwpwa"]
+	definition Ficha is form {
+
+		is-prototypable;
+		is-component;
+		label = "Componente";
+
+		["m_fluuw"]
+		field-picture Imagen {
+			label = "Foto";
+			description = "Foto";
+			size {
+				height = 480;
+				width = 640;
+			}
+		}
+
+		["m_okyfg"]
+		field-text Codigo {
+			is-univocal;
+			label = "Código";
+		}
+
+		["mctjszg"]
+		field-text Nombre {
+			label = "Nombre";
+		}
+
+		["m7ej8aa"]
+		field-composite Ubicacion {
+			label = "Ubicación";
+
+			["mme0tka"]
+			field-text Lugar {
+				label = "Módulo";
+			}
+
+			["mxy0wbg"]
+			field-text Zona {
+				label = "Sección";
+			}
+
+			["mw5fp6a"]
+			field-text Direccion {
+				label = "Subsección";
+			}
+
+			["m8tvnyq"]
+			field-text Telefono {
+				label = "Teléfono de contacto";
+			}
+			view {
+				mode = EXPANDED;
+				show {
+					field = ref Lugar;
+					field = ref Zona;
+					field = ref Direccion;
+					field = ref Telefono;
+				}
+			}
+		}
+
+		["mqvtsow"]
+		field-composite Parametros {
+			is-static;
+			label = "Parámetros";
+			is-multiple;
+
+			["m_3ntpg"]
+			field-select Atributo {
+				label = "Atributo";
+				source = ref TesauroAtributo;
+			}
+
+			["mzu0qzg"]
+			field-text Valor {
+				label = "Valor";
+				is-multiple;
+			}
+
+			["mcswghq"]
+			field-select Unidad {
+				label = "Unidad";
+				source = ref TesauroUnidades;
+			}
+			view {
+				mode = EXPANDED;
+				show {
+					field = ref Atributo;
+					field = ref Valor;
+					field = ref Unidad;
+				}
+			}
+		}
+
+		["m5g9sna"]
+		field-file Adjuntos {
+			is-multiple;
+//			label = "Adjuntos";
+			label = "Ficha técnica";
+		}
+
+		["mwvy_aa"]
+		field-boolean Inactivo {
+			label = "Inactivo";
+		}
+
+		["mzal1ca"]
+		field-memo Observaciones {
+			label = "Observaciones";
+		}
+		
+		
+		
+		["mawqqpa"]
+		field-text Marca {
+			label = "Marca";
+		}
+		
+		["msmtwha"]
+		field-text Modelo {
+			label = "Modelo";
+		}
+		
+//		["mxhjy5w"]
+//		field-text NumeroSerie {
+//			label = "Nº de serie";
+//		}
+		
+		["mc47gkw"]
+		field-number Cantidad {
+			label = "Cantidad";
+		}
+		
+		["mc6wrew"]
+		field-select Categoria {
+			label = "Categoría";
+			source = ref coordinacion.TesauroCategoriaComponente;
+		}
+		
+		["mcxp9cq"]
+		field-number Precio {
+			label = "Precio";
+		}
+		
+		["md_xcdg"]
+		field-link Proveedor {
+			label = "Proveedor";
+			source {
+			index = ref coordinacion.modulos.proveedores.Coleccion.Index;
+			}
+		}
+		
+		["mvst5vq"]
+		field-date FechaInstalacion {
+			label = "Fecha de instalación";
+			precision = DAYS;
+		}
+		
+		["muetbqa"]
+		field-number Espesor {
+			label = "Espesor";
+		}
+		
+		["mxe8mxq"]
+		field-number MetrosValla {
+			label = "Mestros valla";			
+		}
+		
+		["mdcd9tq"]
+		field-text Material {
+			label = "Material";
+		}		
+		
+		mapping {
+			index = ref Coleccion.Index;
+			calculate() {
+				var referencia = this.^reference;
+				var nodo = this.^node;
+				var seccionUbicacion = nodo.ubicacionField as ficha.Ubicacion;
+				referencia.lugar = seccionUbicacion.lugar;
+				referencia.zona = seccionUbicacion.zona;
+				if (nodo.inactivo){
+					referencia.inactivoLabel = "Inactivo";
+					referencia.activoLabel = "No";
+				}else{
+//MERGE
+//					referencia.inactivo = null;
+					referencia.inactivoLabel = null;
+					referencia.activoLabel = "Sí";
+				}
+			}
+		}
+		mapping {
+			index = ref coordinacion.CatalogoComponentes.Index;
+			calculate() {
+				var referencia = this.^reference;
+				var nodo = this.^node;
+				var ubicacion = nodo.ubicacionField as Ubicacion;
+				referencia.setLugar(ubicacion.lugar);
+				referencia.setZona(ubicacion.zona);
+				var componente = this.getNode().getOwner() as coordinacion.modulos.componentes.coleccion.Componente;
+				if(componente.isPrototype()) return;
+				var componentes = componente.getOwner();
+				var nodoPadre = componentes.getOwner();
+				if(nodoPadre instanceof coordinacion.objetosactuacion.ObjetoActuacion) {
+					var padre = nodoPadre as coordinacion.objetosactuacion.ObjetoActuacion;
+					referencia.setIdPadre(padre.toLink.getId());
+					referencia.setLabelPadre(padre.getFicha.nombre);
+				}
+				if (nodo.inactivo){
+					referencia.activoLabel = "No";
+				}else{
+					referencia.activoLabel = "Sí";
+				}
+			}
+		}
+		mapping {
+			index = ref coordinacion.CatalogoObjetosActuacion.Index;
+			calculate() {
+				var referencia = this.^reference;
+				var nodo = this.^node;
+				var ubicacion = nodo.ubicacionField as Ubicacion;
+				referencia.lugar = ubicacion.lugar;
+				referencia.zona = ubicacion.zona;
+				var componente = this.getNode().getOwner() as coordinacion.modulos.componentes.coleccion.Componente;
+				if(componente.isPrototype()) return;
+				var componentes = componente.getOwner();
+				var nodoPadre = componentes.getOwner();
+				if(nodoPadre instanceof coordinacion.objetosactuacion.ObjetoActuacion) {
+					var padre = nodoPadre as coordinacion.objetosactuacion.ObjetoActuacion;
+					referencia.setIdPadre(padre.toLink.getId());
+					referencia.setLabelPadre(padre.getFicha.nombre);
+				}
+				if (nodo.inactivo){
+					referencia.activoLabel = "No";
+				}else{
+					referencia.activoLabel = "Sí";
+				}
+			}
+		}
+		properties {
+			calculate() {
+//MERGE
+//				this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
+				//this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
+				var nodo = this.getNode();
+				var componente = this.getNode().getOwner() as coordinacion.modulos.componentes.coleccion.Componente;
+				if(componente.isPrototype()) {
+					this.getProperties().setLabel(nodo.getNombre());
+					return;					
+				}				
+				var padre = coordinacion::modulos::utilidades::ObjetoActuacionTools::obtenerPadreNode(this.getNode());
+				var fichaPadre = padre.ficha;				
+				var nombrePadre = fichaPadre.nombre;
+				var codigoPadre = fichaPadre.codigo;														
+				this.getProperties().setLabel(codigoPadre + " " + nombrePadre + " - " + nodo.getCodigo()+ " " + nodo.getNombre());				
+			}
+		}
+
+		["mprkx_g"]
+		view Vista {
+			is-default;
+			show {
+				field = ref Imagen;
+				field = ref Codigo;
+				field = ref Nombre;
+				field = ref Inactivo;
+				field = ref Marca;
+				field = ref Modelo;
+//				field = ref NumeroSerie;
+				field = ref Cantidad;				
+				field = ref Categoria;
+				field = ref FechaInstalacion;
+				field = ref Precio;
+				field = ref Proveedor;
+//				field = ref Ubicacion;
+				field = ref Adjuntos;
+				field = ref Observaciones;
+//MERGE
+//				field = ref Inactivo;
+			}
+		}
+
+		["mc7de9a"]
+		view VistaParametros {
+			show {
+				field = ref Espesor;
+				field = ref MetrosValla;
+				field = ref Material;
+				field = ref Parametros;
+			}
+		}
+
+		["mfteiha"]
+		operation NotificarIncidencia {
+			label = "Generar incidencia";
+			execute() {
+				var incidencia = coordinacion :: incidencias :: Incidencia :: createNew(coordinacion :: incidencias :: Coleccion :: instance);
+				incidencia.setObjetoActuacion(this.owner.toLink);
+				incidencia.save;
+				ClientService :: redirectUserTo(incidencia.toMonetLink(true));
+			}
+		}
+
+	}
+}
+  

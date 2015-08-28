@@ -1,0 +1,48 @@
+package coordinacion.modulos.asistentes {
+
+	["muw_qza"]
+	definition ConfigurarEncargoCorrectivo is form {
+		label = "Configuración del encargo correctivo";
+
+		["mywqtja"]
+		field-date FechaInicio {
+			label = "Fecha de inicio propuesta";
+			precision = DAYS;
+		}
+
+		["mb3oysw"]
+		field-date FechaFinLimite {
+			label = "Fecha fin límite de realización";
+			precision = DAYS;
+		}
+
+		["mrcmk0a"]
+		field-memo Observaciones {
+			label = "Observaciones";
+		}
+
+		["mdkkoya"]
+		field-boolean Urgente {
+			label = "Urgente";
+		}
+
+		["mmbkyvg"]
+		field-file Adjuntos {
+			label = "Adjuntos";
+			is-multiple;
+		}
+
+		["mmjshaq"]
+		view Vista {
+			is-default;
+			show {
+				field = ref FechaInicio;
+				field = ref FechaFinLimite;
+				field = ref Observaciones;
+				field = ref Adjuntos;
+			}
+		}
+
+	}
+}
+  

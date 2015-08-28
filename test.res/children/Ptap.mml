@@ -1,0 +1,180 @@
+package coordinacion.procesos.copa {
+
+	["m_eky_w"]
+	definition Ptap is document {
+		label = "Parte de trabajo de actuación preventivo";
+		is-readonly;
+
+		schema {
+			NombreActuacion String;
+			ExpedienteLabel String;
+			Codigo String;
+			Cliente String;
+			FechaRealizacion Date;
+			Cuadrilla Term;
+			Responsable Term;
+			FirmaResponsable Picture;
+			FechaCreacion Date;
+			FechaFirma Date;
+			UnidadDeNegocio String;
+			
+			Op1 String;
+			Op2 String;
+			Op3 String;
+			Op4 String;
+			Op5 String;
+			Op6 String;
+			Op7 String;
+			Op8 String;
+			Op9 String;
+			Op10 String;
+			
+			many OpRevisionLabel{
+				ObjetoActuacion Term;
+				op1check Boolean;
+				op2check Boolean;
+				op3check Boolean;
+				op4ceck Boolean;
+				op5check Boolean;
+				op6check Boolean;
+				op7check Boolean;
+				op8check Boolean;
+				op9check Boolean;
+				op10check Boolean;
+			}			
+			many Trabajos {
+				ObjetoActuacion Term;
+				idExtranjeraObjeto String;
+				FechaRealizacionEstimada Date;
+				FechaRealizacionEstimadaLabel String;
+				Categoria Term;
+				OperacionesRevision CheckList;
+				many OpRevisionRealizadas{
+					Operacion Term;
+					OperacionPadre Term;
+				}
+				many OpRevision {
+					Hecho1 Boolean;
+					Hecho2 Boolean;
+					Hecho3 Boolean;
+					Op1 Term;
+					Op2 Term;
+					Op3 Term;
+				}
+				many Operaciones {
+					OperacionPadre Term;
+					Operacion Term;
+					Valor String;
+					Unidad Term;
+				}
+				Frecuencia Term;
+				many Recursos Term;
+				RecursosLabel String;
+				RealizadoPor String;
+				Observaciones String;
+			}
+			ObservacionesCliente String;
+			ObservacionesOperario String;
+			FirmaCliente Picture;
+			FirmaOperario Picture;
+			many Recursos Term;
+			many Costes {
+				Consumible Number;
+				ConsumibleFacturable Number;
+				Repuesto Number;
+				RepuestoFacturable Number;
+				Esfuerzo Number;
+				EsfuerzoFacturable Number;
+				Total Number;
+				TotalFacturable Number;
+			}
+			Consumible Number;
+			ConsumibleFacturable Number;
+			Repuesto Number;
+			RepuestoFacturable Number;
+			Esfuerzo Number;
+			EsfuerzoFacturable Number;
+			Total Number;
+			TotalFacutrable Number;
+			many Esfuerzos {
+				Nombre String;
+				Horas Number;
+				CosteHora Number;
+				Facturable Boolean;
+			}
+			many Consumibles {
+				Nombre String;
+				Cantidad Number;
+				CosteUnidad Number;
+				Facturable Boolean;
+			}
+			many Repuestos {
+				Nombre String;
+				Cantidad Number;
+				CosteUnidad Number;
+				Facturable Boolean;
+			}
+		}
+
+		["mwlea3q"]
+		definition Importador is importer {
+			label = "Importador";
+			target = ref Ptap;
+			onInitialize() {
+			}
+			onImportItem(coordinacion.procesos.copa.ptap.Schema item) {
+				var expediente = this.scope as coordinacion.procesos.copa.Expediente;
+				var ficha = expediente.fichaExpediente;
+				var fresultado = expediente.resultadoPa;
+				var seccionControl = ficha.seccionControlField as coordinacion.procesos.copa.fichaexpediente.SeccionControl;
+				seccionControl.codigo = item.codigo;
+				seccionControl.estado = new Term("e001", null);
+				var seccionEncargo = ficha.seccionEncargoField as coordinacion.procesos.copa.fichaexpediente.SeccionEncargo;
+				seccionEncargo.unidad = item.unidadDeNegocio;
+				seccionEncargo.fechaRealizacion = item.fechaRealizacion;
+				var seccionInformacion = fresultado.seccionInformacionVisitaField as coordinacion.procesos.copa.resultadopa.SeccionInformacionVisita;
+				seccionInformacion.fechaRealizacion = item.fechaRealizacion;
+				if(item.cuadrilla != null) seccionInformacion.cuadrilla = item.cuadrilla.^label if(item.responsable != null) seccionInformacion.responsable = item.responsable.^label;
+				seccionInformacion.imagenFirma = item.firmaResponsable;
+				fresultado.seccionTrabajosField.removeAll;
+				for(trabajo : item.trabajos) {
+					var str = fresultado.seccionTrabajosField.addNew as resultadopa.SeccionTrabajos;
+					str.fechaRealizacionEstimada = trabajo.fechaRealizacionEstimada;
+					str.operacionesRevisionField.fill(trabajo.operacionesRevision);
+					if (trabajo.idExtranjeraObjeto != null && !trabajo.idExtranjeraObjeto.empty){
+						var objeto = NodeService::get(trabajo.idExtranjeraObjeto);
+						str.objetoActuacion = objeto.toLink;
+					}
+					
+					for(oprevre : trabajo.opRevisionRealizadas){
+						var seccionoprev = str.seccionOperacionesRevisionField.addNew as resultadopa.secciontrabajos.SeccionOperacionesRevision;
+						if (oprevre.operacion != null){
+						seccionoprev.operacionRev = oprevre.operacion;
+						}
+						try{
+							if (oprevre.operacionPadre != null){
+								seccionoprev.operacionRevPadre = oprevre.operacionPadre; 
+							}							
+						}catch(Exception e){
+							ConsoleService.println("Warning: XXModelXX : Operación de revisión padre es nula en preventivo: " + item.codigo);
+						} 
+					}
+					//str.objetoActuacion = trabajo.objetoActuacion.^label;
+					str.idExtranjeraObjeto = trabajo.idExtranjeraObjeto;
+					for(operacion : trabajo.operaciones) {
+						var sop = str.seccionOperacionesField.addNew as resultadopa.secciontrabajos.SeccionOperaciones;
+						if(operacion.operacion != null) sop.operacion = operacion.operacion;
+						sop.operacionPadre = operacion.operacionPadre;
+						sop.valor = operacion.valor;
+						if(operacion.unidad != null) sop.unidad = operacion.unidad.^label;
+					}
+					trabajo.observaciones = str.observaciones;
+				}
+				ficha.save;
+				fresultado.save;
+			}
+
+		}
+
+	}
+}

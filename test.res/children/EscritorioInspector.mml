@@ -1,0 +1,40 @@
+import coordinacion.territorio.*
+import coordinacion.inventario.*
+import coordinacion.proveedores.*
+
+package coordinacion {
+
+	["ms2fvmq"]
+	definition EscritorioInspector is desktop {
+		label = "Inicio";
+		is-singleton;
+		help = "version.html";
+
+		for {
+			role = ref RoleInspectorEscritorio;
+		}
+
+		["mfm4a8g"]
+		view Gestion {
+			label = "Gestión";
+			show {
+				link = ref Expedientes;
+				link = ref incidencias.Coleccion;
+				link = ref objetosactuacion.Coleccion;
+			}
+		}
+
+		["mt48ulw"]
+		view {
+			label = "Maestros";
+			show {
+				link = ref proveedores.Coleccion;
+				link = ref Piezas;
+				link = ref Preferencias;
+				link = ref CatalogoComponentes;
+			}
+		}
+
+	}
+}
+  

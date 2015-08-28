@@ -7,8 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
-
 public class SynchronizerFile {
 	public static String NEW_LINE = "\n";
 	private File file;
@@ -168,8 +166,9 @@ public class SynchronizerFile {
 
 		@Override
 		public boolean equals(Object o) {
+
 			return this == o ||
-				o instanceof Line && getLevenshteinDistance(content, ((Line) o).content) == 0;
+				o instanceof Line && (content.equals(((Line) o).content));
 
 		}
 

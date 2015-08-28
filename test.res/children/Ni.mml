@@ -1,0 +1,87 @@
+package coordinacion.procesos.ani {
+
+	["moxpj6g"]
+	definition Ni is document {
+		label = "Notificación de incidencia";
+		schema {
+			Cliente String;
+			Proveedor String;
+			Edificio String;
+			ObjetoActuacionLabel String;
+			Lugar String;
+			Zona String;
+			ObjetoActuacionId String;
+			TipoIncidenciaLabel String;
+			many TipoIncidencia Term;
+			FechaIncidencia Date;
+			Corregida Boolean;
+			Descripcion String;
+			ImagenIncidencia Picture;
+			many Anexo {
+				Imagen1 Picture;
+				Imagen2 Picture;
+			}
+			many adjuntosIncidencia File;
+			ImagenMapa Picture;
+		}
+
+		["mekaxvq"]
+		definition Importador is importer {
+			label = "Exportador";
+			target = ref Ni;
+			onImportItem(coordinacion.procesos.ani.ni.Schema item) {
+				var incidencia = this.scope as coordinacion.incidencias.Incidencia;
+				importarCampos(item, incidencia);
+				importarImagenes(item, incidencia);
+				incidencia.save;
+			}
+
+			function obtenerObjeto(coordinacion.procesos.ani.ni.Schema item) : Node {
+				if (item.objetoActuacionId != null){
+					return NodeService :: get(item.objetoActuacionId);					
+				}else{
+					var etiqueta = item.objetoActuacionLabel;
+					var String codigo ="";
+					if (etiqueta.contains("-")){
+						codigo = etiqueta.substring(etiqueta.indexOf(".")-4, etiqueta.indexOf(".")+5);
+					}else{
+						codigo = etiqueta.substring(0, 4);
+					}
+					var objetos = coordinacion.CatalogoObjetosActuacion.getInstance;
+					for (obj : objetos.get(coordinacion.catalogoobjetosactuacion.Index.Codigo.Eq(codigo))){
+						return obj.getIndexedNode();
+					}
+				}
+				return null;
+			}
+
+			function importarCampos(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {
+				incidencia.setObjetoActuacion(obtenerObjeto(item).toLink);
+				coordinacion::modulos::utilidades::Utilidad::asignarMultiple(item.tipoIncidencia,incidencia.tipoIncidenciaField);
+				incidencia.fechaIncidencia = item.fechaIncidencia;
+				incidencia.corregida = item.corregida;
+				importarCampos2(item,incidencia);
+			}
+
+			function importarCampos2(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {
+				incidencia.descripcion = item.descripcion;
+				coordinacion::modulos::utilidades::Utilidad::asignarMultiple(item.adjuntosIncidencia,incidencia.adjuntosIncidenciaField);
+				if (item.corregida)
+					incidencia.unidad = item.proveedor;				
+			}
+
+			function importarImagenes(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {
+				incidencia.imagenIncidenciaField.addNew(item.imagenIncidencia);
+				for(anexo : item.anexo) {
+					incidencia.imagenIncidenciaField.addNew(anexo.imagen1);
+					if(anexo.imagen2 != null) {
+						incidencia.imagenIncidenciaField.addNew(anexo.imagen2);
+					}
+				}
+			}
+
+		}
+
+	}
+}
+  
