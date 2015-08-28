@@ -75,13 +75,13 @@ public class Synchronizer {
 
 	private int calculatePositionOf(Block block) {
 		return block != null ?
-			block.getLines().get(0).number() :
+			block.lines().get(0).number() :
 			child.linesSize();
 	}
 
 	private Block removedBlockOfNextLine(Line line) {
 		for (Map.Entry<Block, Block> entry : child.removedBlocks().entrySet())
-			if (isNextLine(line, entry.getKey().getLines().get(0))) return entry.getValue();
+			if (isNextLine(line, entry.getKey().lines().get(0))) return entry.getValue();
 		return null;
 	}
 

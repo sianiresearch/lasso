@@ -10,6 +10,17 @@ package coordinacion.incidencias {
 			node = ref Incidencia;
 		}
 		index = ref Index;
+// MERGE
+//
+//		["mc2hbzq"]
+//		operation RealizarIncidencia {
+//			label = "Realizar informe";
+//			execute() {
+//				var tarea = coordinacion :: procesos :: infi :: Workmap :: createNew();
+//				tarea.resume; 
+//				ClientService :: redirectUserTo(tarea.toMonetLink());
+//			}
+//		}
 
 		["mk4m4_g"]
 		view {
@@ -28,31 +39,9 @@ package coordinacion.incidencias {
 			analyze {
 				sorting {
 					attribute = ref Index.ObjetoActuacion;
-					attribute = ref Index.FechaIncidencia;
-					attribute = ref Index.FechaCierre;
-					attribute = ref Index.TipoIncidencia;
-					attribute = ref Index.Origen;
-					attribute = ref Index.Estado;
-					attribute = ref Index.ResultadoEjecucion;
-					attribute = ref Index.Unidad;
-					attribute = ref Index.LugarObjetoActuacion;
-					attribute = ref Index.ZonaObjetoActuacion;
-					attribute = ref Index.LugarComponente;
-					attribute = ref Index.ZonaComponente;
 				}
 				dimension {
 					attribute = ref Index.ObjetoActuacion;
-					attribute = ref Index.FechaIncidencia;
-					attribute = ref Index.FechaCierre;
-					attribute = ref Index.TipoIncidencia;
-					attribute = ref Index.Origen;
-					attribute = ref Index.Estado;
-					attribute = ref Index.ResultadoEjecucion;
-					attribute = ref Index.Unidad;
-					attribute = ref Index.LugarObjetoActuacion;
-					attribute = ref Index.ZonaObjetoActuacion;
-					attribute = ref Index.LugarComponente;
-					attribute = ref Index.ZonaComponente;
 				}
 			}
 		}
@@ -70,31 +59,9 @@ package coordinacion.incidencias {
 			analyze {
 				sorting {
 					attribute = ref Index.ObjetoActuacion;
-					attribute = ref Index.FechaIncidencia;
-					attribute = ref Index.FechaCierre;
-					attribute = ref Index.TipoIncidencia;
-					attribute = ref Index.Origen;
-					attribute = ref Index.Estado;
-					attribute = ref Index.ResultadoEjecucion;
-					attribute = ref Index.Unidad;
-					attribute = ref Index.LugarObjetoActuacion;
-					attribute = ref Index.ZonaObjetoActuacion;
-					attribute = ref Index.LugarComponente;
-					attribute = ref Index.ZonaComponente;
 				}
 				dimension {
 					attribute = ref Index.ObjetoActuacion;
-					attribute = ref Index.FechaIncidencia;
-					attribute = ref Index.FechaCierre;
-					attribute = ref Index.TipoIncidencia;
-					attribute = ref Index.Origen;
-					attribute = ref Index.Estado;
-					attribute = ref Index.ResultadoEjecucion;
-					attribute = ref Index.Unidad;
-					attribute = ref Index.LugarObjetoActuacion;
-					attribute = ref Index.ZonaObjetoActuacion;
-					attribute = ref Index.LugarComponente;
-					attribute = ref Index.ZonaComponente;
 				}
 			}
 		}
@@ -110,6 +77,20 @@ package coordinacion.incidencias {
 					type = TERM;
 					source = ref coordinacion.TesauroEstadosIncidencia;
 				}
+// MERGE
+//
+//				["m1gzbeg"]
+//				attribute TiempoMedioActuacionLabel {
+//					label = "Tiempo medio de actuación";
+//					type = STRING;
+//				}				
+//				
+//				["m9uaygw"]
+//				attribute FechaEnvioOtac {
+//					label = "Fecha de la última otac enviada";
+//					type = DATE;
+//					precision = DAYS;
+//				}
 			}
 
 			["mofbd1q"]
@@ -127,11 +108,6 @@ package coordinacion.incidencias {
 					line-below = ref Unidad;
 					line-below = ref FechaIncidencia;
 					line-below = ref FechaEjecucion;
-					line-below = ref FechaCierre;
-					line-below = ref Prioridad;
-					line-below = ref ObjetoPadre;
-					line-below = ref CreadaPor;
-					highlight = ref Estado;
 					highlight = ref ResultadoEjecucion;
 				}
 			}
@@ -139,25 +115,5 @@ package coordinacion.incidencias {
 		}
 
 	}
-// MERGE
-//		["mc2hbzq"]
-//		operation RealizarIncidencia {
-//			label = "Realizar informe";
-//			execute() {
-//				var tarea = coordinacion :: procesos :: infi :: Workmap :: createNew();
-//				tarea.resume; 
-//				ClientService :: redirectUserTo(tarea.toMonetLink());
-// MERGE
-//				["m1gzbeg"]
-//				attribute TiempoMedioActuacionLabel {
-//					label = "Tiempo medio de actuación";
-//					type = STRING;
-//				}				
-//				
-//				["m9uaygw"]
-//				attribute FechaEnvioOtac {
-//					label = "Fecha de la última otac enviada";
-//					type = DATE;
-//					precision = DAYS;
 }
   

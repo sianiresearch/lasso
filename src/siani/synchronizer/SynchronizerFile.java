@@ -48,10 +48,9 @@ public class SynchronizerFile {
 	public List<Block> split(int size) {
 		List<Block> blocks = new ArrayList<>();
 		int i;
-		for (i = 0; i + size <= remainingLines.size(); i = i + size) {
+		for (i = 0; i + size <= remainingLines.size(); i = i + 1) {
 			final List<Line> lines = remainingLines.subList(i, i + size);
 			if (areConsecutive(lines) && lines.size() == size) blocks.add(new Block(clone(lines)));
-			else i = i - size + 1;
 		}
 		return blocks;
 	}
@@ -88,11 +87,12 @@ public class SynchronizerFile {
 	}
 
 	public boolean remove(Block block) {
-		if (block == null) return false;
+		if (remainingLines.isEmpty() || block == null) return false;
 		int index = indexOf(block);
 		if (index < 0) return false;
-		removedBlocks.put(getClone(block), findBlockInside(block));
-		remainingLines().removeAll(block.getLines());
+		final Block blockInside = findBlockInside(block);
+		removedBlocks.put(getClone(block), blockInside);
+		remainingLines().subList(index, index + blockInside.size()).clear();
 		return true;
 	}
 
@@ -116,8 +116,15 @@ public class SynchronizerFile {
 
 	public int indexOf(Block block) {
 		if (remainingLines.size() < block.size()) return -1;
-		int i = remainingLines.indexOf(block.getLines().get(0));
-		return fits(block, i) && checkCompleteBlock(block, i) ? i : -1;
+		int i = 0;
+		while (i >= 0) {
+			int index = remainingLines.subList(i, remainingLines.size()).indexOf(block.lines().get(0));
+			if (index == -1) return -1;
+			i = index + i;
+			if (fits(block, i) && checkCompleteBlock(block, i)) return i;
+			i++;
+		}
+		return -1;
 	}
 
 	private boolean fits(Block block, int i) {
@@ -126,13 +133,13 @@ public class SynchronizerFile {
 
 	private boolean checkCompleteBlock(Block block, int firstLine) {
 		for (int i = firstLine; i < firstLine + block.size(); i++)
-			if (!remainingLines.get(i).content.equals(block.getLines().get(i - firstLine).content)) return false;
+			if (!remainingLines.get(i).content.equals(block.lines().get(i - firstLine).content)) return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return file.getName();
+		return file.getPath();
 	}
 
 

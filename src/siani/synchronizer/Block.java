@@ -11,7 +11,7 @@ public class Block implements Cloneable {
 		this.lines = Collections.synchronizedList(lines);
 	}
 
-	public List<SynchronizerFile.Line> getLines() {
+	public List<SynchronizerFile.Line> lines() {
 		return lines;
 	}
 

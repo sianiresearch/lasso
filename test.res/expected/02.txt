@@ -6,9 +6,9 @@ Line 3 with changes
 //Line 3
 Line 4
 Line 5 with changes and
+a new line
 // MERGE
 //Line 5
-a new line
 Line 6
 new line 6.1
 Line 7
