@@ -23,8 +23,12 @@ public class SynchronizerFile {
 	private List<Line> buildRemainingLines(List<String> lines) {
 		List<Line> rLines = new ArrayList<>();
 		for (int i = 0; i < lines.size(); i++)
-			rLines.add(new Line(i, lines.get(i)));
+			rLines.add(new Line(i, uncomment(lines.get(i))));
 		return rLines;
+	}
+
+	private String uncomment(String line) {
+		return line.trim().startsWith("//") ? line.replaceFirst("//", "") : line;
 	}
 
 	public File file() {

@@ -91,7 +91,6 @@ package coordinacion.objetosactuacion {
 					label = "Distrito";
 						source = ref coordinacion.TesauroDistritos;
 //MERGE
-//					label = "Lugar";
 //					source = ref coordinacion.TesauroLugar;
 //					
 				}
@@ -104,7 +103,6 @@ package coordinacion.objetosactuacion {
 						source = ref  coordinacion.TesauroBarrios;
 				}				
 //MERGE
-//					label = "Zona";
 //					source = ref coordinacion.TesauroZona;
 //				}
 

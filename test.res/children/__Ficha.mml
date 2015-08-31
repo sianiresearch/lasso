@@ -102,8 +102,6 @@ package coordinacion.modulos.componentes {
 			is-multiple;
 //			label = "Adjuntos";
 			label = "Ficha técnica";
-//MERGE
-//			label = "Adjuntos";
 		}
 
 		["mwvy_aa"]
@@ -216,6 +214,8 @@ package coordinacion.modulos.componentes {
 					referencia.activoLabel = "No";
 				}else{
 					referencia.activoLabel = "Sí";
+//MERGE
+//					referencia.inactivo = null;
 				}
 			}
 		}
@@ -251,16 +251,12 @@ package coordinacion.modulos.componentes {
 				if(componente.isPrototype()) {
 					this.getProperties().setLabel(nodo.getNombre());
 					return;					
-//MERGE
-//					referencia.inactivo = null;
 				}				
 				var padre = coordinacion::modulos::utilidades::ObjetoActuacionTools::obtenerPadreNode(this.getNode());
 				var fichaPadre = padre.ficha;				
 				var nombrePadre = fichaPadre.nombre;
 				var codigoPadre = fichaPadre.codigo;														
 				this.getProperties().setLabel(codigoPadre + " " + nombrePadre + " - " + nodo.getCodigo()+ " " + nodo.getNombre());				
-//MERGE
-//				this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
 			}
 		}
 
@@ -280,8 +276,6 @@ package coordinacion.modulos.componentes {
 				field = ref FechaInstalacion;
 				field = ref Precio;
 				field = ref Proveedor;
-//				field = ref Ubicacion;
-//MERGE
 //				field = ref Ubicacion;
 				field = ref Adjuntos;
 				field = ref Observaciones;

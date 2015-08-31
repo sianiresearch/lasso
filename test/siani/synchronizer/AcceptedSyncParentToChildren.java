@@ -61,6 +61,24 @@ public class AcceptedSyncParentToChildren {
 		assertSync(FILE);
 	}
 
+	@Test
+	public void should_Sync_Ficha() throws Exception {
+		final String FILE = "Ficha.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Ni() throws Exception {
+		final String FILE = "Ni.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_ObjetoActuacion() throws Exception {
+		final String FILE = "ObjetoActuacion.mml";
+		assertSync(FILE);
+	}
+
 
 	@Test
 	public void should_Sync_All() throws Exception {

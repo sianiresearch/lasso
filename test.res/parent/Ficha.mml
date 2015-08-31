@@ -124,7 +124,7 @@ package coordinacion.modulos.componentes {
 					referencia.inactivoLabel = "Inactivo";
 				}else{
 					referencia.inactivo = null;
-				}				
+				}
 			}
 		}
 		mapping {
