@@ -21,12 +21,6 @@ package coordinacion.incidencias {
 			serial GeneratorIdIncidencia {
 				format = "I-%4S/%2Y";
 			}
-//MERGE
-//		
-//		["ml_p54g"]
-//		field-text CodigoNotificacionIncidencia {
-//			is-readonly;
-//			label = "Código de notificación";
 		}
 
 		["my4isiq"]
@@ -134,6 +128,10 @@ package coordinacion.incidencias {
 			source = ref coordinacion.TesauroOrigenesIncidencia;
 		}
 
+//MERGE
+//		["mczhatw"]
+//		field-number TiempoMedioVerificacion {
+//			label = "Tiempo medio de verificación";
 		["majatcw"]
 		field-select Prioridad {
 			label = "Prioridad de la resolución";
@@ -216,6 +214,13 @@ package coordinacion.incidencias {
 			label = "Tipo de ICC";
 		}
 
+//MERGE
+//		["mpi_ldg"]
+//		field-picture ImagenMapa {
+//			label = "Mapa";
+//			size {
+//				width = 600;
+//				height = 600;
 		["m409big"]
 		field-composite Demandante {
 			label = "Datos de contacto";
@@ -266,24 +271,14 @@ package coordinacion.incidencias {
 			["ml6vijq"]
 			field-text CodigoPostal {
 				label = "Código postal";
+//MERGE
+//		
+//		["ml_p54g"]
+//		field-text CodigoNotificacionIncidencia {
+//			is-readonly;
+//			label = "Código de notificación";
 			}
 		}
-//MERGE
-//		["mczhatw"]
-//		field-number TiempoMedioVerificacion {
-//			label = "Tiempo medio de verificación";
-//		}
-//		
-//		["mrvmf4g"]
-//		field-number TiempoMedioActuacion {
-//			label = "Tiempo medio de actuación";
-//		}
-//		
-//		["msvju_g"]
-//		field-number TiempoMedioInspeccion{
-//			label = "Tiempo medio de inspección";
-//		}
-//		
 
 		["m2tp9vg"]
 		field-link Documentos {
@@ -291,10 +286,6 @@ package coordinacion.incidencias {
 			label = "Documentos de la incidencia";
 			source {
 				index = ref IndiceDocumentos;
-//MERGE
-//						}    	  					    		  				
-//  					}
-//  				}
 			}
 		}
 		mapping {
@@ -338,15 +329,15 @@ package coordinacion.incidencias {
 						var objetoActuacion = objeto as coordinacion.objetosactuacion.ObjetoActuacion;
 						var ficha = objetoActuacion.ficha;
 						var seccionLocalizacion = ficha.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
-//						referencia.zonaObjetoActuacion = seccionLocalizacion.zona;
-//						referencia.lugarObjetoActuacion = seccionLocalizacion.lugar;
-						if (seccionLocalizacion.zona != null){
-							referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;							
 //MERGE
 //						if (seccionLocalizacion.zona != null )
 //							referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;
 //						if (seccionLocalizacion.lugar != null)
 //							referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;
+//						referencia.zonaObjetoActuacion = seccionLocalizacion.zona;
+//						referencia.lugarObjetoActuacion = seccionLocalizacion.lugar;
+						if (seccionLocalizacion.zona != null){
+							referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;							
 						}
 						if (seccionLocalizacion.lugar != null){	
 							referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;							
@@ -358,15 +349,15 @@ package coordinacion.incidencias {
 							var padre = ObjetoActuacionTools :: obtenerPadreNode(componente);
 							var fichaObjeto = padre.ficha;
 							var seccionLocalizacion = fichaObjeto.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
-//							referencia.lugarObjetoActuacion = seccionLocalizacion.lugar;
-//							referencia.zonaObjetoActuacion = seccionLocalizacion.zona;
-							if (seccionLocalizacion.lugar != null){
-								referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;								
 //MERGE
 //							if (seccionLocalizacion.lugar != null)
 //								referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;
 //							if (seccionLocalizacion.zona != null)
 //								referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;
+//							referencia.lugarObjetoActuacion = seccionLocalizacion.lugar;
+//							referencia.zonaObjetoActuacion = seccionLocalizacion.zona;
+							if (seccionLocalizacion.lugar != null){
+								referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;								
 							}
 							if (seccionLocalizacion.zona != null){
 								referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;								
@@ -388,18 +379,6 @@ package coordinacion.incidencias {
 				if(nodo.objetoActuacion != null) {
 					objeto = nodo.objetoActuacion.getLabel();
 				}
-//MERGE
-//		["m_c72gq"]
-//		operation OperacionLocalizar {
-//			label = "Localizar";
-//			execute() {
-//				if (this.objetoActuacion != null){
-//					var objpadre =  ObjetoActuacionTools :: obtenerPadreNode(this.objetoActuacionField.^node);
-//					this.location = objpadre.location;
-//					var localizacion = objpadre.location;
-//					this.save;					
-////					this.setImagenMapa(MapRequest.getMapaCoordenadas("objeto actuacion", localizacion.geometry.centroid));					
-//				}
 				if(codigo == null) {
 					codigo = "Sin código";
 				}
@@ -502,34 +481,47 @@ package coordinacion.incidencias {
 		}
 
 		onSave() {
+			if(this.objetoActuacion != null) {
+				var objeto = NodeService :: get(this.objetoActuacion.id);
+				this.objetoPadre = ObjetoActuacionTools :: obtenerPadreLabel(objeto);
+//MERGE
+//		
+//		["mrvmf4g"]
+//		field-number TiempoMedioActuacion {
+//			label = "Tiempo medio de actuación";
+//		}
+//		
+//		["msvju_g"]
+//		field-number TiempoMedioInspeccion{
+//			label = "Tiempo medio de inspección";
+//		}
+//		
+//MERGE
+//				var objpadre =  ObjetoActuacionTools :: obtenerPadreNode(objeto);
+//				this.location = objpadre.location;
+			}
+			if(this.tipoIncidencia.^size > 0) {				
+				var tipo="";
+				for (Term tipoIncidenciaField : this.getTipoIncidenciaField().getAll()){
+   					if (tipoIncidenciaField != null){
+   						if (tipoIncidenciaField.^label.contains("ICC")){
+   							if (tipo.equals("")){
+	  							tipo = tipoIncidenciaField.^label;       						
+   							}else{
+	  							tipo = tipo + ", " + tipoIncidenciaField.^label;       						
+//MERGE
+//   							}
 //MERGE
 //				if (nodo.tiempoMedioActuacion != null){
 //					if (nodo.tiempoMedioActuacion.doubleValue > 0){
 //						var Double horas = nodo.tiempoMedioActuacion.doubleValue / 3600;
 //						var Integer truncado = horas.intValue; 
 //						referencia.tiempoMedioActuacionLabel = String.valueOf(truncado) + " Horas";				
-			if(this.objetoActuacion != null) {
-				var objeto = NodeService :: get(this.objetoActuacion.id);
-				this.objetoPadre = ObjetoActuacionTools :: obtenerPadreLabel(objeto);
-			}
-			if(this.tipoIncidencia.^size > 0) {				
-//MERGE
-//		}
-				var tipo="";
-				for (Term tipoIncidenciaField : this.getTipoIncidenciaField().getAll()){
-   					if (tipoIncidenciaField != null){
-   						if (tipoIncidenciaField.^label.contains("ICC")){
-   							if (tipo.equals("")){
-//MERGE
-//   							}
-	  							tipo = tipoIncidenciaField.^label;       						
-   							}else{
-//MERGE
-////				var objpadre =  ObjetoActuacionTools :: obtenerPadreNode(objeto);
-////				this.location = objpadre.location;
-	  							tipo = tipo + ", " + tipoIncidenciaField.^label;       						
 							}
    							this.tipoIcc = tipo;       							
+//MERGE
+//						}    	  					    		  				
+//  					}
 						}
 					}
 				}
@@ -570,15 +562,8 @@ package coordinacion.incidencias {
 			label = "Gestión";
 			show {
 //MERGE
-////				field = ref ImagenMapa;
+//				field = ref ImagenMapa;
 				field = ref FechaCreacion;
-//MERGE
-//		["mpi_ldg"]
-//		field-picture ImagenMapa {
-//			label = "Mapa";
-//			size {
-//				width = 600;
-//				height = 600;
 				field = ref FechaIncidencia;
 				field = ref FechaModificacion;
 				field = ref Prioridad;
@@ -613,6 +598,18 @@ package coordinacion.incidencias {
 			show {
 				links:in {
 					node = ref coordinacion.procesos.cori.Expediente;
+//MERGE
+//		["m_c72gq"]
+//		operation OperacionLocalizar {
+//			label = "Localizar";
+//			execute() {
+//				if (this.objetoActuacion != null){
+//					var objpadre =  ObjetoActuacionTools :: obtenerPadreNode(this.objetoActuacionField.^node);
+//					this.location = objpadre.location;
+//					var localizacion = objpadre.location;
+//					this.save;					
+//					this.setImagenMapa(MapRequest.getMapaCoordenadas("objeto actuacion", localizacion.geometry.centroid));					
+//				}
 				}
 			}
 		}
@@ -631,6 +628,8 @@ package coordinacion.incidencias {
 			is-visible-when-embedded;
 			
 			show {
+//MERGE
+//				layout = layout LayoutIncidencia;
 				field = ref CodigoIncidencia;
 				field = ref ImagenIncidencia;
 				field = ref ObjetoActuacion;
@@ -638,15 +637,6 @@ package coordinacion.incidencias {
 				field = ref Origen;
 				field = ref Descripcion;
 				field = ref AdjuntosIncidencia;
-//MERGE
-//				layout = layout LayoutIncidencia;
-////				field = ref CodigoIncidencia;
-////				field = ref ImagenIncidencia;
-////				field = ref ObjetoActuacion;
-////				field = ref TipoIncidencia;
-////				field = ref Origen;
-////				field = ref Descripcion;
-////				field = ref AdjuntosIncidencia;
 			}
 		}
 

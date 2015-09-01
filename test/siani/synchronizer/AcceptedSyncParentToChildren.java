@@ -15,11 +15,6 @@ public class AcceptedSyncParentToChildren {
 	private static File expectedHome = new File("test.res/expected/");
 
 	@Test
-	public void should_Sync_Parent1_In_Child1() throws Exception {
-		new Synchronizer(new File(parentHome, "01.txt"), new File(childHome, "01.txt")).sync();
-	}
-
-	@Test
 	public void should_Sync_Parent2_In_Child2() throws Exception {
 		new Synchronizer(new File(parentHome, "02.txt"), new File(childHome, "02.txt")).sync();
 		assertEquals(readFile(new File(expectedHome, "02.txt")), readFile(new File(childHome, "__02.txt")));
@@ -76,6 +71,48 @@ public class AcceptedSyncParentToChildren {
 	@Test
 	public void should_Sync_ObjetoActuacion() throws Exception {
 		final String FILE = "ObjetoActuacion.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Otc() throws Exception {
+		final String FILE = "Otc.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Ptac() throws Exception {
+		final String FILE = "Ptac.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Ptap() throws Exception {
+		final String FILE = "Ptap.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Ptic() throws Exception {
+		final String FILE = "Ptic.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Ptv() throws Exception {
+		final String FILE = "Ptv.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Sincronia() throws Exception {
+		final String FILE = "Sincronia.mml";
+		assertSync(FILE);
+	}
+
+	@Test
+	public void should_Sync_Workmap() throws Exception {
+		final String FILE = "Workmap.mml";
 		assertSync(FILE);
 	}
 

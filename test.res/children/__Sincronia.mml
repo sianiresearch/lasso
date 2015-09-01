@@ -114,13 +114,13 @@ package coordinacion.procesos.asi {
 //				localizacion.lugar = objetoSchema.lugar;
 //				localizacion.zona = objetoSchema.zona;
 				if (objetoSchema.lugar != null)
-					localizacion.lugar = new Term( null, objetoSchema.lugar);
 //MERGE
 //					localizacion.lugar = new Term(null, objetoSchema.lugar);
+					localizacion.lugar = new Term( null, objetoSchema.lugar);
 				if (objetoSchema.zona != null)
-					localizacion.zona = new Term( null, objetoSchema.zona);
 //MERGE
 //					localizacion.zona = new Term(null, objetoSchema.zona);
+					localizacion.zona = new Term( null, objetoSchema.zona);
 				localizacion.direccion = objetoSchema.direccion;
 				ficha.inactivo = objetoSchema.inactivo;
 				ficha.save;
@@ -177,6 +177,11 @@ package coordinacion.procesos.asi {
 					slugar.codigo = ficha.codigo;
 					slugar.nombre = ficha.nombre;
 					var localizacion = ficha.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+//MERGE
+//					if (localizacion.lugar != null)
+//						slugar.lugar = localizacion.lugar.^label;
+//					if (localizacion.zona != null)
+//						slugar.zona = localizacion.zona.^label;
 //					slugar.lugar = localizacion.lugar;
 //					slugar.zona = localizacion.zona;
 					if (localizacion.lugar != null){
@@ -185,11 +190,6 @@ package coordinacion.procesos.asi {
 					if (localizacion.zona != null){
 						slugar.zona = localizacion.zona.^label;						
 						}
-//MERGE
-//					if (localizacion.lugar != null)
-//						slugar.lugar = localizacion.lugar.^label;
-//					if (localizacion.zona != null)
-//						slugar.zona = localizacion.zona.^label;
 					slugar.direccion = localizacion.direccion;
 					slugar.inactivo = ficha.inactivo;
 					slugar.padre = coordinacion :: modulos :: utilidades :: ObjetoActuacionTools :: obtenerPadreLabel(lugar as Node);

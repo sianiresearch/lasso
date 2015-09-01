@@ -52,7 +52,7 @@ package coordinacion.procesos.cori.documentos {
 					}
 					if(seccionLocalizacion.zona != null){
 						i.setZona(seccionLocalizacion.zona.^label);					
-					}					
+					}
 				}
 				i.setCodigo(fichaExpediente.codigo);
 				i.setIdIncidencia(incidencia.codigoIncidencia);

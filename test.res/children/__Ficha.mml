@@ -188,6 +188,8 @@ package coordinacion.modulos.componentes {
 					referencia.inactivoLabel = "Inactivo";
 					referencia.activoLabel = "No";
 				}else{
+//MERGE
+//					referencia.inactivo = null;
 					referencia.inactivoLabel = null;
 					referencia.activoLabel = "Sí";
 				}
@@ -214,8 +216,6 @@ package coordinacion.modulos.componentes {
 					referencia.activoLabel = "No";
 				}else{
 					referencia.activoLabel = "Sí";
-//MERGE
-//					referencia.inactivo = null;
 				}
 			}
 		}

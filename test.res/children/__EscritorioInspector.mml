@@ -11,9 +11,9 @@ package coordinacion {
 		help = "version.html";
 
 		for {
-			role = ref RoleInspectorEscritorio;
 //MERGE
 //			role = ref RoleInspector;
+			role = ref RoleInspectorEscritorio;
 		}
 
 		["mfm4a8g"]

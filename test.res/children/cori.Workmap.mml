@@ -24,7 +24,7 @@ package coordinacion.procesos.cori {
         view {
             label = "Incidencia";
             show {
-                shortcut = "shIncidencia";  
+                shortcut = "shIncidencia";
                 shortcut-view = "VistaDescripcion";
             }
         }
@@ -55,11 +55,11 @@ package coordinacion.procesos.cori {
 				var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
 				
 				if (incidencia.getFlag("saltartramite") != null){
-					doGoto(Place::IniciarActuacion,"");					
+					doGoto(Place::IniciarActuacion,"");
 					return;
 				}
 				if (incidencia.getFlag("saltarainspeccion") != null){
-					doGoto(Place::GestionarInspeccion,"");					
+					doGoto(Place::GestionarInspeccion,"");
 					return;
 				}
 				
@@ -95,7 +95,7 @@ package coordinacion.procesos.cori {
 							else {
 								doGoto(Place :: Gestionado, "Iniciar resolución de la incidencia");
 								return;
-							}							
+							}
 						}else{
 							doGoto(Place :: Gestionado, "Iniciar resolución de la incidencia");
 							return;
@@ -197,7 +197,7 @@ package coordinacion.procesos.cori {
 
 				onSolve(ConfigurarEncargoCorrectivo f) {
 					var Expediente expediente = this.getTarget();
-					var EncargoCV encargo; 
+					var EncargoCV encargo;
 					if (this.shEncargoCV == null){
 						encargo = EncargoCV :: createNew(expediente.coleccion);
 						this.setShEncargoCV(encargo);
@@ -251,11 +251,9 @@ package coordinacion.procesos.cori {
 			 	goto = ref ResultadoVerificacionSinJob;
 			 	history = "Configuración de resultados iniciada";
 			 }
-		 } 
-			
-			
+		 }
 		}
-		
+
 		["mdnahba"]
 		place ResultadoVerificacionSinJob {
 
@@ -322,7 +320,7 @@ package coordinacion.procesos.cori {
 			var parteInterno = ptv :: Exportador :: doExportOf(ficha).toNewDocument;
 			parteInterno.consolidate();
 			ficha.setPt(parteInterno.toLink);
-			ficha.save;						
+			ficha.save;
 			var links = new ArrayList <MonetLink>;
 			links.^add(parteInterno.toMonetLink);
 			this.addLog("Parde de trabajo generado", "Parte de trabajo de verificación", links);
@@ -333,7 +331,7 @@ package coordinacion.procesos.cori {
 				HechosIncidencia :: hechoIncidenciaVerificada(incidencia);
 				coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido verificado. Se procede a tramitar el expediente", this);
 			}
-		}		
+		}
 		
 				
 
@@ -416,7 +414,7 @@ package coordinacion.procesos.cori {
 			 		goto = ref ResultadoInspeccionSinJob;
 			 		history = "Configuración de resultados iniciada";
 			 	}
-		 	} 
+		 	}
 		}
 		
 		
@@ -487,7 +485,7 @@ package coordinacion.procesos.cori {
 			var parteInterno = ptic :: Exportador :: doExportOf(ficha).toNewDocument;
 			parteInterno.consolidate();
 			ficha.setPt(parteInterno.toLink);
-			ficha.save;					
+			ficha.save;
 			var links = new ArrayList <MonetLink>;
 			links.^add(parteInterno.toMonetLink);
 			this.addLog("Parde de trabajo generado", "Parte de trabajo de inspección", links);
@@ -495,9 +493,9 @@ package coordinacion.procesos.cori {
 			asociarDocumentoPt(incidencia, parteInterno, "I", this.getFlag("codigoEI"));
 			AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term("e007", "Inspeccionada"));
 			if (resultado){
-				HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);								
+				HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);
 				coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido inspeccionado. La incidencia ha sido solucionada", this);
-			}	
+			}
 		}
 		
 				
@@ -535,7 +533,7 @@ package coordinacion.procesos.cori {
 				label = "Iniciando verificación";
 				goto = ref EsperandoPtvInterna;
 				onCreate(JobRequest msg) {
-					var encargo = this.shEncargoCV as encargos.EncargoCV;					
+					var encargo = this.shEncargoCV as encargos.EncargoCV;
 					var fichaEncargo = encargo.ficha;
 					var orden = otv :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
 					var incidencia = this.shIncidencia as Incidencia;
@@ -553,7 +551,7 @@ package coordinacion.procesos.cori {
 				}
 				onSetupJob(JobSetup js) {
 					SetupDelegation :: configurarJob(js, this.shIncidencia as Incidencia);
-				}				
+				}
 				
 				onSetupJobComplete(String providerLabel,Date suggestedStartDate,Date suggestedEndDate,String observations,boolean urgent) {
 					var Expediente expediente = this.getTarget();
@@ -570,7 +568,7 @@ package coordinacion.procesos.cori {
 					this.setFlag("codigoEVJob", String :: valueOf(codigo));
 					
 					AnexoWorkmap :: rellenarFichaEncargoJobCV(encargo, expediente, " V-", codigo, suggestedStartDate, suggestedEndDate, observations);
-				}				
+				}
 									
 				onFinished(JobResponse msg) {
 					var encargo = this.shEncargoCV as EncargoCV;
@@ -579,11 +577,11 @@ package coordinacion.procesos.cori {
 					parteInterno.consolidate();
 					var links = new ArrayList <MonetLink>;
 					links.^add(parteInterno.toMonetLink);
-					this.addLog("Parde de trabajo generado", "Parte de trabajo de verificación", links);					
+					this.addLog("Parde de trabajo generado", "Parte de trabajo de verificación", links);
 					
 					var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtvInterna_ExitPtvInterna;
-					if (!verificado){					
-						bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtvInterna_ExitPtvNoVerificadoInterna;					
+					if (!verificado){
+						bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtvInterna_ExitPtvNoVerificadoInterna;
 					}else{
 						var incidencia = this.shIncidencia as Incidencia;
 						AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term("e002", "Verificada"));
@@ -599,7 +597,7 @@ package coordinacion.procesos.cori {
 					post.setTitleLink(this.toMonetLink());
 					post.setBody(this.getLabel());
 					post.setBodyLink(this.toMonetLink());
-					NewsService.postAndNotifyToAll(post);					
+					NewsService.postAndNotifyToAll(post);
 					
 					doUnlock(bloqueo);
 				}
@@ -639,7 +637,7 @@ package coordinacion.procesos.cori {
 					fichaEncargo.setFechaInicio(f.fechaInicio);
 					fichaEncargo.setFechaFinLimite(f.fechaFinLimite);
 					fichaEncargo.setObservaciones(f.observaciones);
-					Utilidad::asignarMultiple(f.adjuntos, fichaEncargo.adjuntosField); 
+					Utilidad::asignarMultiple(f.adjuntos, fichaEncargo.adjuntosField);
 					fichaEncargo.adjuntosField.addNewAll(f.adjuntos);
 					fichaEncargo.prioridad = fichaExpediente.prioridad;
 					fichaEncargo.save();
@@ -1032,7 +1030,7 @@ package coordinacion.procesos.cori {
 					goto = ref VolverEjecutar;
 				}
 			}
-		}		
+		}
 
 		["mw1ztmg"]
 		place ConfirmarPticCerrarExpediente {
@@ -1226,11 +1224,11 @@ package coordinacion.procesos.cori {
 					parteInterno.consolidate();
 					var links = new ArrayList <MonetLink>;
 					links.^add(parteInterno.toMonetLink);
-					this.addLog("Parde de trabajo generado", "Parte de trabajo de inspección", links);					
+					this.addLog("Parde de trabajo generado", "Parte de trabajo de inspección", links);
 																				
 					var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPticInterna_ExitPticInterna;
 					if (!inspeccionado){
-						bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPticInterna_ExitPticNoSolucionadoInterna;						
+						bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPticInterna_ExitPticNoSolucionadoInterna;
 					}else{
 						var incidencia = this.shIncidencia as Incidencia;
 						AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term(null, "Inspeccionada"));
@@ -1238,7 +1236,7 @@ package coordinacion.procesos.cori {
 						incidencia.save();
 						HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);
 						coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido inspeccionado. La incidencia ha sido solucionada", this);
-					}					 
+					}
 					var incidencia = this.shIncidencia as Incidencia;
 					asociarDocumentoPt(incidencia, parteInterno, "I", this.getFlag("codigoEIJob"));
 					var Post post = Post.createRequest();
@@ -1246,8 +1244,8 @@ package coordinacion.procesos.cori {
 					post.setTitleLink(this.toMonetLink());
 					post.setBody(this.getLabel());
 					post.setBodyLink(this.toMonetLink());
-					NewsService.postAndNotifyToAll(post);					
-					doUnlock(bloqueo);										 
+					NewsService.postAndNotifyToAll(post);
+					doUnlock(bloqueo);
 				}
 			}
 		}
@@ -1372,7 +1370,7 @@ package coordinacion.procesos.cori {
 							var esquema = parte.^schema;
 							incidencia.setFechaVerificacion(esquema.fechaFinReal);
 							incidencia.save();
-							HechosIncidencia :: hechoIncidenciaVerificada(incidencia);								
+							HechosIncidencia :: hechoIncidenciaVerificada(incidencia);
 							coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + tarea.getLabel() + " ha sido verificado. Se procede a tramitar el expediente", tarea);
 						}
 						tarea.doUnlock(bloqueo);
@@ -1452,7 +1450,7 @@ package coordinacion.procesos.cori {
 						var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtac_ExitPtac;
 						if(! fichaEncargo.resultado) {
 							incidencia.setResultadoEjecucion("No corregida");
-							incidencia.save();							
+							incidencia.save();
 							bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtac_ExitPtacNoCorregido;
 						}
 						else {
@@ -1546,7 +1544,7 @@ package coordinacion.procesos.cori {
 							var esquema = parte.^schema;
 							incidencia.setFechaInspeccion(esquema.fechaFinReal);
 							incidencia.save();
-							HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);								
+							HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);
 							coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + tarea.getLabel() + " ha sido inspeccionado. La incidencia ha sido solucionada", tarea);
 						}
 						tarea.doUnlock(bloqueo);
@@ -1591,7 +1589,7 @@ package coordinacion.procesos.cori {
 			if (numero != null){
 				titulo += "-" + numero;
 			}
-			titulo += " " + fecha.toString; 
+			titulo += " " + fecha.toString;
 			orden.setLabel(titulo);
 			incidencia.documentosField.insert(0, orden.toLink);
 			incidencia.save;

@@ -153,8 +153,8 @@ package coordinacion.procesos.copa {
 						}
 						try{
 							if (oprevre.operacionPadre != null){
-								seccionoprev.operacionRevPadre = oprevre.operacionPadre; 
-							}							
+								seccionoprev.operacionRevPadre = oprevre.operacionPadre;
+							}
 						}catch(Exception e){
 							ConsoleService.println("Warning: XXModelXX : Operación de revisión padre es nula en preventivo: " + item.codigo);
 						} 

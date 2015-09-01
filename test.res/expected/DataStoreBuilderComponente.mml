@@ -33,7 +33,7 @@ package coordinacion.analytics {
 //			if (seccionLocalizacion.zona != null)
 //			componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona, seccionLocalizacion.zona), crearJerarquiaLocalizacion(nodeInstance));
 			if (seccionLocalizacion.zona != null){
-				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));			
+				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));
 			}
 		}
 

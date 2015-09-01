@@ -34,9 +34,9 @@ package coordinacion.procesos.copa {
 				op1check Boolean;
 				op2check Boolean;
 				op3check Boolean;
-				op4ceck Boolean;
 //MERGE
 //				op4check Boolean;
+				op4ceck Boolean;
 				op5check Boolean;
 				op6check Boolean;
 				op7check Boolean;
@@ -152,17 +152,16 @@ package coordinacion.procesos.copa {
 						var seccionoprev = str.seccionOperacionesRevisionField.addNew as resultadopa.secciontrabajos.SeccionOperacionesRevision;
 						if (oprevre.operacion != null){
 						seccionoprev.operacionRev = oprevre.operacion;
+//MERGE
+//						seccionoprev.operacionRevPadre = oprevre.operacionPadre;
 						}
 						try{
 							if (oprevre.operacionPadre != null){
-								seccionoprev.operacionRevPadre = oprevre.operacionPadre; 
-							}							
+								seccionoprev.operacionRevPadre = oprevre.operacionPadre;
+							}
 						}catch(Exception e){
 							ConsoleService.println("Warning: XXModelXX : Operación de revisión padre es nula en preventivo: " + item.codigo);
 						} 
-//MERGE
-//						seccionoprev.operacionRev = oprevre.operacion; 
-//						seccionoprev.operacionRevPadre = oprevre.operacionPadre; 
 					}
 					//str.objetoActuacion = trabajo.objetoActuacion.^label;
 					str.idExtranjeraObjeto = trabajo.idExtranjeraObjeto;

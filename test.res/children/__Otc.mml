@@ -18,7 +18,6 @@ package coordinacion.procesos.cori {
 			TipoIncidenciaLabel String;
 			many TipoIncidencia Term;
 			Descripcion String;
-			ImagenIncidencia Picture;
 //MERGE
 //			many VisorImagenIncidencia{
 //				ImagenIncidencia Picture;
@@ -26,6 +25,7 @@ package coordinacion.procesos.cori {
 //			many VisorMapa{
 //				ImagenMapa Picture;			
 //			}
+			ImagenIncidencia Picture;
 			Urgente Boolean;
 			many Adjuntos File;
 			many AdjuntosIncidencia File;

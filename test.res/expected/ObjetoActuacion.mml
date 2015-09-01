@@ -201,17 +201,17 @@ package coordinacion.objetosactuacion {
 //					referencia.lugar = seccionLocalizacion.lugar;
 //					referencia.zona = seccionLocalizacion.zona;
 					if (seccionLocalizacion.lugar != null){
-						referencia.lugar = seccionLocalizacion.lugar.^label;						
+						referencia.lugar = seccionLocalizacion.lugar.^label;
 //MERGE
 //					if (seccionLocalizacion.zona != null)
 					}
 					if (seccionLocalizacion.zona != null){
-						referencia.zona = seccionLocalizacion.zona.^label;					
+						referencia.zona = seccionLocalizacion.zona.^label;
 					}
 					referencia.direccion = seccionLocalizacion.direccion;
 					referencia.telefono = seccionLocalizacion.telefono;
 					if (nodo.inactivo){					
-						referencia.inactivoLabel = "Inactivo";	
+						referencia.inactivoLabel = "Inactivo";
 						referencia.activoLabel = "No";
 					}else{
 						referencia.inactivoLabel = null;

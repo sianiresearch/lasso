@@ -148,8 +148,8 @@ package coordinacion.procesos.copa {
 					
 					for(oprevre : trabajo.opRevisionRealizadas){
 						var seccionoprev = str.seccionOperacionesRevisionField.addNew as resultadopa.secciontrabajos.SeccionOperacionesRevision;
-						seccionoprev.operacionRev = oprevre.operacion; 
-						seccionoprev.operacionRevPadre = oprevre.operacionPadre; 
+						seccionoprev.operacionRev = oprevre.operacion;
+						seccionoprev.operacionRevPadre = oprevre.operacionPadre;
 					}
 					//str.objetoActuacion = trabajo.objetoActuacion.^label;
 					str.idExtranjeraObjeto = trabajo.idExtranjeraObjeto;

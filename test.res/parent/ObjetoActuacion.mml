@@ -155,9 +155,9 @@ package coordinacion.objetosactuacion {
 					referencia.direccion = seccionLocalizacion.direccion;
 					referencia.telefono = seccionLocalizacion.telefono;
 					if (nodo.inactivo){					
-						referencia.inactivoLabel = "Inactivo";						
+						referencia.inactivoLabel = "Inactivo";
 					}else{
-						referencia.inactivoLabel = null;						
+						referencia.inactivoLabel = null;
 					}
 				}
 			}

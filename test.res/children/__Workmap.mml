@@ -12,7 +12,12 @@ package coordinacion.procesos.ani {
 		shortcut shNi;
 		shortcut shParte;
 //MERGE
-//		}
+//
+//		["mo8phya"]
+//		view {
+//			label = "Incidencia";
+//			show { 
+//				shortcut = "shIncidencia";
 
 		["m2tbi2w"]
 		view {
@@ -195,16 +200,11 @@ package coordinacion.procesos.ani {
 				}
 
 				["m3ih9ew"]
-//MERGE
-//
-//		["mo8phya"]
-//		view {
-//			label = "Incidencia";
-//			show { 
-//				shortcut = "shIncidencia";
 				stop Ignorar {
 					label = "No, eliminar notificación";
 					goto = ref Terminado;
+//MERGE
+//		}
 					history = "Se ha decidido eliminar la notificación";
 				}
 			}

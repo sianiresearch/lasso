@@ -110,7 +110,7 @@ package coordinacion.procesos.ani {
 				incidencia.registroSalida = item.registroSalida;
 				coordinacion :: modulos :: utilidades :: Utilidad :: asignarMultiple(item.adjuntosIncidencia, incidencia.adjuntosIncidenciaField);
 				if (item.corregida)
-					incidencia.unidad = item.proveedor;				
+					incidencia.unidad = item.proveedor;
 			}
 
 			function importarImagenes(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {

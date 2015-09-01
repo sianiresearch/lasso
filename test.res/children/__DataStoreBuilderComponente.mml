@@ -29,13 +29,12 @@ package coordinacion.analytics {
 			componenteObjetoActuacion.addCodigo(nodeInstance.getCodigo);
 			componenteObjetoActuacion.addNombre(new Term(nodeInstance.getCodigo, nodeInstance.getNombre), crearJerarquiaObjeto(nodeInstance));
 			var seccionLocalizacion = obtenerLocalizacion(obtenerFicha(nodeInstance));
-//			componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona, seccionLocalizacion.zona), crearJerarquiaLocalizacion(nodeInstance));
-			if (seccionLocalizacion.zona != null){
-				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));			
-			}
 //MERGE
 //			if (seccionLocalizacion.zona != null)
-//				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));
+//			componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona, seccionLocalizacion.zona), crearJerarquiaLocalizacion(nodeInstance));
+			if (seccionLocalizacion.zona != null){
+				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));
+			}
 		}
 
 		function crearJerarquiaObjeto(coordinacion.modulos.componentes.Ficha nodeInstance) : ArrayList <Term> {

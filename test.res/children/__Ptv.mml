@@ -52,13 +52,11 @@ package coordinacion.procesos.cori.documentos {
 					if (seccionLocalizacion.lugar != null){
 						i.setLugar(seccionLocalizacion.lugar.^label);
 					}
-					if (seccionLocalizacion.zona != null){
 //MERGE
 //					if(seccionLocalizacion.zona != null){
+					if (seccionLocalizacion.zona != null){
 						i.setZona(seccionLocalizacion.zona.^label);					
 					}
-//MERGE
-//					}				
 				}
 				i.setCodigo(fichaExpediente.codigo);
 				i.setIdIncidencia(incidencia.codigoIncidencia);

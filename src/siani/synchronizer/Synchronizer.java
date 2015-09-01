@@ -40,9 +40,11 @@ public class Synchronizer {
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			final List<Line> changedLines = changes.get(i);
 			if (isEmptyContent(changedLines)) continue;
-			int position = calculatePositionOf(removedBlockOfPreviousLine(changedLines.get(changedLines.size() - 1)));
+			int position = calculatePositionOf(blockOfPreviousLine(changedLines.get(0)));
 			newLines.add(position++, "//MERGE");
-			newLines.addAll(position, changedLines.stream().map(line -> "//" + line.content()).collect(toList()));
+			newLines.addAll(position, changedLines.stream().
+				map(line -> "//" + line.content()).
+				collect(toList()));
 		}
 		return newLines;
 	}
@@ -78,7 +80,7 @@ public class Synchronizer {
 			block.lines().get(block.size() - 1).number() + 1 : 0;
 	}
 
-	private Block removedBlockOfPreviousLine(Line line) {
+	private Block blockOfPreviousLine(Line line) {
 		for (Map.Entry<Block, Block> entry : child.removedBlocks().entrySet())
 			if (isPreviousLine(line, entry.getKey().lines().get(entry.getKey().size() - 1))) return entry.getValue();
 		return null;

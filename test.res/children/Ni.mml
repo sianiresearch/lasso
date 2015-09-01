@@ -38,7 +38,7 @@ package coordinacion.procesos.ani {
 
 			function obtenerObjeto(coordinacion.procesos.ani.ni.Schema item) : Node {
 				if (item.objetoActuacionId != null){
-					return NodeService :: get(item.objetoActuacionId);					
+					return NodeService :: get(item.objetoActuacionId);
 				}else{
 					var etiqueta = item.objetoActuacionLabel;
 					var String codigo ="";
@@ -67,7 +67,7 @@ package coordinacion.procesos.ani {
 				incidencia.descripcion = item.descripcion;
 				coordinacion::modulos::utilidades::Utilidad::asignarMultiple(item.adjuntosIncidencia,incidencia.adjuntosIncidenciaField);
 				if (item.corregida)
-					incidencia.unidad = item.proveedor;				
+					incidencia.unidad = item.proveedor;
 			}
 
 			function importarImagenes(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {

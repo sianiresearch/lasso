@@ -87,24 +87,24 @@ package coordinacion.objetosactuacion {
 				["mme0tka"]
 //				field-text Lugar {
 //					label = "Lugar";
-				field-select Lugar {
-					label = "Distrito";
-						source = ref coordinacion.TesauroDistritos;
 //MERGE
 //					source = ref coordinacion.TesauroLugar;
 //					
+				field-select Lugar {
+					label = "Distrito";
+						source = ref coordinacion.TesauroDistritos;
 				}
 
 				["mxy0wbg"]
 //				field-text Zona {
 //					label = "Zona";
+//MERGE
+//					source = ref coordinacion.TesauroZona;
+//				}
 				field-select Zona {
 					label = "Barrio";
 						source = ref  coordinacion.TesauroBarrios;
 				}				
-//MERGE
-//					source = ref coordinacion.TesauroZona;
-//				}
 
 				["mw5fp6a"]
 				field-text Direccion {
@@ -194,31 +194,26 @@ package coordinacion.objetosactuacion {
 				calculate() { var referencia = this.^reference;
 					var nodo = this.^node;
 					var seccionLocalizacion = nodo.localizacionField as ficha.Localizacion;
+//MERGE
+//					if (seccionLocalizacion.lugar != null)
 //					referencia.lugar = seccionLocalizacion.lugar;
 //					referencia.zona = seccionLocalizacion.zona;
 					if (seccionLocalizacion.lugar != null){
-						referencia.lugar = seccionLocalizacion.lugar.^label;						
+						referencia.lugar = seccionLocalizacion.lugar.^label;
+//MERGE
+//					if (seccionLocalizacion.zona != null)
 					}
 					if (seccionLocalizacion.zona != null){
-						referencia.zona = seccionLocalizacion.zona.^label;					
+						referencia.zona = seccionLocalizacion.zona.^label;
 					}
-//MERGE
-//					if (seccionLocalizacion.lugar != null)
-//						referencia.lugar = seccionLocalizacion.lugar.^label;
-//					if (seccionLocalizacion.zona != null)
-//						referencia.zona = seccionLocalizacion.zona.^label;
 					referencia.direccion = seccionLocalizacion.direccion;
 					referencia.telefono = seccionLocalizacion.telefono;
 					if (nodo.inactivo){					
-						referencia.inactivoLabel = "Inactivo";	
+						referencia.inactivoLabel = "Inactivo";
 						referencia.activoLabel = "No";
-//MERGE
-//						referencia.inactivoLabel = "Inactivo";						
 					}else{
 						referencia.inactivoLabel = null;
 						referencia.activoLabel = "Sí";
-//MERGE
-//						referencia.inactivoLabel = null;						
 					}
 				}
 			}
@@ -227,6 +222,11 @@ package coordinacion.objetosactuacion {
 				calculate() { var referencia = this.^reference;
 					var nodo = this.^node;
 					var ubicacion = nodo.localizacionField as Localizacion;
+//MERGE
+//					if (ubicacion.lugar != null)
+//						referencia.lugar = ubicacion.lugar.^label;
+//					if (ubicacion.zona != null)
+//						referencia.zona = ubicacion.zona.^label;
 //					referencia.lugar = ubicacion.lugar;
 //					referencia.zona = ubicacion.zona;
 					if (ubicacion.lugar != null){
@@ -235,11 +235,6 @@ package coordinacion.objetosactuacion {
 					if (ubicacion.zona != null){
 						referencia.zona = ubicacion.zona.^label;						
 					}
-//MERGE
-//					if (ubicacion.lugar != null)
-//						referencia.lugar = ubicacion.lugar.^label;
-//					if (ubicacion.zona != null)
-//						referencia.zona = ubicacion.zona.^label;
 					referencia.labelPadre = nodo.nombre;
 				}
 			}
