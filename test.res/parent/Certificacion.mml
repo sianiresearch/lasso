@@ -43,7 +43,7 @@ package coordinacion.procesos.coca {
 //		  this.label = "Certificación: " + finicial.toString() + " - " + ffinal.toString();
 //		  this.fechaInicial = finicial;
 //		  this.fechaFinal = ffinal;		  
-//sumar un día		  
+//sumar un día
 	  	  for (referencia  : incidencias.get(Expression.And(coordinacion.incidencias.coleccion.Index.FechaIcc.Ge(finicial.getValue()),
 	  			  																	coordinacion.incidencias.coleccion.Index.FechaIcc.Le(ffinal.getValue()),coordinacion.incidencias.coleccion.Index.TiposIncidencia.Like("%ICC%")))) {
 	  		var indice  = referencia as coordinacion.incidencias.coleccion.Index;

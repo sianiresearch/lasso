@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/synchronizer.iml" filepath="$PROJECT_DIR$/synchronizer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lasso.iml" filepath="$PROJECT_DIR$/lasso.iml" />
     </modules>
   </component>
 </project>

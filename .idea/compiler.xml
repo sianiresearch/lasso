@@ -24,8 +24,16 @@
         <processorPath useClasspath="true" />
         <module name="synchronizer" />
       </profile>
+      <profile default="false" name="Annotation profile for lasso" enabled="true">
+        <sourceOutputDir name="out/out/Synchronizer/generated-sources/annotations" />
+        <sourceTestOutputDir name="out/out/Synchronizer/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="lasso" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="lasso" target="1.8" />
       <module name="synchronizer" target="1.8" />
     </bytecodeTargetLevel>
   </component>

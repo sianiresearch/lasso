@@ -245,8 +245,6 @@ package coordinacion.modulos.componentes {
 		}
 		properties {
 			calculate() {
-//MERGE
-//				this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
 				//this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
 				var nodo = this.getNode();
 				var componente = this.getNode().getOwner() as coordinacion.modulos.componentes.coleccion.Componente;
@@ -281,8 +279,6 @@ package coordinacion.modulos.componentes {
 //				field = ref Ubicacion;
 				field = ref Adjuntos;
 				field = ref Observaciones;
-//MERGE
-//				field = ref Inactivo;
 			}
 		}
 

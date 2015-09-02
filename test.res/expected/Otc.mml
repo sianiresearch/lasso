@@ -20,12 +20,12 @@ package coordinacion.procesos.cori {
 			Descripcion String;
 //MERGE
 //			many VisorImagenIncidencia{
-			ImagenIncidencia Picture;
-//MERGE
+//				ImagenIncidencia Picture;
 //			}
 //			many VisorMapa{
 //				ImagenMapa Picture;			
 //			}
+			ImagenIncidencia Picture;
 			Urgente Boolean;
 			many Adjuntos File;
 			many AdjuntosIncidencia File;

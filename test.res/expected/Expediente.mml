@@ -14,20 +14,20 @@ package coordinacion.procesos.copa {
 			label = "Información";
 			
 			is-default;
-			show {
-				component = ref FichaExpediente.Vista;
-			}
-		}
-
 //MERGE
-//		["mdZt4VA"]
-//		view VistaVisita {
-//			label = "Información";
 //			show {
 //				component = ref FichaExpediente.Vista;
 //			}
 //		}
 //
+//		["mdZt4VA"]
+//		view VistaVisita {
+//			label = "Información";
+			show {
+				component = ref FichaExpediente.Vista;
+			}
+		}
+
 		["mHSSw4A"]
 		view VistaResultado {
 			label = "Resultado del trabajo";

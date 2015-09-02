@@ -1,4 +1,4 @@
-package siani.synchronizer;
+package siani.lasso;
 
 
 import java.io.File;
@@ -7,14 +7,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.*;
 
-public class SynchronizerFile {
+class LassoFile {
 	public static String NEW_LINE = "\n";
 	private File file;
 	private List<String> lines = new ArrayList<>();
 	private List<Line> remainingLines = new ArrayList<>();
 	private Map<Block, Block> removedBlocks = new LinkedHashMap<>();
 
-	public SynchronizerFile(File file) {
+	public LassoFile(File file) {
 		this.file = file;
 		lines = readLinesOfFile(file);
 		remainingLines = buildRemainingLines(lines);

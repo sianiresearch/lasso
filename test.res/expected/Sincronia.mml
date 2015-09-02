@@ -179,12 +179,13 @@ package coordinacion.procesos.asi {
 					var localizacion = ficha.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
 //MERGE
 //					if (localizacion.lugar != null)
+//						slugar.lugar = localizacion.lugar.^label;
+//					if (localizacion.zona != null)
+//						slugar.zona = localizacion.zona.^label;
 //					slugar.lugar = localizacion.lugar;
 //					slugar.zona = localizacion.zona;
 					if (localizacion.lugar != null){
 						slugar.lugar = localizacion.lugar.^label;						
-//MERGE
-//					if (localizacion.zona != null)
 					}
 					if (localizacion.zona != null){
 						slugar.zona = localizacion.zona.^label;						

@@ -57,12 +57,12 @@ package coordinacion.procesos.ani {
 					var corregida = msg.getString("corregida");
 					if(corregida != null) {
 						tarea.setFlag("corregida", corregida);
-					}
 //MERGE
+//					}
 //					var esMobile = msg.getString("mobile");
 //					if(esMobile != null) {
 //						tarea.setFlag("mobile", esMobile);
-//					}
+					}
 					tarea.save;
 					
 					var post = Post :: createRequest();
@@ -202,15 +202,15 @@ package coordinacion.procesos.ani {
 				}
 
 				["m3ih9ew"]
+				stop Ignorar {
+					label = "No, eliminar notificación";
+					goto = ref Terminado;
+					history = "Se ha decidido eliminar la notificación";
+				}
+			}
+		}
+
 //MERGE
-//				stop Ignorar {
-//					label = "No, eliminar notificación";
-//					goto = ref Terminado;
-//					history = "Se ha decidido eliminar la notificación";
-//				}
-//			}
-//		}
-//
 //		["mi_nr3g"]
 //		place RecibidoMobile {
 //
@@ -226,14 +226,14 @@ package coordinacion.procesos.ani {
 //				}
 //
 //				["mfqabxg"]
-				stop Ignorar {
-					label = "No, eliminar notificación";
-					goto = ref Terminado;
-					history = "Se ha decidido eliminar la notificación";
-				}
-			}
-		}
-
+//				stop Ignorar {
+//					label = "No, eliminar notificación";
+//					goto = ref Terminado;
+//					history = "Se ha decidido eliminar la notificación";
+//				}
+//			}
+//		}
+//
 		function ImportarIncidencia() : coordinacion.incidencias.Incidencia {
 			var documentoNi = this.shNi as Ni;
 			var documentoPtac = this.shParte as coordinacion.procesos.cori.documentos.Ptac;

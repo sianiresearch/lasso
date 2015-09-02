@@ -152,6 +152,8 @@ package coordinacion.procesos.copa {
 						var seccionoprev = str.seccionOperacionesRevisionField.addNew as resultadopa.secciontrabajos.SeccionOperacionesRevision;
 						if (oprevre.operacion != null){
 						seccionoprev.operacionRev = oprevre.operacion;
+//MERGE
+//						seccionoprev.operacionRevPadre = oprevre.operacionPadre;
 						}
 						try{
 							if (oprevre.operacionPadre != null){

@@ -10,8 +10,8 @@ package coordinacion.incidencias {
 			node = ref Incidencia;
 		}
 		index = ref Index;
-
 //MERGE
+//
 //		["mc2hbzq"]
 //		operation RealizarIncidencia {
 //			label = "Realizar informe";
@@ -21,7 +21,6 @@ package coordinacion.incidencias {
 //				ClientService :: redirectUserTo(tarea.toMonetLink());
 //			}
 //		}
-//
 
 		["mk4m4_g"]
 		view {
@@ -122,8 +121,8 @@ package coordinacion.incidencias {
 					type = TERM;
 					source = ref coordinacion.TesauroEstadosIncidencia;
 				}
-				
 //MERGE
+//
 //				["m1gzbeg"]
 //				attribute TiempoMedioActuacionLabel {
 //					label = "Tiempo medio de actuación";
@@ -132,7 +131,7 @@ package coordinacion.incidencias {
 //				
 //				["m9uaygw"]
 //				attribute FechaEnvioOtac {
-//					label = "Fecha de la �ltima otac enviada";
+//					label = "Fecha de la última otac enviada";
 //					type = DATE;
 //					precision = DAYS;
 //				}
