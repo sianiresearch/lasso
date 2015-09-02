@@ -14,10 +14,19 @@ public class Lasso {
 
 	private final LassoFile parent;
 	private final LassoFile child;
+	private final boolean override;
 
 	public Lasso(File parent, File child) {
 		this.parent = new LassoFile(parent);
 		this.child = new LassoFile(child);
+		this.override = true;
+	}
+
+	public Lasso(File parent, File child, boolean override) {
+		this.parent = new LassoFile(parent);
+		this.child = new LassoFile(child);
+		this.override = override;
+
 	}
 
 	public void execute() {
@@ -119,11 +128,15 @@ public class Lasso {
 
 	private void writeSyncedFile(List<String> lines) {
 		try {
-			final FileWriter writer = new FileWriter(new File(child.file().getParent(), "__" + child.file().getName()));
+			final FileWriter writer = new FileWriter(getDestiny());
 			for (String line : lines) writer.write(line + LassoFile.NEW_LINE);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private File getDestiny() {
+		return override ? child.file() : new File(child.file().getParent(), "__" + child.file().getName());
 	}
 }
