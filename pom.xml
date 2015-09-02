@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>siani.tara</groupId>
-  <artifactId>Synchronizer</artifactId>
+  <artifactId>lasso</artifactId>
   <version>1.0</version>
 
   <properties>
@@ -15,9 +15,9 @@
   </properties>
 
   <build>
-    <outputDirectory>out/production/Synchronizer</outputDirectory>
-    <testOutputDirectory>out/test/Synchronizer</testOutputDirectory>
-    <directory>out/out/Synchronizer</directory>
+    <outputDirectory>out/production/lasso</outputDirectory>
+    <testOutputDirectory>out/test/lasso</testOutputDirectory>
+    <directory>out/out/lasso</directory>
   </build>
 
   <dependencies>
@@ -26,12 +26,6 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
       <version>4.10</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.0</version>
     </dependency>
   </dependencies>
 

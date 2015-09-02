@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/out/production/Synchronizer" />
-    <output-test url="file://$MODULE_DIR$/out/test/Synchronizer" />
+    <output url="file://$MODULE_DIR$/out/production/Lasso" />
+    <output-test url="file://$MODULE_DIR$/out/test/lasso" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
@@ -10,13 +10,15 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/oout/test/Synchronizer" />
       <excludeFolder url="file://$MODULE_DIR$/out/out/Synchronizer" />
+      <excludeFolder url="file://$MODULE_DIR$/out/out/lasso" />
+      <excludeFolder url="file://$MODULE_DIR$/out/production/Lasso" />
       <excludeFolder url="file://$MODULE_DIR$/out/production/Synchronizer" />
       <excludeFolder url="file://$MODULE_DIR$/out/test/Synchronizer" />
+      <excludeFolder url="file://$MODULE_DIR$/out/test/lasso" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.0" level="project" />
   </component>
 </module>

@@ -25,8 +25,8 @@
         <module name="synchronizer" />
       </profile>
       <profile default="false" name="Annotation profile for lasso" enabled="true">
-        <sourceOutputDir name="out/out/Synchronizer/generated-sources/annotations" />
-        <sourceTestOutputDir name="out/out/Synchronizer/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="out/out/lasso/generated-sources/annotations" />
+        <sourceTestOutputDir name="out/out/lasso/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="lasso" />
