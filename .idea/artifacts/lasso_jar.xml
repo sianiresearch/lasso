@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="lasso:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/lasso_jar</output-path>
+    <root id="archive" name="lasso.jar">
+      <element id="module-output" name="lasso" />
+    </root>
+  </artifact>
+</component>
