@@ -1,0 +1,22 @@
+package org.generico.utils;
+
+public class Utils {
+
+	public static boolean a() {
+		return false;
+	}
+
+	public static int run() {
+		int result = -1;
+		if (1 == 2) {
+			result = 1;
+		} else if (2 == 3) {
+			result = 2;
+		}
+		return result;
+	}
+
+	public static boolean b() {
+		return false;
+	}
+}

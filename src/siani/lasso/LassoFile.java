@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 class LassoFile {
+	private static final String COMMENT_PREFIX = "//";
 	public static String NEW_LINE = "\n";
 	private File file;
 	private List<String> lines = new ArrayList<>();
@@ -28,7 +29,7 @@ class LassoFile {
 	}
 
 	private String uncomment(String line) {
-		return line.trim().startsWith("//") ? line.replaceFirst("//", "") : line;
+		return line.trim().startsWith(COMMENT_PREFIX) ? line.replaceFirst(COMMENT_PREFIX, "") : line;
 	}
 
 	public File file() {

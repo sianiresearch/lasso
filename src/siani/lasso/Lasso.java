@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.toList;
+import java.util.stream.Collectors;
 
 public class Lasso {
 
@@ -34,9 +33,7 @@ public class Lasso {
 		for (blockSize = parent.linesSize(); blockSize >= 1; blockSize--) {
 			List<Block> matches = matchBlocksInChild(parent.split(blockSize));
 			while (!matches.isEmpty()) {
-				matches.stream().
-					filter(child::remove).
-					forEach(parent::remove);
+				matches.stream().filter(child::remove).forEach(parent::remove);
 				matches = matchBlocksInChild(parent.split(blockSize));
 			}
 		}
@@ -48,8 +45,8 @@ public class Lasso {
 		return isInChild(blocks);
 	}
 
-	private List<Block> isInChild(List<Block> consecutiveBLocks) {
-		return consecutiveBLocks.stream().filter(child::contains).collect(toList());
+	private List<Block> isInChild(List<Block> blocks) {
+		return blocks.stream().filter(child::contains).collect(Collectors.toList());
 	}
 
 	private List<List<LassoFile.Line>> packConsecutiveChanges(List<LassoFile.Line> lines) {
@@ -70,17 +67,20 @@ public class Lasso {
 
 	private List<String> propagateChanges() {
 		List<String> newLines = new ArrayList<>(child.lines());
+		if (parent.remainingLines().isEmpty()) return newLines;
 		List<List<LassoFile.Line>> changes = packConsecutiveChanges(parent.remainingLines());
 		for (int i = changes.size() - 1; i >= 0; i--) {
 			final List<LassoFile.Line> changedLines = changes.get(i);
 			if (isEmptyContent(changedLines)) continue;
 			int position = calculatePositionOf(blockOfPreviousLine(changedLines.get(0)));
 			newLines.add(position++, "//MERGE");
-			newLines.addAll(position, changedLines.stream().
-				map(line -> "//" + line.content()).
-				collect(toList()));
+			newLines.addAll(position, addComment(changedLines));
 		}
 		return newLines;
+	}
+
+	private List<String> addComment(List<LassoFile.Line> changedLines) {
+		return changedLines.stream().map(changedLine -> "//" + changedLine.content()).collect(Collectors.toList());
 	}
 
 	private boolean isEmptyContent(List<LassoFile.Line> lines) {
@@ -93,23 +93,23 @@ public class Lasso {
 		return a.number() == b.number() + 1;
 	}
 
-//	private List<Block> packConsecutiveBlocks(List<Block> blocks) {
-//		List<Block> packedBlocks = new ArrayList<>();
-//		Block temp = blocks.get(0);
-//		for (int i = 0; i < blocks.size() - 1; i++)
-//			if (areConsecutive(blocks.get(i + 1), blocks.get(i)))
-//				temp.lines().addAll(blocks.get(i + 1).lines());
-//			else {
-//				packedBlocks.add(temp);
-//				temp = blocks.get(i + 1);
-//			}
-//		packedBlocks.add(temp);
-//		return packedBlocks;
-//	}
-//
-//	private boolean areConsecutive(Block a, Block b) {
-//		return a.lines().get(0).number() == b.lines().get(b.size() - 1).number() + 1;
-//	}
+	private List<Block> packConsecutiveBlocks(List<Block> blocks) {
+		List<Block> packedBlocks = new ArrayList<>();
+		Block temp = blocks.get(0);
+		for (int i = 0; i < blocks.size() - 1; i++)
+			if (areConsecutive(blocks.get(i + 1), blocks.get(i)))
+				temp.lines().addAll(blocks.get(i + 1).lines());
+			else {
+				packedBlocks.add(temp);
+				temp = blocks.get(i + 1);
+			}
+		packedBlocks.add(temp);
+		return packedBlocks;
+	}
+
+	private boolean areConsecutive(Block a, Block b) {
+		return a.lines().get(0).number() == b.lines().get(b.size() - 1).number() + 1;
+	}
 
 	private int calculatePositionOf(Block block) {
 		return block != null ?

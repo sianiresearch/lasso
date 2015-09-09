@@ -16,7 +16,7 @@ public class AcceptedLinkParentToChildren {
 
 	@Test
 	public void should_Link_Parent2_In_Child2() throws Exception {
-		new Lasso(new File(parentHome, "02.txt"), new File(childHome, "02.txt"),false).execute();
+		new Lasso(new File(parentHome, "02.txt"), new File(childHome, "02.txt"), false).execute();
 		assertEquals(readFile(new File(expectedHome, "02.txt")), readFile(new File(childHome, "__02.txt")));
 	}
 
@@ -91,9 +91,15 @@ public class AcceptedLinkParentToChildren {
 	}
 
 	@Test
+	public void should_Link_Utils() throws Exception {
+		assertLink("Utils.txt");
+	}
+
+	@Test
 	public void should_Link_Sincronia() throws Exception {
 		assertLink("Sincronia.mml");
 	}
+
 
 	@Test
 	public void should_Link_Workmap() throws Exception {

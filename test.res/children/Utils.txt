@@ -1,0 +1,17 @@
+package org.generico.utils;
+
+public class Utils {
+
+	public static boolean run() {
+
+		if (1 == 2) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean c() {
+		return false;
+	}
+}
