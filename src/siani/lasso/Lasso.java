@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Lasso {
 
@@ -31,7 +30,9 @@ public class Lasso {
 		for (blockSize = parent.linesSize(); blockSize >= 1; blockSize--) {
 			List<Block> matches = matchBlocksInChild(parent.split(blockSize));
 			while (!matches.isEmpty()) {
-				matches.stream().filter(child::remove).forEach(parent::remove);
+				for (Block match : matches)
+					if (child.remove(match))
+						parent.remove(match);
 				matches = matchBlocksInChild(parent.split(blockSize));
 			}
 		}
@@ -44,7 +45,9 @@ public class Lasso {
 	}
 
 	private List<Block> isInChild(List<Block> blocks) {
-		return blocks.stream().filter(child::contains).collect(Collectors.toList());
+		List<Block> list = new ArrayList<>();
+		for (Block block : blocks) if (child.contains(block)) list.add(block);
+		return list;
 	}
 
 	private List<List<LassoFile.Line>> packConsecutiveChanges(List<LassoFile.Line> lines) {
@@ -78,7 +81,9 @@ public class Lasso {
 	}
 
 	private List<String> addComment(List<LassoFile.Line> changedLines) {
-		return changedLines.stream().map(changedLine -> LassoFile.COMMENT_PREFIX + changedLine.content()).collect(Collectors.toList());
+		List<String> commentedLines = new ArrayList<>();
+		for (LassoFile.Line line : changedLines) commentedLines.add(LassoFile.COMMENT_PREFIX + line.content());
+		return commentedLines;
 	}
 
 	private boolean isEmptyContent(List<LassoFile.Line> lines) {

@@ -33,8 +33,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="lasso" target="1.8" />
-      <module name="synchronizer" target="1.8" />
+      <module name="lasso" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
