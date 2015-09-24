@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 class LassoFile {
-	private static final String COMMENT_PREFIX = "//";
+	public static final String COMMENT_PREFIX = "//";
 	public static String NEW_LINE = "\n";
 	private File file;
 	private List<String> lines = new ArrayList<>();
@@ -63,8 +63,7 @@ class LassoFile {
 		for (Line line : lines)
 			try {
 				clonedList.add((Line) line.clone());
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
+			} catch (CloneNotSupportedException ignored) {
 			}
 		return clonedList;
 	}
@@ -83,8 +82,7 @@ class LassoFile {
 	private List<String> readLinesOfFile(File file) {
 		try {
 			return Files.readAllLines(file.toPath(), Charset.forName("UTF-8"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ignored) {
 		}
 		return Collections.emptyList();
 	}

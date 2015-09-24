@@ -16,19 +16,17 @@ public class Lasso {
 	private final boolean override;
 
 	public Lasso(File parent, File child) {
-		this.parent = new LassoFile(parent);
-		this.child = new LassoFile(child);
-		this.override = true;
+		this(parent, child, true);
 	}
 
 	public Lasso(File parent, File child, boolean override) {
 		this.parent = new LassoFile(parent);
 		this.child = new LassoFile(child);
 		this.override = override;
-
 	}
 
 	public void execute() {
+		if (!parent.file().exists() || !child.file().exists()) return;
 		int blockSize;
 		for (blockSize = parent.linesSize(); blockSize >= 1; blockSize--) {
 			List<Block> matches = matchBlocksInChild(parent.split(blockSize));
@@ -73,14 +71,14 @@ public class Lasso {
 			final List<LassoFile.Line> changedLines = changes.get(i);
 			if (isEmptyContent(changedLines)) continue;
 			int position = calculatePositionOf(blockOfPreviousLine(changedLines.get(0)));
-			newLines.add(position++, "//MERGE");
+			newLines.add(position++, LassoFile.COMMENT_PREFIX + "MERGE");
 			newLines.addAll(position, addComment(changedLines));
 		}
 		return newLines;
 	}
 
 	private List<String> addComment(List<LassoFile.Line> changedLines) {
-		return changedLines.stream().map(changedLine -> "//" + changedLine.content()).collect(Collectors.toList());
+		return changedLines.stream().map(changedLine -> LassoFile.COMMENT_PREFIX + changedLine.content()).collect(Collectors.toList());
 	}
 
 	private boolean isEmptyContent(List<LassoFile.Line> lines) {
