@@ -8,20 +8,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static siani.lasso.LassoComment.JAVA;
+
 public class Lasso {
 
 	private final LassoFile parent;
 	private final LassoFile child;
 	private final boolean override;
+	private final LassoComment comment;
 
 	public Lasso(File parent, File child) {
 		this(parent, child, true);
 	}
 
 	public Lasso(File parent, File child, boolean override) {
-		this.parent = new LassoFile(parent);
-		this.child = new LassoFile(child);
+		this(parent, child, override, JAVA);
+	}
+
+	public Lasso(File parent, File child, boolean override, LassoComment comment) {
+		this.parent = new LassoFile(parent, comment);
+		this.child = new LassoFile(child, comment);
 		this.override = override;
+		this.comment = comment;
 	}
 
 	public void execute() {
@@ -74,7 +82,7 @@ public class Lasso {
 			final List<LassoFile.Line> changedLines = changes.get(i);
 			if (isEmptyContent(changedLines)) continue;
 			int position = calculatePositionOf(blockOfPreviousLine(changedLines.get(0)));
-			newLines.add(position++, LassoFile.COMMENT_PREFIX + "MERGE");
+			newLines.add(position++, comment.begin() + "MERGE" + comment.end());
 			newLines.addAll(position, addComment(changedLines));
 		}
 		return newLines;
@@ -82,7 +90,8 @@ public class Lasso {
 
 	private List<String> addComment(List<LassoFile.Line> changedLines) {
 		List<String> commentedLines = new ArrayList<>();
-		for (LassoFile.Line line : changedLines) commentedLines.add(LassoFile.COMMENT_PREFIX + line.content());
+		for (LassoFile.Line line : changedLines)
+			commentedLines.add(comment.begin() + line.content() + comment.end());
 		return commentedLines;
 	}
 

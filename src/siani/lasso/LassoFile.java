@@ -8,15 +8,16 @@ import java.nio.file.Files;
 import java.util.*;
 
 class LassoFile {
-	public static final String COMMENT_PREFIX = "//";
 	public static String NEW_LINE = "\n";
 	private File file;
+	private final LassoComment lassoComment;
 	private List<String> lines = new ArrayList<>();
 	private List<Line> remainingLines = new ArrayList<>();
 	private Map<Block, Block> removedBlocks = new LinkedHashMap<>();
 
-	public LassoFile(File file) {
+	public LassoFile(File file, LassoComment lassoComment) {
 		this.file = file;
+		this.lassoComment = lassoComment;
 		lines = readLinesOfFile(file);
 		remainingLines = buildRemainingLines(lines);
 	}
@@ -29,7 +30,11 @@ class LassoFile {
 	}
 
 	private String uncomment(String line) {
-		return line.trim().startsWith(COMMENT_PREFIX) ? line.replaceFirst(COMMENT_PREFIX, "") : line;
+		if (line.trim().startsWith(lassoComment.begin()))
+			line = line.replaceFirst(lassoComment.begin(), "");
+		if (line.trim().endsWith(lassoComment.end()))
+			line = line.substring(0, line.length() - lassoComment.end().length());
+		return line;
 	}
 
 	public File file() {
