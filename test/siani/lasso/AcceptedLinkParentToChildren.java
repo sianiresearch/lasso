@@ -106,6 +106,21 @@ public class AcceptedLinkParentToChildren {
 		assertLink("Workmap.mml");
 	}
 
+	@Test
+	public void should_Link_CatalogoObjetosActuacion() throws Exception {
+		assertLink("CatalogoObjetosActuacion.mml");
+	}
+
+	@Test
+	public void should_Link_EscritorioAdministradorSistema() throws Exception {
+		assertLink("EscritorioAdministradorSistema.mml");
+	}
+
+
+	@Test
+	public void should_Link_Expedientes() throws Exception {
+		assertLink("Expedientes.mml");
+	}
 
 	private void assertLink(String FILE) {
 		new Lasso(new File(parentHome, FILE), new File(childHome, FILE), false).execute();

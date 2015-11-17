@@ -1,0 +1,116 @@
+package coordinacion {
+
+	["mmpa7mg"]
+	definition CatalogoObjetosActuacion is catalog {
+		label = "Objeto de actuación";
+
+		is-singleton;
+		index = ref Index;
+
+		["mw_c9ng"]
+		view Normal {
+			is-default;
+
+			is-visible-when-embedded;
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.Nombre;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Nombre;
+				}
+			}
+		}
+
+		["mhjgflw"]
+		definition Index is index {
+			label = "Objeto de actuación";
+			reference {
+
+				["mqohvyw"]
+				attribute Codigo {
+					type = STRING;
+					label = "Código";
+				}
+
+				["mco2m9q"]
+				attribute Nombre {
+					type = STRING;
+					label = "Nombre";
+				}
+
+				["mcttopw"]
+				attribute Lugar {
+//					label = "Lugar";
+					label = "Distrito";
+					type = STRING;
+				}
+
+				["mzqr3la"]
+				attribute LabelPadre {
+//					label = "Objeto de actuación";
+					label = "Calle";
+					type = STRING;
+				}
+
+				["mrk28ww"]
+				attribute Zona {
+//					label = "Zona";
+					label = "Barrio";
+					type = STRING;
+				}
+
+				["mljft9g"]
+				attribute IdPadre {
+					type = STRING;
+					label = "Id padre";
+				}
+
+				["my1muea"]
+				attribute NumeroGobiernoMinimo {
+					label = "Nº min";
+					type = STRING;
+				}
+
+				["mu5h7fw"]
+				attribute NumeroGobiernoMaximo {
+					label = "Nº max";
+					type = STRING;
+				}
+
+				["mgn2ygw"]
+				attribute TipoVia {
+					label = "Tipo de vía";
+					type = STRING;
+				}
+			}
+
+			["mqsxmuw"]
+			view Vista {
+				show {
+					line = ref Codigo;
+					title = ref Nombre;
+				}
+			}
+
+			["mslrz_w"]
+			view VistaLink {
+				show {
+//					line = ref LabelPadre;
+//					line = ref Codigo;
+					line = ref TipoVia;
+					line = ref Nombre;
+					line = ref Lugar;
+					line = ref Zona;
+					line = ref NumeroGobiernoMinimo;
+					line = ref NumeroGobiernoMaximo;
+				}
+			}
+
+		}
+
+	}
+}
