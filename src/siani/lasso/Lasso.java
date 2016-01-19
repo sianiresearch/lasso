@@ -26,8 +26,12 @@ public class Lasso {
 	}
 
 	public Lasso(File parent, File child, boolean override, LassoComment comment) {
-		this.parent = new LassoFile(parent, comment);
-		this.child = new LassoFile(child, comment);
+		this(parent, child, override, comment, false);
+	}
+
+	public Lasso(File parent, File child, boolean override, LassoComment comment, boolean skipIndent) {
+		this.parent = new LassoFile(parent, comment, skipIndent);
+		this.child = new LassoFile(child, comment, skipIndent);
 		this.override = override;
 		this.comment = comment;
 	}

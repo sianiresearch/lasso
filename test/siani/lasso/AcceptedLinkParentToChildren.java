@@ -36,6 +36,11 @@ public class AcceptedLinkParentToChildren {
 	}
 
 	@Test
+	public void should_Link_SlipIndents() throws Exception {
+		assertLinkWithOutIndents("skipIndents.txt");
+	}
+
+	@Test
 	public void should_Link_DataStoreBuilderComponente() throws Exception {
 		assertLink("DataStoreBuilderComponente.mml");
 	}
@@ -124,6 +129,11 @@ public class AcceptedLinkParentToChildren {
 
 	private void assertLink(String FILE) {
 		new Lasso(new File(parentHome, FILE), new File(childHome, FILE), false).execute();
+		assertEquals("File " + FILE, readFile(new File(expectedHome, FILE)), readFile(new File(childHome, "__" + FILE)));
+	}
+
+	private void assertLinkWithOutIndents(String FILE) {
+		new Lasso(new File(parentHome, FILE), new File(childHome, FILE), false, LassoComment.XML, true).execute();
 		assertEquals("File " + FILE, readFile(new File(expectedHome, FILE)), readFile(new File(childHome, "__" + FILE)));
 	}
 

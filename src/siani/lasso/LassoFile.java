@@ -15,17 +15,17 @@ class LassoFile {
 	private List<Line> remainingLines = new ArrayList<>();
 	private Map<Block, Block> removedBlocks = new LinkedHashMap<>();
 
-	public LassoFile(File file, LassoComment lassoComment) {
+	public LassoFile(File file, LassoComment lassoComment, boolean skipIndent) {
 		this.file = file;
 		this.lassoComment = lassoComment;
 		lines = readLinesOfFile(file);
-		remainingLines = buildRemainingLines(lines);
+		remainingLines = buildRemainingLines(lines, skipIndent);
 	}
 
-	private List<Line> buildRemainingLines(List<String> lines) {
+	private List<Line> buildRemainingLines(List<String> lines, boolean skipIndent) {
 		List<Line> rLines = new ArrayList<>();
 		for (int i = 0; i < lines.size(); i++)
-			rLines.add(new Line(i, uncomment(lines.get(i))));
+			rLines.add(new Line(i, uncomment(lines.get(i)), skipIndent));
 		return rLines;
 	}
 
@@ -139,7 +139,7 @@ class LassoFile {
 
 	private boolean checkCompleteBlock(Block block, int firstLine) {
 		for (int i = firstLine; i < firstLine + block.size(); i++)
-			if (!remainingLines.get(i).content.equals(block.lines().get(i - firstLine).content)) return false;
+			if (!remainingLines.get(i).equals(block.lines().get(i - firstLine))) return false;
 		return true;
 	}
 
@@ -153,10 +153,12 @@ class LassoFile {
 
 		private int number;
 		private String content;
+		private final boolean skipIndent;
 
-		public Line(int number, String content) {
+		public Line(int number, String content, boolean skipIndent) {
 			this.number = number;
 			this.content = content;
+			this.skipIndent = skipIndent;
 		}
 
 		public int number() {
@@ -174,10 +176,13 @@ class LassoFile {
 
 		@Override
 		public boolean equals(Object o) {
-
 			return this == o ||
-				o instanceof Line && (content.equals(((Line) o).content));
+				o instanceof Line && isEquals((Line) o);
 
+		}
+
+		private boolean isEquals(Line o) {
+			return skipIndent ? content.trim().equals(o.content.trim()) : content.equals(o.content);
 		}
 
 		@Override
@@ -188,7 +193,7 @@ class LassoFile {
 		@Override
 		public Object clone() throws CloneNotSupportedException {
 			super.clone();
-			return new Line(number, content);
+			return new Line(number, content, skipIndent);
 		}
 	}
 }
