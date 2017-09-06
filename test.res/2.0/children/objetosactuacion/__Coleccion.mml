@@ -1,0 +1,179 @@
+package coordinacion.objetosactuacion {
+
+	["m6mp_zq"]
+	definition Coleccion is collection {
+//MERGE
+//		label = "Objetos de actuación";
+//		description = "Conjunto de los objetos de actuación";
+		label = "Lugares de actuación";
+		description = "Conjunto de los lugares de actuación";
+
+		is-singleton;
+		add {
+			node = ref ObjetoActuacion;
+		}
+		index = ref Index;
+
+		["mxcmeaa"]
+		view {
+//MERGE
+//			label = "Objetos de actuación";
+			label = "Lugares de actuación";
+			show {
+				index {
+					sort-by = ref Index.Codigo;
+					sort-mode = ASC;
+					with-view = ref Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+					attribute = ref Index.Lugar;
+					attribute = ref Index.Zona;
+					attribute = ref Index.Direccion;
+				}
+				dimension {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+					attribute = ref Index.Lugar;
+					attribute = ref Index.Zona;
+					attribute = ref Index.Direccion;
+				}
+			}
+		}
+
+		["mt3xzmq"]
+		view VistaNormal {
+			is-default;
+			is-visible-when-embedded;
+			show {
+				index {
+					sort-by = ref Index.Codigo;
+					sort-mode = ASC;
+					with-view = ref Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+				}
+				dimension {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+				}
+			}
+		}
+
+		["m1e8z0w"]
+		view VistaMapa {
+			label = "Mapa";
+			show {
+				locations {
+					with-view = ref Index.Vista;
+				}
+			}
+		}
+
+		["mz6y7yq"]
+		definition Index is index {
+//MERGE
+//			label = "Objeto de actuación";
+			label = "Lugar de actuación";
+			reference {
+
+				["m0doe2g"]
+				attribute Imagen {
+					label = "Foto";
+					type = PICTURE;
+				}
+
+				["mlhufqq"]
+				attribute Codigo {
+					type = STRING;
+					label = "Código";
+				}
+
+				["mrifuia"]
+				attribute Nombre {
+					type = STRING;
+					label = "Nombre";
+				}
+
+				["m_jiqag"]
+				attribute Lugar {
+					type = STRING;
+//MERGE
+//					label = "Lugar";
+					label = "Distrito";
+				}
+
+				["mbtbdag"]
+				attribute Zona {
+//MERGE
+//					label = "Zona";
+					label = "Barrio";
+					type = STRING;
+				}
+
+				["mv6jvbq"]
+				attribute Direccion {
+					label = "Dirección";
+					type = STRING;
+				}
+
+				["meskrma"]
+				attribute Telefono {
+					label = "Teléfono";
+					type = STRING;
+				}
+
+				["msp8ceg"]
+				attribute Inactivo {
+					label = "Inactivo";
+					type = BOOLEAN;
+				}
+				
+				["myp1pig"]
+				attribute InactivoLabel {
+					label = "Inactivo";
+					type = STRING;
+				}
+				
+                ["m_pm_ha"]
+                attribute NumeroGobiernoMinimo {
+                	label = "Nº de gobierno mínimo";
+                	type = STRING;
+                }
+                
+                ["mg3b6mg"]
+				attribute NumeroGobiernoMaximo{
+                	label = "Nº gobierno máximo";
+                	type = STRING;
+                }  
+			}
+
+			["mivoyvw"]
+			view Vista {
+				is-default;
+				show {
+					picture = ref Imagen;
+					title = ref Nombre;
+					line = ref Codigo;
+					line-below = ref Lugar;
+					line-below = ref Zona;
+					line-below = ref Direccion;
+					line-below = ref Telefono;
+					highlight = ref InactivoLabel;
+                    line = ref NumeroGobiernoMinimo;
+                    line = ref NumeroGobiernoMaximo;
+				}
+			}
+
+		}
+
+	}
+}
+  

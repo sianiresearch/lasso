@@ -1,0 +1,139 @@
+package coordinacion.modulos.controlcalidad {
+
+	["mk9fcoq"]
+	definition Ficha is form {
+		label = "Certificación";		
+		is-readonly;
+
+		["mvcke6g"]
+		field-date FechaInicial {
+			label = "Fecha inicial";
+			precision = DAYS;
+		}
+
+		["mezlyxq"]
+		field-date FechaFinal {
+			label = "Fecha final";
+			precision = DAYS;
+		}
+
+		["m1xj6_a"]
+		field-node Certificacion {
+			label = "Certificación";
+			add {
+				node = ref coordinacion.procesos.coca.Certificacion;
+			}
+		}
+
+		["mftcstw"]
+		field-date FechaCreacion {
+			label = "Fecha de creación";
+			precision = DAYS;
+		}
+
+		["me_v49q"]
+		field-date FechaCertificacion {
+			label = "Fecha de certificación";
+			precision = DAYS;
+		}
+
+		["mhteytw"]
+		field-number CuantiaMaximaTotal {
+			label = "Cuantía máxima a percibir";
+			format = "####.## €";
+		}
+
+		["mai7m8w"]
+		field-composite Indicadores {
+			label = "Ponderación de los indicadores";
+			is-multiple;
+			
+			["mi7h1tg"]
+			field-select Nombre {
+				label = "Indicador";
+				source = ref coordinacion.TesauroTiposIncidencia;
+				is-readonly;
+			}
+
+			["mz1wyna"]
+			field-number Indicador {
+				label = "Ponderación del indicador (%)";
+				format = "### %";
+			}
+		}
+
+		//		["masdtjq"]
+		//		field-number Indicador1 {
+		//			label = "Ponderación del indicador 1 (%)";
+		//			format = "### %";
+		//		}
+		//
+		//		["m0q4_vg"]
+		//		field-number Indicador2 {
+		//			label = "Ponderación del indicador 2 (%)";
+		//			format = "### %";
+		//		}
+		//
+		//		["m8covfw"]
+		//		field-number Indicador3 {
+		//			label = "Ponderación del indicador 3 (%)";
+		//			format = "### %";
+		//		}
+		//
+		//		["miwwxbw"]
+		//		field-number Indicador4 {
+		//			label = "Ponderación del indicador 4 (%)";
+		//			format = "### %";
+		//		}
+		//
+		//		["mwl_uga"]
+		//		field-number Indicador5 {
+		//			label = "Ponderación del indicador 5 (%)";
+		//			format = "### %";
+		//		}
+		["mwbu4bw"]
+		field-text Tecnico {
+			label = "Nombre del técnico";
+		}
+
+		["m1kmv5q"]
+		field-node Facturacion {
+			label = "Facturación";
+			add {
+				node = ref coordinacion.procesos.coca.Facturacion;
+			}
+		}
+		properties {
+			calculate() {
+				var nodo = this.^node;
+				if(nodo.fechaCertificacion != null) {
+					nodo.setLabel("Certificación: " + nodo.fechaCertificacion);
+				}
+				else {
+					nodo.setLabel("Certificación pendiente...");
+				}
+			}
+		}
+		mapping {
+			index = ref Coleccion.Index;
+		}
+
+		["mtcmm4a"]
+		view {
+			label = "Certificación";
+			show {
+				attachments {
+					field:node {
+						field = ref Certificacion;
+						exporter = ref coordinacion.procesos.coca.Certificacion.Exportador;
+					}
+				}
+			}
+		}
+
+		constructor() {
+			this.setFechaCreacion(new Date());
+		}
+
+	}
+}

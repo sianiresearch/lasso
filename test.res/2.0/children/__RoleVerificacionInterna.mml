@@ -1,0 +1,10 @@
+package coordinacion {
+
+	["mhkceaw"]
+	definition RoleVerificacionInterna is role {
+		label = "Verificación interna";
+		enable-services {
+			ontology = "ServicioVerificacionInterna";
+		}
+	}
+}

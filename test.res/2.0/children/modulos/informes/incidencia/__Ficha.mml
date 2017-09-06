@@ -1,0 +1,171 @@
+package coordinacion.modulos.informes.incidencia {
+
+	["m7rcfoq"]
+	definition Ficha is form {
+		label = "Ficha";
+
+		["mhop0ug"]
+		field-select TipoInforme {
+			label = "Tipo de informe";
+			terms {
+				term {
+					label = "Informe de incidencias ejecutadas";
+					key = "i001";
+				}
+				term {
+					label = "Informe de incidencias enviadas";
+					key = "i002";
+				}
+			}
+		}
+
+		["mmfueha"]
+		field-date FechaInforme {
+			label = "Fecha del informe";
+			precision = DAYS;
+		}
+
+		["md8avpw"]
+		field-date FechaInicio {
+			label = "Fecha de inicio";
+			precision = DAYS;
+		}
+
+		["m8pyjfa"]
+		field-date FechaFin {
+			label = "Ficha de fin";
+			precision = DAYS;
+		}
+
+		["mm4wbyw"]
+		field-select Estado {
+			label = "Estado";
+			terms {
+				term {
+					label = "Cerrada";
+					key = "e001";
+				}
+				term {
+					label = "No cerrada";
+					key = "e002";
+				}
+			}
+		}
+
+		["mnprqta"]
+		field-select ResultadoEjecucion {
+			label = "Resultado de la ejecucion";
+			terms {
+				term {
+					label = "Corregida";
+					key = "c001";
+				}
+				term {
+					label = "No corregida";
+					key = "c002";
+				}
+			}
+		}
+
+		["m0cry4a"]
+		field-link Objeto {
+			label = "Objeto";
+			allow-search;
+			allow-history;
+			source {
+				index = ref coordinacion.CatalogoObjetosActuacion.Index;
+				view = ref coordinacion.CatalogoObjetosActuacion.Index.VistaLink;
+			}
+		}
+
+		["mkir5nq"]
+		field-select Lugar {
+			label = "Lugar";
+			source = ref coordinacion.TesauroLugar;
+		}
+
+		["msazwow"]
+		field-select Zona {
+			label = "Zona";
+			source = ref coordinacion.TesauroZona;
+		}
+
+		["mdrskwq"]
+		field-select OrdenacionEjecutadas {
+			label = "Ordenación de incidencias";
+			terms {
+				term {
+					label = "Lugar";
+					key = "o001";
+				}
+				term {
+					label = "Zona";
+					key = "o002";
+				}
+				term {
+					label = "Objeto";
+					key = "o003";
+				}
+				term {
+					label = "Fecha de ejecución";
+					key = "o004";
+				}
+			}
+		}
+		
+		["m_dmh1g"]
+		field-select OrdenacionEnviadas {
+			label = "Ordenación de incidencias";
+			terms {
+				term {
+					label = "Lugar";
+					key = "o001";
+				}
+				term {
+					label = "Zona";
+					key = "o002";
+				}
+				term {
+					label = "Objeto";
+					key = "o003";
+				}
+				term {
+					label = "Fecha de envío";
+					key = "o004";
+				}
+			}
+		}
+
+		["mdcst_g"]
+		field-node Documento {
+			label = "Documento de incidencias";
+			add {
+				node = ref coordinacion.procesos.infi.InformeIncidencia;
+				node = ref coordinacion.procesos.infi.InformeIncidenciasEnviadas;
+			}
+		}
+
+		["mveltia"]
+		field-select Unidad {
+			label = "Unidad";
+			terms {
+				term {
+					label = "Ejecución";
+					key = "u001";
+				}
+			}
+		}
+
+		["mcqrehw"]
+		view VistaDocumento {
+			show {
+				field = ref Lugar;
+				field = ref Zona;
+				field = ref Estado;
+				field = ref ResultadoEjecucion;
+				field = ref Documento;
+			}
+		}
+
+	}
+}

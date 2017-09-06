@@ -1,0 +1,82 @@
+package coordinacion.proveedores {
+
+	["mqmtdww"]
+	definition Coleccion is collection {
+		label = "Proveedores";
+		is-singleton;
+		add {
+			node = ref Proveedor;
+		}
+		index = ref Index;
+
+		["mr9yn7a"]
+		view {
+			show {
+				index {
+					sort-by = ref Index.Empresa;
+					sort-mode = ASC;
+					with-view = ref Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Empresa;
+					attribute = ref Index.Direccion;
+					attribute = ref Index.Telefono;
+					attribute = ref Index.CorreoElectronico;
+				}
+				dimension {
+					attribute = ref Index.Empresa;
+					attribute = ref Index.Direccion;
+					attribute = ref Index.Telefono;
+					attribute = ref Index.CorreoElectronico;
+				}
+			}
+		}
+
+		["mfkdmva"]
+		definition Index is index {
+			label = "Proveedor";
+			reference {
+
+				["macdiwa"]
+				attribute Empresa {
+					type = STRING;
+					label = "Empresa";
+				}
+
+				["m0nfodg"]
+				attribute Direccion {
+					type = STRING;
+					label = "Dirección";
+				}
+
+				["mshf7ua"]
+				attribute Telefono {
+					type = STRING;
+					label = "Teléfono";
+				}
+
+				["mccfleq"]
+				attribute CorreoElectronico {
+					type = STRING;
+					label = "Correo electrónico";
+				}
+			}
+
+			["mpr2tua"]
+			view Vista {
+				is-default;
+				show {
+					title = ref Empresa;
+					line = ref Direccion;
+					line = ref Telefono;
+					line = ref CorreoElectronico;
+				}
+			}
+
+		}
+
+	}
+}
+  

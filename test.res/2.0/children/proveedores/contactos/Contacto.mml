@@ -1,0 +1,50 @@
+package coordinacion.proveedores.contactos {
+
+	["m3hyyza"]
+	definition Contacto is form {
+		label = "Contacto";
+
+		mapping {
+			index = ref Coleccion.Index;
+		}
+
+		["mvlvhkg"]
+		field-text Nombre {
+			label = "Nombre contacto";
+		}
+
+		["mcsot4w"]
+		field-text Telefono {
+			label = "Teléfono del contacto";
+		}
+
+		["mxbfexa"]
+		field-text CorreoElectronico {
+			label = "Correo electrónico";
+		}
+		properties {
+			calculate() {
+				var nodo = this.^node; 
+				var nombre = nodo.nombre;
+				if (nombre != null || !nombre.empty){
+					nodo.setLabel(nombre);					
+				}else{
+					this.getProperties().setLabel("nombre contacto");					
+				}
+			}
+		}
+
+		["m6v_ybw"]
+		view TabNormal {
+			is-default;
+			label = "Información";
+			show {
+				field = ref Nombre;
+				field = ref Telefono;
+				field = ref CorreoElectronico;
+			}
+		}
+
+	}
+}
+  

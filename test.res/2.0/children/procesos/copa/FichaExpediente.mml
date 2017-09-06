@@ -1,0 +1,168 @@
+package coordinacion.procesos.copa {
+
+	["mzGYsZQ"]
+	definition FichaExpediente is form {
+		label = "Expediente preventivo de actuación";
+		is-component;
+
+		["m7v8cea"]
+		field-node Pt {
+			label = "Parte de trabajo preventivo";
+			is-multiple;
+			add {
+				node = ref Ptap;
+			}
+		}
+
+		["m_Al28Q"]
+		field-composite SeccionControl {
+			label = "Información de control";
+
+			["mpc7cya"]
+			field-text Codigo {
+				label = "Código";
+			}
+
+			["mtZVaQg"]
+			field-select Estado {
+				label = "Estado";
+				terms {
+					term {
+						key = "e001";
+						label = "Sin revisar";
+					}
+					term {
+						key = "e002";
+						label = "Revisado";
+					}
+					term {
+						key = "e003";
+						label = "Revisión cancelada";
+					}
+				}
+				select {
+					is-embedded;
+				}
+			}
+		}
+
+		["m4ormdg"]
+		field-composite SeccionEncargo {
+			label = "Información del trabajo preventivo";
+
+			["m4wjbaa"]
+			field-text Unidad {
+				label = "Unidad de origen";
+			}
+
+			["mc4fiow"]
+			field-text Reponsable {
+				label = "Responsable";
+			}
+
+			["meUU8oA"]
+			field-date FechaRealizacion {
+				label = "Fecha de realizacion";
+				precision = DAYS;
+			}
+
+			["m7s54va"]
+			field-date FechaCierre {
+				label = "Fecha de cierre";
+			}
+		}
+
+		["my02ehg"]
+		field-composite SeccionRespuesta {
+			label = "Observaciones realizadas";
+			is-multiple;
+
+			["mf_uonw"]
+			field-date FechaObservaciones {
+				label = "Fecha de envío de observaciones";
+				precision = DAYS;
+			}
+
+			["m2pgbsg"]
+			field-memo Observaciones {
+				label = "Observaciones";
+			}
+
+			["mbpkp7g"]
+			field-boolean NoValidado {
+				label = "No validado";
+			}
+
+			["mo4rxtq"]
+			field-text ultima {
+				label = "Últimas observaciones";
+			}
+			view {
+				show {
+					field = ref FechaObservaciones;
+					field = ref Observaciones;
+					field = ref NoValidado;
+				}
+			}
+		}
+		mapping {
+			index = ref coordinacion.Expedientes.Index;
+			calculate() {
+				var nodo = this.getNode();
+				var referencia = this.^reference;
+				referencia.setTipoExpediente("Preventivo de actuación");
+				var seccionControl = nodo.seccionControlField as SeccionControl;
+				var seccionEncargo = nodo.seccionEncargoField as SeccionEncargo;
+				var Term estado = seccionControl.estado;
+				referencia.setCodigo(seccionControl.codigo);
+				referencia.setFechaRealizacion(seccionEncargo.fechaRealizacion);
+				if(estado != null) {
+					referencia.setEstado(estado)
+					if(estado.^label.equals("Revisado") || estado.^label.equals("Revisión cancelada")) {
+						referencia.filtroEstado = "resuelto";
+					}else{
+						referencia.filtroEstado = "ejecucion";
+					}
+				}					
+			}
+		}
+		properties {
+			calculate() {
+				var nodo = this.^node;
+				var seccionControl = nodo.seccionControlField as SeccionControl;
+				nodo.^label = seccionControl.codigo;
+			}
+		}
+
+		["mdhSw6w"]
+		view VistaInformacion {
+			
+			is-default;
+			show {
+				field = ref SeccionControl;
+				field = ref SeccionEncargo;
+				field = ref SeccionRespuesta;
+			}
+		}
+
+		["ms4xkla"]
+		view Vista {
+			is-default;
+			show {
+				field = ref SeccionControl;
+				field = ref SeccionEncargo;
+				field = ref SeccionRespuesta;
+			}
+		}
+
+		["m806EPA"]
+		view VistaPt {
+			
+			show {
+				field = ref Pt;
+			}
+		}
+
+	}
+}
+  

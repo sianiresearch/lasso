@@ -1,0 +1,52 @@
+package coordinacion.proveedores {
+
+	["mljvaxa"]
+	definition FichaProveedor is form {
+		label = "Proveedor";
+
+		is-component;
+
+		mapping {
+			index = ref Coleccion.Index;
+		}
+
+		["mq1jywa"]
+		field-text Empresa {
+			label = "Empresa";
+		}
+
+		["m19n31g"]
+		field-text Direccion {
+			label = "Dirección";
+		}
+
+		["moogtww"]
+		field-text Telefono {
+			label = "Teléfono";
+		}
+
+		["m58sima"]
+		field-text CorreoElectronico {
+			label = "Correo electrónico";
+		}
+		properties {
+			calculate() {
+				this.getProperties().setLabel("proveedor");
+			}
+		}
+
+		["mbfrnrg"]
+		view Vista {
+			
+			is-default;
+			show {
+				field = ref Empresa;
+				field = ref Direccion;
+				field = ref Telefono;
+				field = ref CorreoElectronico;
+			}
+		}
+
+	}
+}
+  

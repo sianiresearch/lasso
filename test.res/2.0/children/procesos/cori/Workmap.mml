@@ -1,0 +1,1793 @@
+import java.util.*
+import coordinacion.procesos.cori.documentos.*
+import coordinacion.procesos.cori.encargos.*
+import coordinacion.modulos.utilidades.*
+import coordinacion.modulos.asistentes.*
+import coordinacion.incidencias.*
+
+package coordinacion.procesos.cori {
+
+	["mjudelq"]
+	definition Workmap is activity {
+		label = "Coordinar incidencias";
+		target = ref Expediente;
+		role = ref coordinacion.RoleCoordinador;
+
+		shortcut shIncidencia;
+		shortcut shEncargoCI;
+		shortcut shEncargoCV;
+		shortcut shEncargoCA;
+		shortcut shParteIncidenciaCorregida;
+
+		
+  		["mr_hsmg"]
+        view {
+            label = "Incidencia";
+            show {
+                shortcut = "shIncidencia";  
+                shortcut-view = "VistaDescripcion";
+            }
+        }
+		
+
+		["mob_f5w"]
+		view {
+			label = "Expediente";
+			show {
+				target = ref Expediente.InformacionGeneral;
+			}
+		}
+		
+
+
+	onAbort() {
+			var estadoActual = currentPlace;
+			this.setFlag("estadoAnterior", currentPlace);
+			if (this.getFlag("abortoAceptado") != null) estadoActual = this.getFlag("abortoAceptado"); 
+			if (this.getFlag("abortarEjecucion") == null ){
+				if (estadoActual.equals("EsperandoPtac")){
+					doGoto(Place :: EnviarAbortarOtac, "Solicitar aborto a ejecución");
+					return;
+				}else{
+					if (estadoActual.equals("EsperandoPtic")){
+						doGoto(Place :: EnviarAbortarOtic, "Solicitar aborto a ejecución");
+						return;	
+					}else{
+						if (estadoActual.equals("EsperandoPtv")){
+							doGoto(Place :: EnviarAbortarOtv, "Solicitar aborto a ejecución");
+							return;						
+						}
+					}
+				}
+				ConsoleService.println("El estado actual era:------------->" + estadoActual);
+				doGoto(Place :: FinalizarAborto, "preparando aborto");
+			}else{
+				doGoto(Place :: DecisionAbortar, "gestionando aborto");
+			}
+			
+		}
+		//inicio aborto
+		["mtl3wmg"]
+		place EnviarAbortarOtac {
+			
+			["mkpmmgg"]
+			send-request {
+				label = "Envío de petición de aborto";
+				history = "petición enviada";
+				request = ref ServicioActuacion.PeticionAbortar;
+				//goto = ref EsperandoAbortar;
+				goto = ref ComprobarAbortarExpediente;
+				provider = ref ServicioActuacion;
+			}
+		}
+		
+		["m0eyjja"]
+		place EnviarAbortarOtic {
+			
+			["macvw9w"]
+			send-request {
+				label = "Envío de petición de aborto";
+				history = "petición enviada";
+				request = ref ServicioInspeccion.PeticionAbortar;
+				//goto = ref EsperandoAbortar;
+				goto = ref ComprobarAbortarExpediente;
+				provider = ref ServicioInspeccion;
+			}
+		}
+		
+		["mt6ub3q"]
+		place EnviarAbortarOtv {
+			
+			["mkpmmgg"]
+			send-request {
+				label = "Envío de petición de aborto";
+				history = "petición enviada";
+				request = ref ServicioVerificacion.PeticionAbortar;
+				//goto = ref EsperandoAbortar;
+				goto = ref ComprobarAbortarExpediente;
+				provider = ref ServicioVerificacion;
+			}
+		}
+		
+		["mcaadfw"]
+		place ComprobarAbortarExpediente {
+			onArrive() {
+				if (this.getFlag("decisionAbortar") != null){
+					if (this.getFlag("decisionAbortar").equals("true")){
+						doGoto(Place.AbortarExpediente,"");
+					} else{
+						var estadoAnterior = this.getFlag("estadoAnterior");
+						doGoto(estadoAnterior,"");
+					}
+				}else{
+					doGoto(Place.AbortarExpediente,"");
+				}
+			}
+			
+		}
+		["mwtjztq"]
+		place AbortarExpediente {
+			["mqfegdq"]
+			line {
+				label = "La tarea de ejecución ha sido abortada correctamente";
+				["msvczrq"]
+			stop StopCerrarAborto {
+				label = "Cerrar tarea";
+				goto = ref FinalizarAborto;
+				history = "Tarea abortada";
+			}
+			}
+			
+		}
+		
+		["mybrfwq"]
+		place FinalizarAborto {
+			onArrive() {
+				AnexoWorkmap :: abortarExpediente(this);
+			} 
+		}
+		
+		["mn56xeg"]
+		place DecisionAbortar {
+			["mzsfyng"]
+			line {
+				label = "Ejecución ha solicitado abortar esta tarea ¿Desea que la tarea sea abortada? ";
+				["mvrji3w"]
+			stop StopAbortarTarea {
+				label = "Si, abortar tarea";
+				goto = ref GestionarDecisionAborto;
+				onTake() {
+					this.setFlag("decisionAbortar","true");				
+					this.removeFlag("abortarEjecucion");
+					this.setFlag("abortoAceptado", this.getFlag("estadoAnterior"));
+					this.abort;
+					//realizar aborto normal
+				}
+				
+				history = "Se ha decidido abortar";
+			}
+			
+			["m_lrnxq"]
+			stop StopNoAbortarTarea {
+				label = "No, abortar tarea, continuar";
+				goto = ref GestionarDecisionAborto;
+				onTake() {
+					this.setFlag("decisionAbortar","false");
+					this.removeFlag("abortarEjecucion");
+				}				
+				history = "Se ha decidido No abortar";
+			}
+			}
+		}
+		
+		["milnzmq"]
+		place GestionarDecisionAborto {
+			onArrive() {
+				if (this.getFlag("decisionAbortar").equals("true")){
+					this.removeFlag("abortarEjecucion");
+					this.abort;
+				}else{
+					var estadoActual = this.getFlag("estadoAnterior");
+					if (estadoActual.equals("EsperandoPtac")){
+						doGoto(Place :: EnviarAbortarOtac, "Solicitar aborto a ejecución");
+						return;
+					}else{
+						if (estadoActual.equals("EsperandoPtic")){
+							doGoto(Place :: EnviarAbortarOtic, "Solicitar aborto a ejecución");
+							return;	
+						}else{
+							if (estadoActual.equals("EsperandoPtv")){
+								doGoto(Place :: EnviarAbortarOtv, "Solicitar aborto a ejecución");
+								return;						
+							}
+						}
+					}					
+				}				
+			}
+		}		
+		
+				
+		// fin aborto
+
+
+		onInitialize() {
+			AnexoWorkmap :: inicializar(this);
+		}
+
+		["mk5qmbq"]
+		place Iniciado {
+			is-initial;
+			onArrive() {
+				var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+				if(incidencia.getFlag("cerrada") != null) {
+					doGoto(Place :: CerrarExpediente, "Se cerrará el expediente");
+					return;
+				}
+				var String esCorregida = incidencia.getFlag("corregida");
+				if(esCorregida != null) {
+					esCorregida = esCorregida.replaceAll("[\n\r]", "");
+					if(esCorregida.equals("true")) {
+						doGoto(Place :: GestionarInspeccion, "Incidencia ya corregida, ¿que desea hacer?");
+						return;
+					}
+					else {
+						doGoto(Place :: GestionarNoCorregida, "Incidencia no corregida, ¿que desea hacer?");
+						return;
+					}
+				}
+				else {
+					if(this.getFlag("urgente") != null && this.getFlag("urgente").equals("true")) {
+						doGoto(Place :: ConfiguracionIniciarActuacion, "Iniciar resolución de la incidencia");
+						return;
+					}
+					else {
+						
+						if (Setup :: getVariable("SoloEjecucion") != null){
+							if(Setup :: getVariable("SoloEjecucion").equals("true")) {
+								doGoto(Place :: GestionadoSoloEjecucion, "Iniciar resolución de la incidencia");
+								return;
+							}
+							else {
+								doGoto(Place :: Gestionado, "Iniciar resolución de la incidencia");
+								return;
+							}							
+						}else{
+							doGoto(Place :: Gestionado, "Iniciar resolución de la incidencia");
+							return;
+						}
+					}
+				}
+			}
+		}
+
+		["mh4rosg"]
+		place Gestionado {
+
+			["m5jykyw"]
+			line {
+
+				["mutu3gq"]
+				stop StopVerificar {
+					history = "Se procede a verificar la incidencia";
+					goto = ref TipoVerificacion;
+					label = "Hay que verificar";
+				}
+
+				["mr_cihg"]
+				stop StopCorregir {
+					history = "Se procede a corregir la incidencia";
+					goto = ref ConfiguracionIniciarActuacion;
+					label = "Hay que corregir";
+				}
+
+				["mqnyj2g"]
+				stop StopCerrar {
+					history = "Se ha procedido a cerrar el expediente";
+					goto = ref IncidenciaCancelada;
+					label = "No procede. Cerrar expediente";
+				}
+				label = "Clasifique el trabajo correctivo";
+			}
+		}
+
+		["m7oiu_q"]
+		place GestionadoSoloEjecucion {
+
+			["mppos1q"]
+			line {
+
+				["m0iieka"]
+				stop StopCorregir {
+					history = "Se procede a corregir la incidencia";
+					goto = ref ConfiguracionIniciarActuacion;
+					label = "Hay que corregir";
+				}
+
+				["mpzzx4g"]
+				stop StopCerrar {
+					history = "Se ha procedido a cerrar el expediente";
+					goto = ref IncidenciaCancelada;
+					label = "No procede. Cerrar expediente";
+				}
+				label = "Clasifique el trabajo correctivo";
+			}
+		}
+
+		["m6rsbkq"]
+		place TipoVerificacion {
+			onArrive() {
+				var tipo = Setup :: getVariable("TieneVerificacionExterna");
+				var usaJobs = Setup :: getVariable("UsaJobs");
+				if(tipo != null) {
+					if(tipo.equals("true")) {
+						doGoto(Place :: ConfiguracionIniciarVerificacionExterna, "Encargo de verificación delegado a la unidad de ejecución") }
+					else {
+						if(usaJobs != null) {
+							if(usaJobs.equals("true")) {
+								doGoto(Place :: IniciarVerificacionJob, "Encargo de verificación realizado por la unidad de coordinación") }
+							else {
+								doGoto(Place :: ConfiguracionIniciarVerificacionSinJob, "Encargo de verificación realizado por la unidad de coordinación") }
+						}
+					}
+				}
+			}
+		}
+
+		["mzkpbfw"]
+		place ConfiguracionIniciarVerificacionSinJob {
+
+			["mhpic_g"]
+			edition {
+				goto = ref IniciarVerificacionSinJob;
+				history = "Encargo de verificación configurado";
+				label = "Configurar encargo de verificación";
+				use {
+					form = ref ConfigurarEncargoCorrectivo;
+					with-view = ref ConfigurarEncargoCorrectivo.Vista;
+				}
+
+				onSetup(ConfigurarEncargoCorrectivo f) {
+					SetupDelegation :: configurarEncargo(f, this, this.getShIncidencia as coordinacion.incidencias.Incidencia);
+				}
+
+				onSolve(ConfigurarEncargoCorrectivo f) {
+					var Expediente expediente = this.getTarget();
+					var EncargoCV encargo; 
+					if (this.shEncargoCV == null){
+						encargo = EncargoCV :: createNew(expediente.coleccion);
+						this.setShEncargoCV(encargo);
+						this.save;
+					}else{
+						encargo = this.getShEncargoCV() as EncargoCV;
+					}
+					var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+					var fichaEncargo = encargo.ficha;
+					var codigo = 0;
+					if(this.getFlag("codigoEV") != null) {
+						codigo = Integer :: parseInt(this.getFlag("codigoEV")) + 1;
+					}
+					else {
+						codigo = 1;
+					}
+					this.setFlag("codigoEV", String :: valueOf(codigo));
+					fichaEncargo.setCodigo(fichaExpediente.getCodigo + " V-" + codigo);
+					fichaEncargo.setFechaInicio(f.fechaInicio);
+					fichaEncargo.setFechaFinLimite(f.fechaFinLimite);
+					fichaEncargo.setObservaciones(f.observaciones);
+					fichaEncargo.prioridad = fichaExpediente.prioridad;
+					Utilidad::asignarMultiple(f.adjuntos,fichaEncargo.getAdjuntosField());
+					fichaEncargo.save;
+					var orden = otv :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
+					AnexoWorkmap::cambiarEstadoIncidencia(this.shIncidencia as Incidencia,new Term(null, "Verificando"));
+					orden.consolidate();
+					fichaEncargo.setFechaEnvioOT(new Date());
+					fichaEncargo.setOt(orden.toLink);
+					fichaEncargo.save;
+					var links = new ArrayList <MonetLink>;
+					links.^add(orden.toMonetLink);
+					this.addLog("Orden de trabajo generada", "Orden de trabajo de verificación", links);
+				}
+			}
+		}
+		
+		["m8tz6vq"]
+		place IniciarVerificacionSinJob {
+			["mpfh3gq"]
+			 line {
+			 	label = "Rellenar resultados de la verificación";
+		 	["maoyweg"]
+			 stop StopName {
+			 	label = "Iniciar configuración de resultados";
+			 	goto = ref ResultadoVerificacionSinJob;
+			 	history = "Configuración de resultados iniciada";
+			 }
+		 } 
+			
+			
+		}
+		
+		["mdnahba"]
+		place ResultadoVerificacionSinJob {
+
+			["mksydga"]
+			edition {
+				history = "Resultados de la verificación completados";
+				use {
+					form = ref FormResultado;
+					with-view = ref FormResultado.Vista;
+				}
+				onSolve(coordinacion.modulos.asistentes.FormResultado f) {
+					var encargo = this.getShEncargoCV as encargos.EncargoCV;
+					var ficha = encargo.ficha;
+					ficha.setFechaInicioReal(f.getFechaInicioReal());
+					ficha.setFechaFinReal(f.getFechaFinReal());
+					ficha.setObservacionesResultado(f.getObsResultado());
+					ficha.setImagenResultado(f.getImagenResultado());
+					ficha.setFechaRecepcionPT(new Date());
+					coordinacion::modulos::utilidades::Utilidad::asignarMultiple(f.getAdjuntosResultado(),ficha.getAdjuntosResultadoField());
+					ficha.save();
+					
+				}
+				label = "Resultados de la verificación";
+				goto = ref ResueltoVerificacionSinJob;
+			}
+		}
+		
+		["mrdpwug"]
+		place ResueltoVerificacionSinJob {
+			
+			["mjt2peq"]
+			line {
+				label = "Resultado de la verificación";
+				
+				["mp3zogg"]
+				stop Verificada {
+					label = "Verificación Positiva. Se tramita expediente";
+					goto = ref ConfiguracionIniciarActuacion;
+					history = "La verificación ha sido positiva";
+					onTake() {
+						var encargo = this.getShEncargoCV as encargos.EncargoCV;
+						generarPtvInterno(encargo, true);
+						
+					}
+				}
+				
+				["misucqq"]
+				stop NoVerificada {
+					label = "Verificación Negativa. No se tramita expediente";
+					goto = ref CerrarExpediente;
+					history = "La verificación ha sido negativa";
+					onTake() {
+						var encargo = this.getShEncargoCV as encargos.EncargoCV;
+						generarPtvInterno(encargo, false);
+					}
+				}
+			}
+		}
+
+		function generarPtvInterno(encargos.EncargoCV encargo, boolean resultado){
+			var ficha = encargo.getFicha;
+			ficha.resultado = resultado;
+			ficha.save;
+			var parteInterno = ptv :: Exportador :: doExportOf(ficha).toNewDocument;
+			parteInterno.consolidate();
+			ficha.setPt(parteInterno.toLink);
+			ficha.save;						
+			var links = new ArrayList <MonetLink>;
+			links.^add(parteInterno.toMonetLink);
+			this.addLog("Parde de trabajo generado", "Parte de trabajo de verificación", links);
+			var incidencia = this.shIncidencia as Incidencia;
+			AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term("e002", "Verificada"));
+			if (resultado){
+				HechosIncidencia :: hechoIncidenciaVerificada(incidencia);
+				coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido verificado. Se procede a tramitar el expediente", this);
+			}
+		}		
+		
+				
+
+		["m_o2vda"]
+		place IniciarVerificacionSinJobDelegada {
+
+			["m_l18la"]
+			delegation {
+				history = "Verificación iniciada (Sin Job)";
+				label = "Verificar sin Job e interna";
+				goto = ref EnviarOtvInterno;
+				provider = ref ServicioVerificacionInterno;
+
+				onSetup(DelegationSetup ds) {
+					ds.cancel;
+				}
+
+				onSetupComplete(String providerLabel, Date suggestedStartDate, Date suggestedEndDate, String observations, boolean urgent) {
+					var encargo = this.shEncargoCV as EncargoCV;
+					var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+					AnexoWorkmap::setupComplete(incidencia,providerLabel,encargo.ficha);
+				}
+			}
+		}
+
+		["mmar_rq"]
+		place TipoInspeccion {
+			onArrive() {
+				var tipo = Setup :: getVariable("TieneInspeccionExterna");
+				var usaJobs = Setup :: getVariable("UsaJobs");
+				if(tipo != null) {
+					if(tipo.equals("true")) {
+						doGoto(Place :: ConfiguracionIniciarInspeccionExterna, "Encargo de inspección delegado a la unidad de ejecución");
+					}
+					else {
+						if(usaJobs != null) {
+							if(usaJobs.equals("true")) {
+								doGoto(Place :: IniciarInspeccionJob, "Encargo de inspección realizado por la unidad de coordinación");
+							}
+							else {
+								doGoto(Place :: ConfiguracionIniciarInspeccionSinJob, "Encargo de inspección realizado por la unidad de coordinación");
+							}
+						}
+					}
+				}
+			}
+		}
+
+		["mv073_w"]
+		place ConfiguracionIniciarInspeccionSinJob {
+
+			["m9yylmg"]
+			edition {
+				goto = ref IniciarInspeccionSinJob;
+				history = "Encargo de inspección configurado";
+				label = "Configurar encargo de inspección";
+				use {
+					form = ref ConfigurarEncargoCorrectivo;
+					with-view = ref ConfigurarEncargoCorrectivo.Vista;
+				}
+
+				onSetup(ConfigurarEncargoCorrectivo f) {
+					SetupDelegation :: configurarEncargo(f, this, this.getShIncidencia as coordinacion.incidencias.Incidencia);
+				}
+
+				onSolve(ConfigurarEncargoCorrectivo f) {
+					AnexoWorkmap :: solveConfiguracionEncargoInspeccion(this, "codigoEI", f);
+				}
+			}
+		}
+		
+		["mnuhuyg"]
+		place IniciarInspeccionSinJob {
+			["mbomgpa"]
+			line {
+			 	label = "Rellenar resultados de la inspección";
+			 	["mqgxc3g"]
+				stop StopIniciarInspeccion {
+			 		label = "Iniciar configuración de resultados";
+			 		goto = ref ResultadoInspeccionSinJob;
+			 		history = "Configuración de resultados iniciada";
+			 	}
+		 	} 
+		}
+		
+		
+		["mv2spvw"]
+		place ResultadoInspeccionSinJob {
+			
+			["mf2sk8a"]
+			edition {
+				history = "Resultados de la inspección completados";
+				use {
+					form = ref FormResultado;
+					with-view = ref FormResultado.Vista;
+				}
+				onSolve(coordinacion.modulos.asistentes.FormResultado f) {
+					var encargo = this.getShEncargoCI as encargos.EncargoCI;
+					var ficha = encargo.ficha;
+					ficha.setFechaInicioReal(f.getFechaInicioReal());
+					ficha.setFechaFinReal(f.getFechaFinReal());
+					ficha.setObservacionesResultado(f.getObsResultado());
+					ficha.setImagenResultado(f.getImagenResultado());
+					ficha.setFechaRecepcionPT(new Date());
+					coordinacion::modulos::utilidades::Utilidad::asignarMultiple(f.getAdjuntosResultado(),ficha.getAdjuntosResultadoField());
+					ficha.save();
+
+					
+					
+				}
+				label = "Resultados de la inspección";
+				goto = ref ResueltoInspeccionSinJob;
+			}
+		}
+		
+		["mqdqvbg"]
+		place ResueltoInspeccionSinJob {
+			
+			["mhsfclg"]
+			line {
+				label = "Resultado de la incidencia inspeccionada";
+				["mp75klg"]
+				stop Inspeccionada {
+					label = "Se ha solucionado la incidencia";
+					goto = ref CerrarExpediente;
+					history = "Se ha seleccionado incidencia solucionada";
+					onTake() {
+						var encargo = this.getShEncargoCI as encargos.EncargoCI;
+						generarPticInterno(encargo, true);
+					}
+				}
+				
+				["mejseqg"]
+				stop NoInspeccionada {
+					label = "No se ha solucionado la incidencia.";
+					goto = ref VolverEjecutar;
+					history = "Se ha seleccionado incidencia No solucionada";
+					onTake() {
+						var encargo = this.getShEncargoCI as encargos.EncargoCI;
+						generarPticInterno(encargo, false);
+					}
+				}
+			}
+		}
+
+		
+		function generarPticInterno(encargos.EncargoCI encargo, boolean resultado){
+			var ficha = encargo.getFicha;
+			ficha.resultado = resultado;
+			ficha.save;
+			var parteInterno = ptic :: Exportador :: doExportOf(ficha).toNewDocument;
+			parteInterno.consolidate();
+			ficha.setPt(parteInterno.toLink);
+			ficha.save;					
+			var links = new ArrayList <MonetLink>;
+			links.^add(parteInterno.toMonetLink);
+			this.addLog("Parde de trabajo generado", "Parte de trabajo de inspección", links);
+			var incidencia = this.getShIncidencia as Incidencia;
+			AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term("e007", "Inspeccionada"));
+			if (resultado){
+				HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);								
+				coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido inspeccionado. La incidencia ha sido solucionada", this);
+			}	
+		}
+		
+				
+
+		["ma_imqq"]
+		place IniciarInspeccionSinJobDelegada {
+
+			["mhk6esa"]
+			delegation {
+				history = "Inspección iniciada (Sin Job)";
+				label = "Inspeccionar sin Job e interna";
+				goto = ref EsperandoPtic;
+				provider = ref ServicioInspeccionInterno;
+
+				onSetup(DelegationSetup ds) {
+					ds.cancel;
+				}
+
+				onSetupComplete(String providerLabel, Date suggestedStartDate, Date suggestedEndDate, String observations, boolean urgent) {
+					var encargo = this.shEncargoCI as EncargoCI;
+					var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+					AnexoWorkmap::setupComplete(incidencia,providerLabel,encargo.ficha);
+				}
+			}
+		}
+
+		["mekz_aq"]
+		place IniciarVerificacionJob {
+
+			["mbkcgiq"]
+			send-job {
+				history = "Se ha iniciado verificación";
+				role = ref coordinacion.RoleInspector;				
+				job = ref jobs.Verificar;
+				label = "Iniciando verificación";
+				goto = ref EsperandoPtvInterna;
+				onCreate(JobRequest msg) {
+					msg.setLabel("Verificar " + this.^label);
+					var encargo = this.shEncargoCV as encargos.EncargoCV;					
+					var fichaEncargo = encargo.ficha;
+					var orden = otv :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
+					AnexoWorkmap::cambiarEstadoIncidencia(this.shIncidencia as Incidencia,new Term(null, "Verificando"));
+					orden.consolidate();
+					fichaEncargo.setFechaEnvioOT(new Date());
+					fichaEncargo.setOt(orden.toLink);
+					fichaEncargo.save;					
+					var links = new ArrayList <MonetLink>;
+					links.^add(orden.toMonetLink);
+					this.addLog("Orden de trabajo generada", "Orden de trabajo de verificación", links);
+					msg.attachDocument("Orden de trabajo", orden);
+				}
+				onSetupJob(JobSetup js) {
+					SetupDelegation :: configurarJob(js, this.shIncidencia as Incidencia);
+				}				
+				
+				onSetupJobComplete(String providerLabel,Date suggestedStartDate,Date suggestedEndDate,String observations,boolean urgent) {
+					var Expediente expediente = this.getTarget();
+					var encargo = EncargoCV :: createNew(expediente.coleccion);
+					this.shEncargoCV = encargo;
+					this.save;
+					var codigo = 0;
+					if(this.getFlag("codigoEVJob") != null) {
+						codigo = Integer :: parseInt(this.getFlag("codigoEVJob")) + 1;
+					}
+					else {
+						codigo = 1;
+					}
+					this.setFlag("codigoEVJob", String :: valueOf(codigo));
+					
+					AnexoWorkmap :: rellenarFichaEncargoJobCV(encargo, expediente, " V-", codigo, suggestedStartDate, suggestedEndDate, observations);
+				}				
+									
+				onFinished(JobResponse msg) {
+					var encargo = this.shEncargoCV as EncargoCV;
+					var verificado = AnexoWorkmap::verificarInternaJob(encargo , msg);
+					var parteInterno = ptv :: Exportador :: doExportOf(encargo.ficha).toNewDocument;
+					parteInterno.consolidate();
+					var links = new ArrayList <MonetLink>;
+					links.^add(parteInterno.toMonetLink);
+					this.addLog("Parde de trabajo generado", "Parte de trabajo de verificación", links);					
+					
+					var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtvInterna_ExitPtvInterna;
+					if (!verificado){					
+						bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtvInterna_ExitPtvNoVerificadoInterna;					
+					}else{
+						var incidencia = this.shIncidencia as Incidencia;
+						AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term("e002", "Verificada"));
+						incidencia.setFechaVerificacion(encargo.ficha.fechaFinReal);
+						incidencia.save();
+						HechosIncidencia :: hechoIncidenciaVerificada(incidencia);
+						coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido verificado. Se procede a tramitar el expediente", this);
+					}
+					var Post post = Post.createRequest();
+					post.setTitle("Ha llegado un trabajo de verificación desde un dispositivo mobile " + this.getLabel());
+					post.setTitleLink(this.toMonetLink());
+					post.setBody(this.getLabel());
+					post.setBodyLink(this.toMonetLink());
+					NewsService.postAndNotifyToAll(post);					
+					
+					doUnlock(bloqueo);
+				}
+			}
+		}
+
+		["mybswra"]
+		place ConfiguracionIniciarVerificacionExterna {
+
+			["mdawc8w"]
+			edition {
+				goto = ref IniciarVerificacionExterna;
+				history = "Encargo de verificación configurado";
+				label = "Configurar encargo de verificación";
+				use {
+					form = ref ConfigurarEncargoCorrectivo;
+					with-view = ref ConfigurarEncargoCorrectivo.Vista;
+				}
+
+				onSetup(coordinacion.modulos.asistentes.ConfigurarEncargoCorrectivo f) { SetupDelegation :: configurarEncargo(f, this, this.shIncidencia as coordinacion.incidencias.Incidencia);
+				}
+
+				onSolve(coordinacion.modulos.asistentes.ConfigurarEncargoCorrectivo f) {
+					var Expediente expediente = this.getTarget();
+					var encargo = EncargoCV :: createNew(expediente.coleccion);
+					var fichaEncargo = encargo.ficha;
+					var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+					var codigo = 0;
+					if(this.getFlag("codigoEV") != null) {
+						codigo = Integer :: parseInt(this.getFlag("codigoEV")) + 1;
+					}
+					else {
+						codigo = 1;
+					}
+					this.setFlag("codigoEV", String :: valueOf(codigo));
+					fichaEncargo.setCodigo(fichaExpediente.getCodigo + " V-" + codigo);
+					fichaEncargo.setFechaInicio(f.fechaInicio);
+					fichaEncargo.setFechaFinLimite(f.fechaFinLimite);
+					fichaEncargo.setObservaciones(f.observaciones);
+					Utilidad::asignarMultiple(f.adjuntos, fichaEncargo.adjuntosField); 
+					fichaEncargo.prioridad = fichaExpediente.prioridad;
+					fichaEncargo.save();
+					this.setShEncargoCV(encargo);
+					this.save();
+				}
+			}
+		}
+
+		["myz2pta"]
+		place IniciarVerificacionExterna {
+
+			["mrvge3w"]
+			delegation {
+				history = "Se ha iniciado el encargo de verificación";
+				label = "Encargo de verificación iniciado";
+				goto = ref EnviarOtv;
+				provider = ref ServicioVerificacion;
+
+				onSetup(DelegationSetup ds) {
+					ds.cancel;
+				}
+
+				onSetupComplete(String providerLabel, Date suggestedStartDate, Date suggestedEndDate, String observations, boolean urgent) {
+					var encargo = this.shEncargoCV as EncargoCV;
+					var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+					AnexoWorkmap::setupComplete(incidencia,providerLabel,encargo.ficha);
+				}
+			}
+		}
+
+		["mnaybmw"]
+		place ConfiguracionIniciarActuacion {
+
+			["mcdlh6q"]
+			edition {
+				goto = ref IniciarActuacion;
+				history = "Encargo de actuación configurado";
+				label = "Configurar encargo de actuación";
+				use {
+					form = ref ConfigurarEncargoCorrectivo;
+					with-view = ref ConfigurarEncargoCorrectivo.Vista;
+				}
+
+				onSetup(ConfigurarEncargoCorrectivo f) {
+					SetupDelegation :: configurarEncargo(f, this, this.getShIncidencia as coordinacion.incidencias.Incidencia);
+				}
+
+				onSolve(ConfigurarEncargoCorrectivo f) {
+					var Expediente expediente = this.getTarget();
+					var encargo = EncargoCA :: createNew(expediente.coleccion);
+					var fichaEncargo = encargo.ficha;
+					var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+					var codigo = 0;
+					if(this.getFlag("codigoEA") != null) {
+						codigo = Integer :: parseInt(this.getFlag("codigoEA")) + 1;
+					}
+					else {
+						codigo = 1;
+					}
+					this.setFlag("codigoEA", String :: valueOf(codigo));
+					fichaEncargo.setCodigo(fichaExpediente.getCodigo + " A-" + codigo);
+					fichaEncargo.setFechaInicio(f.fechaInicio);
+					fichaEncargo.setFechaFinLimite(f.fechaFinLimite);
+					fichaEncargo.setObservaciones(f.observaciones);
+					fichaEncargo.prioridad = fichaExpediente.prioridad;
+					Utilidad::asignarMultiple(f.adjuntos,fichaEncargo.getAdjuntosField());
+					fichaEncargo.save;
+					this.setShEncargoCA(encargo);
+					this.save();
+				}
+			}
+		}
+
+		["mze3xea"]
+		place IniciarActuacion {
+
+			["mtikzeq"]
+			delegation {
+				history = "Se ha iniciado el encargo de actuación";
+				label = "Encargo de actuación iniciado";
+				goto = ref EnviarOtac;
+				provider = ref ServicioActuacion;
+
+				onSetup(DelegationSetup ds) {
+					ds.cancel;
+				}
+
+				onSetupComplete(String providerLabel, Date suggestedStartDate, Date suggestedEndDate, String observations, boolean urgent) {
+					var encargo = this.shEncargoCA as EncargoCA;
+					var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+					AnexoWorkmap::setupComplete(incidencia,providerLabel,encargo.ficha);
+				}
+			}
+		}
+
+		["m46doua"]
+		place ConfiguracionIniciarInspeccionExterna {
+
+			["m6gbcea"]
+			edition {
+				goto = ref IniciarInspeccionExterna;
+				history = "Encargo de inspección configurado";
+				label = "Configurar encargo de inspección";
+				use {
+					form = ref ConfigurarEncargoCorrectivo;
+					with-view = ref ConfigurarEncargoCorrectivo.Vista;
+				}
+
+				onSetup(ConfigurarEncargoCorrectivo f) {
+					SetupDelegation :: configurarEncargo(f, this, this.getShIncidencia as coordinacion.incidencias.Incidencia);
+				}
+
+				onSolve(ConfigurarEncargoCorrectivo f) {
+					var Expediente expediente = this.getTarget();
+					var encargo = EncargoCI :: createNew(expediente.coleccion);
+					var fichaEncargo = encargo.ficha;
+					var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+					var codigo = 0;
+					if(this.getFlag("codigoEI") != null) {
+						codigo = Integer :: parseInt(this.getFlag("codigoEI")) + 1;
+					}
+					else {
+						codigo = 1;
+					}
+					this.setFlag("codigoEI", String :: valueOf(codigo));
+					fichaEncargo.setCodigo(fichaExpediente.getCodigo + " I-" + codigo);
+					fichaEncargo.setFechaInicio(f.fechaInicio);
+					fichaEncargo.setFechaFinLimite(f.fechaFinLimite);
+					fichaEncargo.setObservaciones(f.observaciones);
+					fichaEncargo.prioridad = fichaExpediente.prioridad;
+					var encargoCA =  this.shEncargoCA as encargos.EncargoCA;
+					var fichaCA = encargoCA.ficha;
+					if (fichaCA.getPt != null){
+						var ptac = fichaCA.getPtField.^node as documentos.Ptac;
+						fichaEncargo.adjuntosField.addNew(ptac.content);
+					}
+					Utilidad::asignarMultiple(f.adjuntos,fichaEncargo.getAdjuntosField());
+					fichaEncargo.save;
+					this.setShEncargoCI(encargo);
+					this.save();
+				}
+			}
+		}
+
+		["mdlnvea"]
+		place IniciarInspeccionExterna {
+
+			["morygma"]
+			delegation {
+				history = "Se ha iniciado el encargo de inspección";
+				label = "Encargo de inspección iniciado";
+				goto = ref EnviarOtic;
+				provider = ref ServicioInspeccion;
+
+				onSetup(DelegationSetup ds) {
+					ds.cancel;
+				}
+
+				onSetupComplete(String providerLabel, Date suggestedStartDate, Date suggestedEndDate, String observations, boolean urgent) {
+					var encargo = this.shEncargoCI as EncargoCI;
+					var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+					AnexoWorkmap::setupComplete(incidencia,providerLabel,encargo.ficha);
+				}
+			}
+		}
+		
+		
+
+		["mzq_0xa"]
+		place EnviarOtvInterno {
+
+			["mbibwea"]
+			send-request {
+				label = "Envío de Otv";
+				history = "Otv enviada";
+				request = ref ServicioVerificacionInterno.Otv;
+				goto = ref EsperandoPtvInterna;
+				provider = ref ServicioVerificacionInterno;
+			}
+		}
+
+		["mshrj4w"]
+		place EnviarOtv {
+
+			["mrpcs1q"]
+			send-request {
+				label = "Envío de Otv";
+				history = "Otv enviada";
+				request = ref ServicioVerificacion.Otv;
+				goto = ref EsperandoPtv;
+				provider = ref ServicioVerificacion;
+			}
+		}
+
+		["m_ntnuw"]
+		place EnviarOtac {
+
+			["msoudpg"]
+			send-request {
+				label = "Envío de OTAC";
+				history = "Otac enviada";
+				request = ref ServicioActuacion.Otac;
+				goto = ref EsperandoPtac;
+				provider = ref ServicioActuacion;
+			}
+		}
+
+		["mbefmng"]
+		place EnviarOtic {
+
+			["mfx24bw"]
+			send-request {
+				label = "Envío de Otic";
+				history = "Otic enviada";
+				request = ref ServicioInspeccion.Otic;
+				goto = ref EsperandoPtic;
+				provider = ref ServicioInspeccion;
+			}
+		}
+
+		["m0fg3xg"]
+		place EsperandoPtvInterna {
+
+			["mtjl0iq"]
+			door DoorPtvInterna {
+				label = "Esperando Ptv";
+
+				["mvnshxg"]
+				exit ExitPtvInterna {
+					history = "Ptv recibido";
+					goto = ref ConfiguracionIniciarActuacion;
+				}
+
+				["mkr5tiq"]
+				exit ExitPtvNoVerificadoInterna {
+					history = "Ptv recibido. La incidencia no procede se cerrará el expediente";
+					goto = ref CerrarExpediente;
+				}
+			}
+		}
+
+		["mg5dghg"]
+		place EsperandoPtv {
+
+			["mq3r_qg"]
+			door DoorPtv {
+				label = "Esperando Ptv";
+
+				["mu9k9qq"]
+				exit ExitPtv {
+					history = "Ptv recibido";
+					goto = ref ConfirmarPtvIniciarActuacion;
+				}
+
+				["mqvyg0g"]
+				exit ExitPtvNoVerificado {
+					history = "Ptv recibido. La incidencia no procede se cerrará el expediente";
+					goto = ref ConfirmarPtvCerrarExpediente;
+				}
+			}
+		}
+
+		["mt_htdq"]
+		place ConfirmarPtvIniciarActuacion {
+
+			["mi53riq"]
+			send-request {
+				request = ref ServicioVerificacion.PeticionTerminarV;
+				provider = ref ServicioVerificacion;
+				goto = ref ConfiguracionIniciarActuacion;
+				history = "";
+				label = "";
+			}
+		}
+
+		["mgthmfg"]
+		place ConfirmarPtvCerrarExpediente {
+
+			["mh_pzba"]
+			send-request {
+				request = ref ServicioVerificacion.PeticionTerminarV;
+				provider = ref ServicioVerificacion;
+				goto = ref CerrarExpediente;
+				history = "";
+				label = "";
+			}
+		}
+
+		["missu2g"]
+		place EsperandoPtac {
+
+			["mmbg7vw"]
+			door DoorPtac {
+				label = "Esperando Ptac";
+
+				["mkhczeg"]
+				exit ExitPtac {
+					history = "Ptac recibido. Incidencia corregida";
+					goto = ref ConfirmarPtacGestionarInspeccion;
+				}
+
+				["mo8uhmg"]
+				exit ExitPtacSoloEjecucion {
+					history = "Ptac recibido. Incidencia corregida";
+					goto = ref ConfirmarPtacGestionarSoloEjecucion;
+				}
+
+				["mpgetta"]
+				exit ExitPtacNoCorregido {
+					history = "Ptac recibido. Incidencia No corregida";
+					goto = ref ConfirmarPtacVolverEjecutar;
+				}
+				["mq2cjpw"]
+				exit ExitTareaRetrasada{
+					history = "La tarea se ha retrasado";
+					goto = ref EsperandoPtac;
+				}
+				timeout {
+					after = 30:00:01:00;
+					take = ref ExitTareaRetrasada;
+					onSetup(TimeoutSetup ws) {
+						var encargo = this.shEncargoCA as encargos.EncargoCA;
+						var fichaEncargo = encargo.ficha;
+						var fechaLimite = new Date(fichaEncargo.getFechaFinLimite().getValue());
+						var coordinacion.Preferencias ficha = coordinacion.Preferencias.getInstance();
+						var coordinacion.preferencias.NotificacionesRetrasos notificaciones = ficha.getNotificacionesRetrasosField() as coordinacion.preferencias.NotificacionesRetrasos;
+						var org.monet.bpi.types.Number dias = notificaciones.diasRetrasos;
+						if (dias != null && dias != Double.NaN){
+							fechaLimite.plusDays(dias.intValue);
+						}
+						var segundos = Utilidad.segundosHastaHoy(fechaLimite);
+						if (segundos == 0){
+							segundos = 3600*24*15;
+						}
+						ConsoleService.println("Timeout programado en segundos-------------> " + segundos);
+//						ws.withSeconds(60);
+						ws.withSeconds(segundos);
+					}
+					onTimeout() {
+						var encargo = this.shEncargoCA as encargos.EncargoCA;
+						var fichaEncargo = encargo.ficha;
+						var fechaLimite = fichaEncargo.getFechaFinLimite();
+						this.addLog("La tarea está fuera de plazo","El encargo ya ha superado la fecha fín limite propuesta");						
+						coordinacion :: modulos :: utilidades :: SendMail :: sendNotificationTaskDelay("La tarea: " + this.getLabel() + " se está retrasando con respecto a su fecha límite: " + fechaLimite.formattedValue, this);
+						ConsoleService.println("Enviando correo informando del retraso de la tarea: "  + this.getLabel());
+					}
+				}				
+			}
+		}
+
+		["mkxwqzg"]
+		place ConfirmarPtacGestionarInspeccion {
+
+			["mtjveow"]
+			send-request {
+				request = ref ServicioActuacion.PeticionTerminarA;
+				provider = ref ServicioActuacion;
+				goto = ref GestionarInspeccion;
+				history = "";
+				label = "";
+			}
+		}
+
+		["m_fc5jg"]
+		place ConfirmarPtacGestionarSoloEjecucion {
+
+			["mshn30g"]
+			send-request {
+				request = ref ServicioActuacion.PeticionTerminarA;
+				provider = ref ServicioActuacion;
+				goto = ref GestionarSoloEjecucion;
+				history = "";
+				label = "";
+			}
+		}
+
+		["mvcopug"]
+		place ConfirmarPtacVolverEjecutar {
+
+			["mtjveow"]
+			send-request {
+				request = ref ServicioActuacion.PeticionTerminarA;
+				provider = ref ServicioActuacion;
+				goto = ref VolverEjecutar;
+				history = "";
+				label = "";
+			}
+		}
+
+		["mtzdeya"]
+		place EsperandoPtic {
+
+			["mjthdmg"]
+			door DoorPtic {
+				label = "Esperando Ptic";
+
+				["msrdt4a"]
+				exit ExitPtic {
+					history = "Ptic recibido. Incidencia solucionada";
+					goto = ref ConfirmarPticCerrarExpediente;
+				}
+
+				["mwte5ig"]
+				exit ExitPticNoSolucionado {
+					history = "Ptic recibido. Incidencia No corregida";
+					goto = ref ConfirmarPticVolverEjecutar;
+				}
+			}
+		}
+		
+		["mlppvnw"]
+		place EsperandoPticInterna {
+			["mxiycgq"]
+			door DoorPticInterna {
+				label = "Esperando Ptic";
+				["mvdkmnw"]
+				exit ExitPticInterna {
+					history = "Ptic recibido. Incidencia solucionada";
+					goto = ref CerrarExpediente;
+				}
+				["mndxqng"]
+				exit ExitPticNoSolucionadoInterna {
+					history = "Ptic recibido. Incidencia No corregida";
+					goto = ref VolverEjecutar;
+				}
+			}
+		}		
+
+		["mw1ztmg"]
+		place ConfirmarPticCerrarExpediente {
+
+			["mrdswha"]
+			send-request {
+				request = ref ServicioInspeccion.PeticionTerminarI;
+				provider = ref ServicioInspeccion;
+				goto = ref CerrarExpediente;
+				history = "";
+				label = "";
+			}
+		}
+
+		["mh_tmeq"]
+		place ConfirmarPticVolverEjecutar {
+
+			["mqku8ma"]
+			send-request {
+				request = ref ServicioInspeccion.PeticionTerminarI;
+				provider = ref ServicioInspeccion;
+				goto = ref VolverEjecutar;
+				history = "";
+				label = "";
+			}
+		}
+
+		["m0fbq2q"]
+		place GestionarSoloEjecucion {
+
+			["mvorj_q"]
+			line {
+				label = "¿Reejecutar el trabajo?";
+
+				["mi2cfew"]
+				stop StopReejecutar {
+					label = "Reejecutar";
+					goto = ref ConfiguracionIniciarActuacion;
+					history = "Encargo de actuación reejecutado";
+				}
+
+				["mmh1k0w"]
+				stop StopTerminar {
+					history = "Trabajo correctivo terminado";
+					goto = ref CerrarExpediente;
+					label = "Terminar";
+				}
+			}
+		}
+
+		["mlwll8g"]
+		place GestionarInspeccion {
+
+			["mnswdma"]
+			line {
+				label = "Desea inspeccionar";
+
+				["m5lb3ma"]
+				stop StopInspeccionar {
+					history = "Trabajo correctivo mandando a inspeccionar";
+					goto = ref TipoInspeccion;
+					label = "Inspeccionar el trabajo correctivo";
+				}
+
+				["maj5beg"]
+				stop StopReejecutar {
+					label = "Reejecutar";
+					goto = ref ConfiguracionIniciarActuacion;
+					history = "Encargo de actuación reejecutado";
+				}
+
+				["mld67uq"]
+				stop StopTerminar {
+					history = "Trabajo correctivo terminado";
+					goto = ref CerrarExpediente;
+					label = "Terminar sin inspección";
+				}
+			}
+		}
+
+		["m7p4bua"]
+		place GestionarNoCorregida {
+
+			["mnedkmw"]
+			line {
+				label = "¿Que desea hacer?";
+
+				["mjbt7mg"]
+				stop StopReejecutar {
+					label = "Reejecutar";
+					goto = ref ConfiguracionIniciarActuacion;
+					history = "Encargo de actuación reejecutado";
+				}
+
+				["mp2fcjg"]
+				stop StopTerminar {
+					history = "Trabajo correctivo terminado";
+					goto = ref CerrarExpediente;
+					label = "Terminar";
+				}
+			}
+		}
+
+		["m76qdra"]
+		place IncidenciaCancelada {
+			onArrive() {
+				var expediente = this.getTarget();
+				var ficha = expediente.fichaExpedienteCorrectivo;
+				ficha.setFechaArchivo(new Date());
+				ficha.setEstado(new Term("cerrado", null));
+				ficha.save;
+				var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia;
+				incidencia.estado = new Term(null, "Cancelada");
+				incidencia.fechaModificacion = new Date();
+				incidencia.fechaCierre = new Date;
+				var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+				fichaExpediente.estado = new Term("noProcedente", "No procedente");
+				incidencia.save;
+				incidencia.lock;
+				if (incidencia.getFlag("verificando") == null && incidencia.getFlag("actuando") == null){
+					HechosIncidencia :: hechoIncidenciaTramitada(incidencia);
+				}
+				HechosIncidencia :: hechoIncidenciaCancelada(incidencia);
+				fichaExpediente.save;
+				doGoto(Place :: Finalizar, "Expediente cerrado");
+			}
+		}
+
+		["mdimdqq"]
+		place CerrarExpediente {
+			onArrive() {
+				AnexoWorkmap :: cerrarExpediente(this);
+			}
+		}
+
+		["m_byr2a"]
+		place Finalizar {
+			is-final;
+		}
+
+		["mtszgta"]
+		place IniciarInspeccionJob {
+
+			["mo0nb9g"]
+			send-job {
+				history = "Se ha iniciado la inspección";
+				role = ref coordinacion.RoleInspector;
+				job = ref jobs.Inspeccionar;
+				label = "Iniciando inspección";
+				goto = ref EsperandoPticInterna;
+				onCreate(JobRequest msg) {
+					msg.setLabel("Inspeccionar " + this.^label);
+					var encargo = this.shEncargoCI as encargos.EncargoCI;
+					var fichaEncargo = encargo.ficha; 
+					var orden = otic :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
+					AnexoWorkmap::cambiarEstadoIncidencia(this.shIncidencia as coordinacion.incidencias.Incidencia ,new Term(null, "Inspeccionando"));
+					orden.consolidate();
+					fichaEncargo.setFechaEnvioOT(new Date());
+					fichaEncargo.setOt(orden.toLink);
+					fichaEncargo.save;
+					var links = new ArrayList <MonetLink>;
+					links.^add(orden.toMonetLink);
+					this.addLog("Orden de trabajo generada", "Orden de trabajo de inspección", links);
+					msg.attachDocument("Orden de trabajo", orden);
+				}
+				onSetupJob(JobSetup js) {
+					SetupDelegation :: configurarJob(js, this.shIncidencia as Incidencia);
+				}
+				
+				onSetupJobComplete(String providerLabel,Date suggestedStartDate,Date suggestedEndDate,String observations,boolean urgent) {
+					var Expediente expediente = this.getTarget();
+					var encargo = EncargoCI :: createNew(expediente.coleccion);
+					this.shEncargoCI = encargo;
+					this.save;
+					var codigo = 0;
+					if(this.getFlag("codigoEIJob") != null) {
+						codigo = Integer :: parseInt(this.getFlag("codigoEIJob")) + 1;
+					}
+					else {
+						codigo = 1;
+					}
+					this.setFlag("codigoEIJob", String :: valueOf(codigo));
+					AnexoWorkmap :: rellenarFichaEncargoJobCI(encargo, expediente, " I-", codigo, suggestedStartDate, suggestedEndDate, observations);
+				}
+				onFinished(JobResponse msg) {
+					var encargo = this.shEncargoCI as EncargoCI;
+					var inspeccionado = AnexoWorkmap::inspeccionarInternaJob(encargo , msg);
+					var parteInterno = ptic :: Exportador :: doExportOf(encargo.ficha).toNewDocument;
+					parteInterno.consolidate();
+					var links = new ArrayList <MonetLink>;
+					links.^add(parteInterno.toMonetLink);
+					this.addLog("Parde de trabajo generado", "Parte de trabajo de inspección", links);					
+																				
+					var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPticInterna_ExitPticInterna;
+					if (!inspeccionado){
+						bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPticInterna_ExitPticNoSolucionadoInterna;						
+					}else{
+						var incidencia = this.shIncidencia as Incidencia;
+						AnexoWorkmap::cambiarEstadoIncidencia(incidencia,new Term(null, "Inspeccionada"));
+						incidencia.setFechaInspeccion(encargo.ficha.fechaFinReal);
+						incidencia.save();
+						HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);
+						coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + this.getLabel() + " ha sido inspeccionado. La incidencia ha sido solucionada", this);
+					}					 
+					var Post post = Post.createRequest();
+					post.setTitle("Ha llegado un trabajo de inspección desde un dispositivo mobile " + this.getLabel());
+					post.setTitleLink(this.toMonetLink());
+					post.setBody(this.getLabel());
+					post.setBodyLink(this.toMonetLink());
+					NewsService.postAndNotifyToAll(post);					
+					doUnlock(bloqueo);										 					
+				}
+			}
+		}
+
+		["mq5hzng"]
+		provider ServicioVerificacionInterno {
+			role = ref coordinacion.RoleCoordinador;
+			internal {
+				service = ref actividades.VerificacionInterna;
+				request Otv {
+					code = "otv";
+
+					constructor(InsourcingRequest msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.getShEncargoCV() as EncargoCV;
+						var incidencia = tarea.getShIncidencia() as Incidencia;
+						msg.setContent(tarea.^label + "Interna");
+						msg.attachString("idtareapadre",tarea.id);
+						msg.attachString("idencargocv",encargo.toLink.id);
+						msg.attachString("idincidencia",incidencia.toLink.id);
+						
+						
+
+						tarea.addLog("Orden de trabajo", "Orden de trabajo de verificación", null);
+						tarea.save;
+					}
+				}
+				onTerminate() {
+					var tarea = this.getTask();
+					tarea.addLog("Parte de trabajo", "Parte de trabajo de verificación", null);
+					tarea.doUnlock(Lock :: EsperandoPtvInterna_ExitPtvInterna);
+				}
+			}
+		}
+
+		["mwo6cvg"]
+		provider ServicioInspeccionInterno {
+			role = ref coordinacion.RoleInspeccionInterna;
+			internal {
+				service = ref actividades.InspeccionInterna;
+				request Otic {
+					code = "otic";
+					constructor(InsourcingRequest msg) {
+						var tarea = this.getTask();
+						msg.setContent(tarea.^label + "Interna");
+						tarea.addLog("Orden de trabajo", "Orden de trabajo de inspección", null);
+					}
+				}
+				onTerminate() {
+					var tarea = this.getTask();
+					tarea.addLog("Parte de trabajo", "Parte de trabajo de inspección", null);
+					tarea.doUnlock(Lock :: EsperandoPtic_ExitPtic);
+				}
+			}
+		}
+
+		["mwgv3yg"]
+		provider ServicioVerificacion {
+			role = ref coordinacion.RoleVerificacion;
+			external {
+				request PeticionAbortar {
+					code = "abortar";
+					constructor(ProviderRequest msg) {
+						this.^task.peticionAbortar(msg);
+					}					
+				}				
+				request PeticionTerminarV {
+					code = "terminar";
+				}
+				request Otv {
+					code = "otv";
+					constructor(ProviderRequest msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.shEncargoCV as encargos.EncargoCV;
+						var fichaEncargo = encargo.ficha;
+						var orden = otv :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
+						orden.consolidate;
+						fichaEncargo.setOt(orden.toLink);
+						fichaEncargo.setFechaEnvioOT(new Date());
+						fichaEncargo.save;
+						var links = new ArrayList <MonetLink>;
+						links.^add(orden.toMonetLink);
+						tarea.addLog("Orden de trabajo", "Orden de trabajo de verificación", links);
+						tarea.save();
+						msg.attachDocument("otv", orden);
+						var String encargoCodigo = fichaEncargo.codigo;
+						msg.attachString("label", tarea.getLabel() + encargoCodigo.substring(9, encargoCodigo.^length));
+						var incidencia = tarea.shIncidencia as coordinacion.incidencias.Incidencia;
+						incidencia.estado = new Term(null, "Verificando");
+						incidencia.fechaModificacion = new Date();
+						var expediente = encargo.owner.owner as Expediente;
+						var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+						fichaExpediente.estado = new Term(null, "Pendiente de verificación");
+						incidencia.save;
+						fichaExpediente.save;
+						incidencia.setFlag("verificando","true");
+						HechosIncidencia :: hechoIncidenciaTramitada(incidencia);
+					}
+				}
+				response Ptv {
+					code = "ptv";
+					import(ProviderResponse msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.shEncargoCV as encargos.EncargoCV;
+						var fichaEncargo = encargo.ficha;
+						var parte = msg.getDocument("ptv", typeof(coordinacion.procesos.cori.documentos.Ptv)) as coordinacion.procesos.cori.documentos.Ptv;
+						var links = new ArrayList <MonetLink>;
+						links.^add(parte.toMonetLink);
+						tarea.addLog("Parte de trabajo", "Parde de trabajo de verificación", links);
+						ptv :: Importador :: doImportOf("ptv", msg).atScope(fichaEncargo);
+						fichaEncargo.setPt(parte.toLink);
+						fichaEncargo.setFechaRecepcionPT(new Date());
+						fichaEncargo.save;
+						var post = Post :: createRequest();
+						post.setTitle("Ha llegado un parte de trabajo de verificación correctivo: " +tarea.^label);
+						post.setTitleLink(tarea.toMonetLink());
+						NewsService :: postAndNotifyToAll(post);
+						var incidencia = tarea.shIncidencia as coordinacion.incidencias.Incidencia;
+						incidencia.estado = new Term(null, "Verificada");
+						incidencia.fechaModificacion = new Date();
+						tarea.save();
+						incidencia.save;
+						var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtv_ExitPtv;
+						if(! fichaEncargo.resultado) {
+							bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtv_ExitPtvNoVerificado;
+						}
+						else {
+							var esquema = parte.^schema;
+							incidencia.setFechaVerificacion(esquema.fechaFinReal);
+							incidencia.save();
+							HechosIncidencia :: hechoIncidenciaVerificada(incidencia);								
+							coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + tarea.getLabel() + " ha sido verificado. Se procede a tramitar el expediente", tarea);
+						}
+						tarea.doUnlock(bloqueo);
+					}
+				}
+			}
+		}
+		
+		function peticionAbortar(ProviderRequest msg){
+			var tarea = this;
+			
+			if (tarea.getFlag("decisionAbortar")!= null){
+				if (tarea.getFlag("decisionAbortar").equals("false")){
+					msg.attachString("abortarEjecucion","false");
+				}
+			}
+		} 		
+
+		["mubuzcw"]
+		provider ServicioActuacion {
+			role = ref coordinacion.RoleActuacionCorrectivo;
+			external {
+				request PeticionAbortar {
+					code = "abortar";
+					constructor(ProviderRequest msg) {
+						this.^task.peticionAbortar(msg);
+					}					
+				}
+				response PeticionEjecucionAbortar {
+					code = "abortarEjecucion";
+					import(ProviderResponse msg) {
+						var tarea = this.^task;
+						tarea.setFlag("abortarEjecucion","true");
+						tarea.abort;
+					}
+					
+				}								
+				request PeticionTerminarA {
+					code = "terminar";
+				}
+				request Otac {
+					code = "otac";
+					constructor(ProviderRequest msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.shEncargoCA as encargos.EncargoCA;
+						var fichaEncargo = encargo.ficha;
+						var orden = otac :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
+						orden.consolidate;
+						fichaEncargo.setOt(orden.toLink);
+						fichaEncargo.setFechaEnvioOT(new Date());
+						fichaEncargo.save;
+						var links = new ArrayList <MonetLink>;
+						links.^add(orden.toMonetLink);
+						tarea.addLog("Orden de trabajo", "Orden de trabajo de actuación", links);
+						tarea.save();
+						msg.attachDocument("otac", orden);
+						var String encargoCodigo = fichaEncargo.codigo;
+						msg.attachString("label", tarea.getLabel() + encargoCodigo.substring(9, encargoCodigo.^length));
+						var incidencia = tarea.shIncidencia as coordinacion.incidencias.Incidencia;
+						incidencia.estado = new Term(null, "Corrigiendo");
+						incidencia.fechaModificacion = new Date();
+						var expediente = encargo.owner.owner as Expediente;
+						var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+						fichaExpediente.estado = new Term(null, "Pendiente de resolución");
+						incidencia.save;
+						fichaExpediente.save;
+						incidencia.setFlag("actuando","true");
+						if (incidencia.getFlag("verificando") == null){
+							HechosIncidencia :: hechoIncidenciaTramitada(incidencia);
+						}
+					}
+				}
+				response Ptac {
+					code = "ptac";
+					import(ProviderResponse msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.shEncargoCA as encargos.EncargoCA;
+						var fichaEncargo = encargo.ficha;
+						var parte = msg.getDocument("ptac", typeof(coordinacion.procesos.cori.documentos.Ptac)) as coordinacion.procesos.cori.documentos.Ptac;
+						fichaEncargo.setFechaRecepcionPT(new Date());
+						fichaEncargo.setPt(parte.toLink);
+						fichaEncargo.save;
+						var links = new ArrayList <MonetLink>;
+						links.^add(parte.toMonetLink);
+						tarea.addLog("Parte de trabajo", "Parte de trabajo de actuación", links);
+						ptac :: Importador :: doImportOf("ptac", msg).atScope(fichaEncargo);
+						var post = Post :: createRequest();
+						post.setTitle("Ha llegado una parte de trabajo de actuación correctiva: " + tarea.^label);
+						post.setTitleLink(tarea.toMonetLink());
+						NewsService :: postAndNotifyToAll(post);
+						tarea.save();
+						var incidencia = tarea.shIncidencia as coordinacion.incidencias.Incidencia;
+						incidencia.estado = new Term("e005", "Ejecutada");
+						incidencia.fechaModificacion = new Date();
+						var expediente = encargo.owner.owner as Expediente;
+						var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+						fichaExpediente.estado = new Term("corregida", "Ejecutado");
+						incidencia.setNivelInfestacion(fichaEncargo.getNivelInfestacion());
+						incidencia.save;
+						fichaExpediente.save;
+						var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtac_ExitPtac;
+						if(! fichaEncargo.resultado) {
+							incidencia.setResultadoEjecucion("No corregida");
+							incidencia.save();							
+							bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtac_ExitPtacNoCorregido;
+						}
+						else {
+							tarea.shParteIncidenciaCorregida = parte;
+							tarea.save();
+							if(Setup :: getVariable("SoloEjecucion") != null && Setup :: getVariable("SoloEjecucion").equals("true")) {
+								bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtac_ExitPtacSoloEjecucion;
+							}
+							var esquema = parte.^schema;
+							incidencia.setFechaEjecucion(esquema.fechaFinReal);
+							incidencia.setResultadoEjecucion("Corregida");
+							incidencia.save();
+							HechosIncidencia :: hechoIncidenciaCorregida(incidencia);
+							coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + tarea.getLabel() + " ha sido corregido", tarea);
+							HechosOperacionesCorrectivas::hechoOperacionRevisionCorrectivo(encargo);
+						}
+						tarea.doUnlock(bloqueo);
+					}
+				}
+			}
+		}
+
+		["mnreyew"]
+		provider ServicioInspeccion {
+			role = ref coordinacion.RoleInspeccionCorrectivo;
+			external {
+				request PeticionAbortar {
+					code = "abortar";
+					constructor(ProviderRequest msg) {
+						this.^task.peticionAbortar(msg);
+					}					
+				}				
+				request PeticionTerminarI {
+					code = "terminar";
+				}
+				request Otic {
+					code = "otic";
+					constructor(ProviderRequest msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.shEncargoCI as encargos.EncargoCI;
+						var fichaEncargo = encargo.ficha;
+//						var parte = tarea.shParteIncidenciaCorregida as documentos.Ptac;
+//						if (parte != null){
+//							fichaEncargo.getAdjuntosField().addNew();
+//							fichaEncargo.save();
+//						}
+						var orden = otic :: Exportador :: doExportOf(fichaEncargo).toNewDocument;
+						orden.consolidate;
+						fichaEncargo.setFechaEnvioOT(new Date());
+						fichaEncargo.setOt(orden.toLink);
+						fichaEncargo.save;
+						var links = new ArrayList <MonetLink>;
+						links.^add(orden.toMonetLink);
+						tarea.addLog("Orden de trabajo", "Orden de trabajo de inspección", links);
+						tarea.save();
+						msg.attachDocument("otic", orden);
+						var String encargoCodigo = fichaEncargo.codigo;
+						msg.attachString("label", tarea.getLabel() + encargoCodigo.substring(9, encargoCodigo.^length));
+						var incidencia = tarea.shIncidencia as coordinacion.incidencias.Incidencia;
+						incidencia.estado = new Term(null, "Inspeccionando");
+						incidencia.fechaModificacion = new Date();
+						var expediente = encargo.owner.owner as Expediente;
+						var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+						fichaExpediente.estado = new Term(null, "Pendiente de inspección");
+						incidencia.save;
+						fichaExpediente.save;
+					}
+				}
+				response Ptic {
+					code = "ptic";
+					import(ProviderResponse msg) {
+						var tarea = this.getTask();
+						var encargo = tarea.shEncargoCI as encargos.EncargoCI;
+						var fichaEncargo = encargo.ficha;
+						var parte = msg.getDocument("ptic", typeof(coordinacion.procesos.cori.documentos.Ptic)) as coordinacion.procesos.cori.documentos.Ptic;
+						fichaEncargo.setFechaRecepcionPT(new Date());
+						fichaEncargo.setPt(parte.toLink);
+						fichaEncargo.save;
+						var links = new ArrayList <MonetLink>;
+						links.^add(parte.toMonetLink);
+						tarea.addLog("Parte de trabajo", "Parte de trabajo de inspección", links);
+						ptic :: Importador :: doImportOf("ptic", msg).atScope(fichaEncargo);
+						var post = Post :: createRequest();
+						post.setTitle("Ha llegado un parte de trabajo de inspección correctiva: " +tarea.^label);
+						post.setTitleLink(tarea.toMonetLink());
+						NewsService :: postAndNotifyToAll(post);
+						tarea.save();
+						var incidencia = tarea.shIncidencia as coordinacion.incidencias.Incidencia;
+						incidencia.estado = new Term(null, "Inspeccionada");
+						incidencia.fechaModificacion = new Date();
+						incidencia.save;
+						var bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtic_ExitPtic;
+						if(! fichaEncargo.resultado) {
+							bloqueo = coordinacion :: procesos :: cori :: workmap :: Lock :: EsperandoPtic_ExitPticNoSolucionado;
+						}
+						else {
+							var esquema = parte.^schema;
+							incidencia.setFechaInspeccion(esquema.fechaFinReal);
+							incidencia.save();
+							HechosIncidencia :: hechoIncidenciaInspeccionada(incidencia);								
+							coordinacion :: modulos :: utilidades :: SendMail :: sendNotification("El trabajo: " + tarea.getLabel() + " ha sido inspeccionado. La incidencia ha sido solucionada", tarea);
+						}
+						tarea.doUnlock(bloqueo);
+					}
+				}
+			}
+		}
+
+		["moewk7q"]
+		place VolverEjecutar {
+
+			["mwpymfq"]
+			line {
+				label = "Incidencia no corregida. ¿Volver a ejecutar?";
+
+				["mjfvu8q"]
+				stop Volver {
+					label = "Volver a ejecutar con nuevas observaciones";
+					goto = ref ConfiguracionIniciarActuacion;
+					history = "Se ha vuelto a realizar un encargo de actuación";
+				}
+
+				["m2amnoa"]
+				stop Cerrar {
+					label = "Cerrar del expediente.";
+					goto = ref CerrarExpediente;
+					history = "Se ha procedido a cerrar el expediente";
+				}
+			}
+		}
+
+	}
+}
+  

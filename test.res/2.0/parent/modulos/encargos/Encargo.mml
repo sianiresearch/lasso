@@ -1,0 +1,216 @@
+import coordinacion.procesos.cori.*
+
+package coordinacion.modulos.encargos {
+
+	["mu5cyba"]
+	abstract definition Encargo is container {
+		label = "Encargo";
+		is-readonly;
+
+		["mimuyew"]
+		abstract definition Ficha is form {
+			label = "Ficha";
+
+			is-component;
+			properties {
+				calculate() {
+					var lab = "Sin definir";
+					if(this.getNode().getCodigo() != null) {
+						this.getProperties().setLabel(this.getNode().getCodigo());
+					}
+					else this.getProperties().setLabel(lab);
+				}
+			}
+			mapping {
+				index = ref Coleccion.Index;
+			}
+
+			["mu_epvq"]
+			field-text Cliente {
+				label = "Cliene";
+			}
+
+			["m207ula"]
+			field-node Ot {
+				label = "Orden de trabajo";
+				add {
+					node = ref Otc;
+				}
+			}
+
+			["mtbvq9w"]
+			field-node Pt {
+				label = "Parte de trabajo";
+				add {
+					node = ref Ptc;
+				}
+			}
+
+			["mub5n0a"]
+			field-date FechaInicio {
+				label = "Fecha de inicio propuesta";
+				precision = DAYS;
+			}
+
+			["mmcnqgw"]
+			field-date FechaFinLimite {
+				label = "Fecha fin límite de realización";
+				precision = DAYS;
+			}
+
+			["mt2bsdq"]
+			field-date FechaEnvioOT {
+				label = "Fecha de envío de la orden";
+				precision = MINUTES;
+			}
+
+			["mulsxrg"]
+			field-date FechaRecepcionPT {
+				label = "Fecha de recepción del parte";
+				precision = MINUTES;
+			}
+
+			["mfubfla"]
+			field-file Adjuntos {
+				label = "Adjuntos";
+				is-multiple;
+			}
+
+			["m4s3prq"]
+			field-memo Observaciones {
+				label = "Observaciones";
+			}
+
+			["mamvesq"]
+			field-number CosteEsfuerzoFacturable {
+				label = "Coste esfuerzo facturable";
+				format = "#,00";
+			}
+
+			["mbvm6_g"]
+			field-number CosteMaterialFacturable {
+				label = "Coste material facturable";
+				format = "#,00";
+			}
+
+			["m9f6hiq"]
+			field-text Codigo {
+				label = "Código";
+			}
+
+			["msg7euq"]
+			field-select Prioridad {
+				label = "Prioridad del encargo";
+				terms {
+					term {
+						key = "p001";
+						label = "Alta";
+					}
+					term {
+						key = "p002";
+						label = "Media";
+					}
+					term {
+						key = "p003";
+						label = "Baja";
+					}
+				}
+				select {
+					is-embedded;
+				}
+			}
+
+			["mho6ggq"]
+			field-number Contador {
+				label = "contador";
+			}
+
+			["ma5p90a"]
+			field-text TipoEncargo {
+				label = "Tipo de encargo";
+			}
+
+			["mexaywq"]
+			field-boolean Resultado {
+				label = "Resultado del encargo";
+			}
+
+			["mkjy_dq"]
+			field-date FechaInicioReal {
+				label = "Fecha y hora de inicio real";
+				precision = MINUTES;
+			}
+
+			["m2il4gw"]
+			field-date FechaFinReal {
+				label = "Fecha y hora fin real";
+				precision = MINUTES;
+			}
+
+			["m5umskq"]
+			field-file AdjuntosResultado {
+				is-multiple;
+				label = "Adjuntos";
+			}
+
+			["m5abseq"]
+			field-memo ObservacionesResultado {
+				label = "Observaciones";
+			}
+
+			["m588gfq"]
+			field-number CalculoCoste {
+				label = "Coste total";
+				format = "#,00";
+			}
+
+			["momp0ca"]
+			field-number CalculoCosteFacturable {
+				label = "Coste total facturable";
+				format = "#,00";
+			}
+
+			["mi50teg"]
+			field-select Operaciones {
+				label = "Operaciones";
+				is-multiple;
+				terms;
+			}
+			
+			["m9atdha"]
+			field-composite SeccionJerarquiaOperaciones {
+				label = "Jerarquía de operaciones";
+				is-multiple;
+				["mhuvwda"]
+				field-select Padre {
+					label = "Categoría";
+				}
+				["mkbazxa"]
+				field-select Hijo {
+					label = "Operación";
+				}
+			}
+
+			["mhim87q"]
+			field-picture ImagenResultado {
+				label = "Foto del resultado del trabajo encargado";
+				size {
+					width = 640;
+					height = 480;
+				}
+			}
+
+			["m3tgqrw"]
+			field-picture ImagenesAnexo {
+				is-multiple;
+				label = "Imágenes anexo";
+				size {
+					width = 640;
+					height = 480;
+				}
+			}
+
+		}
+
+	}
+}

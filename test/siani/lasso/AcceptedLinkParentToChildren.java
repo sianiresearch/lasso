@@ -10,9 +10,9 @@ import static org.junit.Assert.assertEquals;
 
 public class AcceptedLinkParentToChildren {
 
-	private static File parentHome = new File("test.res/parent/");
-	private static File childHome = new File("test.res/children/");
-	private static File expectedHome = new File("test.res/expected/");
+	private static File parentHome = new File("test.res/1.0/parent/");
+	private static File childHome = new File("test.res/1.0/children/");
+	private static File expectedHome = new File("test.res/1.0/expected/");
 
 	@Test
 	public void should_Link_Parent2_In_Child2() throws Exception {

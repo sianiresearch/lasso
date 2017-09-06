@@ -1,0 +1,83 @@
+package coordinacion.procesos.cori {
+
+	["m9lcqgq"]
+	abstract definition Ptc is document {
+		label = "Parte de trabajo";
+
+		schema {
+			NombreDemandante String; 
+			TelefonoDemandante String;
+			DireccionDemandante String;
+//			NivelInfestacion String;
+			NivelInfestacionResultado Term;
+			ElementoTratar String;
+			Origen String;	
+			FechaIncidencia Date;	
+			Descripcion String;
+						
+			Cliente String;
+			Unidad String;
+			Zona String;
+			Lugar String;
+			ObjetoActuacion Term;
+			Responsable String;
+			FechaInicioReal Date;
+			FechaFinReal Date;
+			Codigo String;
+			IdIncidencia String;
+			many TipoIncidencia Term;
+			TipoIncidenciaLabel String;
+			ObservacionesResultado String;
+			Resultado Boolean;
+			ImagenResultado Picture;
+			ImagenMapa Picture;
+			CalculoCoste Number;
+			CalculoCosteFacturable Number;
+			CosteConsumible Number;
+			CosteConsumibleFacturable Number;
+			CosteRepuesto Number;
+			CosteRepuestoFacturable Number;
+			CosteEsfuerzo Number;
+			CosteEsfuerzoFacturable Number;
+			many AdjuntosResultado File;
+			many Anexo {
+				Imagen1 Picture;
+				Imagen2 Picture;
+			}
+			many operaciones Term;
+			many Esfuerzos {
+				Nombre String;
+				NumeroHoras Number;
+				CosteHora Number;
+				FacturableEsfuerzo Boolean;
+			}
+			many Consumibles {
+				Nombre String;
+				CantidadMetrica Number;
+				CosteUnidadConsumible Number;
+				FacturableConsumible Boolean;
+			}
+			many Repuestos {
+				Nombre String;
+				CantidadUnidad Number;
+				CosteUnidadRepuesto Number;
+				FacturableRepuesto Boolean;
+			}
+			FirmaOperario Picture;
+			FirmaCliente Picture;
+			FirmaResponsable Picture;
+			OperacionesLabel String;
+			ObservacionesCliente String;
+			many Recursos Term;
+			RecursosLabel String;
+			FechaCreacion Date;
+			many JerarquiaOperaciones{
+				Categoria Term;
+				Hijo Term;
+			}			
+			NumeroGobiernoInicio String;
+			NumeroGobiernoFin String;
+		}
+
+	}
+}

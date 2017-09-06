@@ -1,0 +1,38 @@
+import coordinacion.modulos.utilidades.OrdenTrabajoComun
+import coordinacion.modulos.utilidades.*
+
+package coordinacion.procesos.cori.documentos {
+
+	["mqdjdcw"]
+	definition Otac is document extends coordinacion.procesos.cori.Otc {
+		label = "Orden de trabajo de actuación correctiva";
+		template = template Otac;
+
+		schema {
+		}
+
+		["m7u1x0a"]
+		definition Exportador is exporter {
+			label = "Exportador";
+			target = ref Otac;
+			onInitialize() {
+			}
+			onExportItem(coordinacion.procesos.cori.documentos.otac.Schema i) {
+				var fichaEncargo = this.getScope() as coordinacion.procesos.cori.encargos.encargoca.Ficha;
+				var expediente = fichaEncargo.owner.owner.owner as coordinacion.procesos.cori.Expediente;
+				var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+				var incidencia = fichaExpediente.enlaceIncidenciaField.getNode() as coordinacion.incidencias.Incidencia;
+				if (incidencia.fechaIcc == null){
+					incidencia.setFechaIcc(new Date());
+					incidencia.save();
+				}
+				OrdenTrabajoComun :: exportarIncidencia(incidencia, i);
+				OrdenTrabajoComun :: exportarEncargo(fichaEncargo, i);
+				OrdenTrabajoComun :: exportarOtros(i);
+				OrdenTrabajoComun :: exportarObjetosActuacion(incidencia, i);
+			}
+		}
+
+	}
+}
+  

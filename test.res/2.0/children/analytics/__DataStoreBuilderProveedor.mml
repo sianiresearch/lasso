@@ -1,0 +1,28 @@
+import coordinacion.analytics.dashboardincidencias.datastoreincidencia.*
+package coordinacion.analytics {
+
+	["m3b2gqw"]
+	definition DataStoreBuilderProveedor is datastore-builder {
+		label = "Builder de proveedor";
+		source = ref coordinacion.modulos.proveedores.Ficha;
+		to {
+			datastore = ref DashBoardIncidencias.DataStoreIncidencia;
+			onBuild(coordinacion.modulos.proveedores.Ficha nodeInstance, coordinacion.analytics.dashboardincidencias.DataStoreIncidencia dataStoreInstance) {
+				var dimensionProveedor = dataStoreInstance.getProveedores();
+				var componenteProveedor = insertarComponenteProveedor(nodeInstance, dimensionProveedor);
+				rellenarComponenteProveedor(nodeInstance, componenteProveedor);				
+				dimensionProveedor.save();
+			}
+		}
+		
+		function insertarComponenteProveedor(coordinacion.modulos.proveedores.Ficha nodeInstance, ProveedoresDimension dimensionProveedor): ProveedoresDimensionComponent{
+			var componenteProveedor = dimensionProveedor.insertComponent(nodeInstance.toLink().getId());
+			return componenteProveedor;
+		}
+		
+		function rellenarComponenteProveedor(coordinacion.modulos.proveedores.Ficha nodeInstance, ProveedoresDimensionComponent componenteProveedor){
+			componenteProveedor.addNombre(nodeInstance.getNombre);
+		}
+
+	}
+}

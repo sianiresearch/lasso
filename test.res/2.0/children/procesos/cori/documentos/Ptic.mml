@@ -1,0 +1,80 @@
+import coordinacion.modulos.utilidades.OrdenTrabajoComun
+import coordinacion.modulos.utilidades.*
+import coordinacion.procesos.cori.*
+import java.util.Iterator
+
+package coordinacion.procesos.cori.documentos {
+
+	["mpaq9dw"]
+	definition Ptic is document extends coordinacion.procesos.cori.Ptc {
+		label = "Parte de trabajo de inspección correctivo";
+		template = template Ptic;
+
+		schema {
+		}
+
+		["mghji5a"]
+		definition Importador is importer {
+			label = "Importador";
+			target = ref Ptic;
+			onInitialize() {
+			}
+			onImportItem(coordinacion.procesos.cori.documentos.ptic.Schema item) {
+				var fichaEncargo = this.getScope() as encargos.encargoci.Ficha;
+				ParteTrabajoComun :: importarEncargo(fichaEncargo, item);
+			}
+		}
+		
+		["mg872ha"]
+		definition Exportador is exporter{
+			label = "Exportador";
+			target = ref Ptic;
+			onInitialize() {
+			
+			}
+			onExportItem(coordinacion.procesos.cori.documentos.ptic.Schema i) {
+				var fichaEncargo = this.getScope() as encargos.encargoci.Ficha;
+				var encargo = this.getScope().owner as encargos.EncargoCI;
+				var coleccion = encargo.owner as encargos.Coleccion;
+				var expediente = coleccion.owner as coordinacion.procesos.cori.Expediente;
+				var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+				var incidencia = fichaExpediente.enlaceIncidenciaField.^node as coordinacion.incidencias.Incidencia;
+				i.setFechaInicioReal(fichaEncargo.fechaInicioReal);
+				i.setFechaFinReal(fichaEncargo.fechaFinReal);
+				i.setCliente(BusinessUnit :: ^name);
+				if (fichaExpediente.objetoActuacion != null){
+					i.setObjetoActuacion(fichaExpediente.objetoActuacionAsTerm);
+					var objetoActuacion = ObjetoActuacionTools.obtenerPadreNode(fichaExpediente.objetoActuacionField.^node);
+					var fichaObjeto = objetoActuacion.ficha;
+					var seccionLocalizacion = fichaObjeto.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+					if (seccionLocalizacion.lugar != null)
+						i.setLugar(seccionLocalizacion.lugar.^label);
+					if (seccionLocalizacion.zona != null)
+						i.setZona(seccionLocalizacion.zona.^label);					
+				}
+				i.setCodigo(fichaExpediente.codigo);
+				i.setIdIncidencia(incidencia.codigoIncidencia);
+				i.setTipoIncidencia(incidencia.tipoIncidencia);
+				i.setTipoIncidenciaLabel(incidencia.tipoIncidenciaField.toString);
+				i.setObservacionesResultado(fichaEncargo.observacionesResultado);
+				i.setResultado(fichaEncargo.resultado);
+				i.setImagenResultado(fichaEncargo.imagenResultado);
+				var Iterator <Picture> iterador = fichaEncargo.getImagenesAnexo().iterator();
+				while(iterador.hasNext()) { 
+					var coordinacion.procesos.cori.ptc.^schema.Anexo fila = new coordinacion.procesos.cori.ptc.^schema.Anexo();
+					fila.setImagen1(iterador.next());
+					if(iterador.hasNext()) { 
+						fila.setImagen2(iterador.next());
+					}
+					i.getAnexo().^add(fila);
+				}
+				//dar soprote en encargos
+				//i.setFirmaOperario(fichaEncargo.get)				
+			
+			}
+			
+
+		}
+	}
+}
+  

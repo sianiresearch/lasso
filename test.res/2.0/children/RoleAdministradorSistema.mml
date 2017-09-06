@@ -1,0 +1,7 @@
+package coordinacion {
+
+	["mcbbjoq"]
+	definition RoleAdministradorSistema is role {
+		label = "Administrador sistema";
+	}
+}

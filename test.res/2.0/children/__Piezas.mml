@@ -1,0 +1,23 @@
+import coordinacion.modulos.*
+
+package coordinacion {
+
+	["mayhi6g"]
+	definition Piezas is container {
+		label = "Piezas";
+
+		is-singleton;
+		contain {
+			node = ref componentes.Coleccion;
+		}
+
+		["mcwn2tw"]
+		view {
+			label = "Vista";
+			show {
+				component = ref componentes.Coleccion.Prototipos;
+			}
+		}
+
+	}
+}

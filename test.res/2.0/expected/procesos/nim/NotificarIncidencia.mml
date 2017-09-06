@@ -1,0 +1,117 @@
+import coordinacion.*
+import coordinacion.modulos.util.*
+
+package coordinacion.procesos.nim {
+
+	["mvtaeda"]
+	definition NotificarIncidencia is sensor {
+		label = "Notificar incidencia|%s %s %s|Cliente|TipoIncidencia|ObjetoActuacion";
+
+		description = "Permite notificar incidencias que han surgido en campo";
+
+		["mvbq8iq"]
+		step Datos {
+			label = "Notificación de incidencia";
+
+			["mscwxka"]
+			edit-picture Imagen {
+				is-multiple;
+				label = "Foto";
+				size {
+					width = 640;
+					height = 480;
+				}
+			}
+
+			["mabtdqw"]
+			edit-select TipoIncidencia {
+				label = "Tipo incidencia";
+				is-multiple;
+				source = ref TesauroTiposIncidencia;
+			}
+
+			["muk9glg"]
+			edit-select Origen {
+				label = "Origen";
+				source = ref TesauroOrigenesIncidencia;
+			}
+
+			["mmujjjg"]
+			edit-select ObjetoActuacion {
+				label = "Objeto de actuación";
+				source = ref TesauroObjetosActuacion;
+			}
+
+			["mgzze3g"]
+			edit-memo Descripcion {
+				label = "Descripción";
+			}
+			view {
+				show = ref Imagen;
+				show = ref ObjetoActuacion;
+				show = ref TipoIncidencia;
+				show = ref Origen;
+				show = ref Descripcion;
+			}
+		}
+
+		["mg7tfdq"]
+		step Gestion {
+			label = "Notificación de la incidencia";
+
+			["mobb9ag"]
+			capture-date FechaNotificacion;
+
+			["mbdmadg"]
+			edit-select Prioridad {
+				label = "Prioridad de la resolución";
+				terms {
+					term {
+						label = "Alta";
+						key = "p001";
+					}
+					term {
+						label = "Media";
+						key = "p002";
+					}
+					term {
+						label = "Baja";
+						key = "p003";
+					}
+				}
+			}
+
+			["mzov0qq"]
+			edit-boolean Urgente {
+				label = "Urgente";
+			}
+
+			["mpmkcha"]
+			capture-position Posicion;
+
+			["mjosuhg"]
+			edit-text RegistroEntrada {
+				label = "Nº registro de entrada";
+			}
+
+			["mfse_dw"]
+			edit-text RegistroSalida {
+				label = "Nº registro de salida";
+			}
+			view {
+				show = ref Prioridad;
+				show = ref Urgente;
+				show = ref RegistroEntrada;
+				show = ref RegistroSalida;
+			}
+		}
+
+		onFinished(SensorResponse msg) {
+			var incidencia = coordinacion.modulos.utilidades.NotificadorIncidencia :: notificacionIncidencia(msg);
+			var tarea = coordinacion :: procesos :: nim :: Workmap :: createNew();
+			tarea.setTarget(incidencia); 
+			tarea.save;
+			tarea.resume;
+		}
+	}
+}

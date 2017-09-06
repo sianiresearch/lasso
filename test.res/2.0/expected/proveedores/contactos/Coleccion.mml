@@ -1,0 +1,75 @@
+package coordinacion.proveedores.contactos {
+
+	["mvphi0g"]
+	definition Coleccion is collection {
+		label = "Contactos";
+
+		is-component;
+		add {
+			node = ref Contacto;
+		}
+
+		index = ref Index;
+
+		["mddav2w"]
+		view Vista {
+			
+			show {
+				index {
+					sort-by = ref Index.Nombre;
+					with-view = ref Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Nombre;
+					attribute = ref Index.Telefono;
+					attribute = ref Index.CorreoElectronico;
+				}
+				dimension {
+					attribute = ref Index.Nombre;
+					attribute = ref Index.Telefono;
+					attribute = ref Index.CorreoElectronico;
+				}
+			}
+		}
+
+		["mkns60g"]
+		definition Index is index {
+			label = "contactos";
+			reference {
+
+				["mwzxmcg"]
+				attribute Nombre {
+					type = STRING;
+					label = "Nombre";
+				}
+
+				["muahxwa"]
+				attribute Telefono {
+					type = STRING;
+					label = "Teléfono";
+				}
+
+				["mq9p__q"]
+				attribute CorreoElectronico {
+					type = STRING;
+					label = "Correo electrónico";
+				}
+			}
+
+			["mqkurew"]
+			view Vista {
+				is-default;
+				show {
+					title = ref Telefono;
+					line = ref Nombre;
+					line = ref CorreoElectronico;
+				}
+			}
+
+		}
+
+	}
+}
+  

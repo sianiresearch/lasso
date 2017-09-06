@@ -1,0 +1,34 @@
+import coordinacion.modulos.utilidades.OrdenTrabajoComun
+import coordinacion.modulos.utilidades.*
+
+package coordinacion.procesos.cori.documentos {
+
+	["mdcb5eq"]
+	definition Otv is document extends coordinacion.procesos.cori.Otc {
+		label = "Orden de trabajo de verificación correctiva";
+		template = template Otv;
+
+		schema {
+		}
+
+		["m0mejdg"]
+		definition Exportador is exporter {
+			label = "Exportador";
+			target = ref Otv;
+			onInitialize() {
+			}
+			onExportItem(coordinacion.procesos.cori.documentos.otv.Schema i) {
+				var fichaEncargo = this.getScope() as coordinacion.procesos.cori.encargos.encargocv.Ficha;
+				var expediente = fichaEncargo.owner.owner.owner as coordinacion.procesos.cori.Expediente;
+				var fichaExpediente = expediente.fichaExpedienteCorrectivo;
+				var incidencia = fichaExpediente.enlaceIncidenciaField.getNode() as coordinacion.incidencias.Incidencia;
+				OrdenTrabajoComun :: exportarIncidencia(incidencia, i);
+				OrdenTrabajoComun :: exportarEncargo(fichaEncargo, i);
+				OrdenTrabajoComun :: exportarOtros(i);
+				OrdenTrabajoComun :: exportarObjetosActuacion(incidencia, i);
+			}
+		}
+
+	}
+}
+  

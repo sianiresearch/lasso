@@ -1,0 +1,29 @@
+import coordinacion.modulos.utilidades.OrdenTrabajoComun
+import coordinacion.modulos.utilidades.*
+import coordinacion.procesos.cori.*
+
+package coordinacion.procesos.cori.documentos {
+
+	["m2kcgjq"]
+	definition Ptac is document extends coordinacion.procesos.cori.Ptc {
+		label = "Parte de trabajo de actuación correctivo";
+		is-readonly;
+
+		schema {
+		}
+
+		["mghji5a"]
+		definition Importador is importer {
+			label = "Importador";
+			target = ref Ptac;
+			onInitialize() {
+			}
+			onImportItem(coordinacion.procesos.cori.documentos.ptac.Schema item) {
+				var fichaEncargo = this.getScope() as encargos.encargoca.Ficha;
+				ParteTrabajoComun :: importarEncargo(fichaEncargo, item);
+			}
+		}
+
+	}
+}
+  

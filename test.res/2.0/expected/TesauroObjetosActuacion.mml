@@ -1,0 +1,20 @@
+package coordinacion {
+
+	["m4renca"]
+	definition TesauroObjetosActuacion is thesaurus {
+		label = "Objeto de actuación";
+		ontology = "OntologiaTesauroObjetosActuacion";
+		is-self-generated;
+		self-generated {
+			from-index {
+				index = ref CatalogoObjetosActuacion.Index;
+				mapping {
+					label = ref CatalogoObjetosActuacion.Index.Nombre;
+					key = ref CatalogoObjetosActuacion.Index.Codigo;
+					parent = ref CatalogoObjetosActuacion.Index.IdPadre;
+				}
+			}
+		}
+	}
+}
+  

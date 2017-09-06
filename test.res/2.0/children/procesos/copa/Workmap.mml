@@ -1,0 +1,185 @@
+import coordinacion.modulos.utilidades.HechosOperacionesPreventivas
+import coordinacion.modulos.asistentes.*
+import coordinacion.modulos.utilidades.*
+
+package coordinacion.procesos.copa {
+
+	["mvpbjaw"]
+	definition Workmap is service {
+		label = "Trabajo de actuación preventivo";
+		target = ref Expediente;
+		shortcut shPtap;
+		ontology = "ServicioActuacionPreventivo";
+
+		["mmrovzq"]
+		view {
+			label = "Expediente";
+			show {
+				target = ref Expediente.VistaInformacion;
+			}
+		}
+
+		["m3_rqja"]
+		view {
+			label = "Parte preventivo";
+			show {
+				shortcut = "shPtap";
+			}
+		}
+		
+		
+		onAbort() {
+			try{
+				var expediente = this.getTarget();
+				var ficha = expediente.fichaExpediente;
+				var seccionControl = ficha.seccionControlField as fichaexpediente.SeccionControl;
+				seccionControl.setEstado(new Term("e003","Revisión cancelada"));
+				ficha.save;
+				doGoto(Place :: Terminado, "Tarea abortada");
+			}catch(Exception e){				
+				e.printStackTrace;
+				doGoto(Place :: Terminado, "Tarea abortada");
+			}			
+		}
+		
+		customer {
+			request Terminar {
+				code = "terminar";
+				import(CustomerRequest msg) {
+					var tarea = this.^task;
+					var bloqueo = Lock :: ConfirmarObservaciones_ExitConfirmar;
+					tarea.doUnlock(bloqueo);
+				}
+			}
+			request Ptap {
+				goto = ref RellenarObservaciones;
+				code = "ptap";
+				import(CustomerRequest msg) {
+					var parte = msg.getDocument("ptap", typeof(Ptap));
+					var Label = msg.getString("label");
+					var Expediente expediente = null;
+					var tarea = this.^task;
+					if (tarea.getFlag("novalidado") != null){
+						expediente = tarea.^target;
+					}else{
+						var expedientes = coordinacion :: Expedientes :: instance;
+						expediente = Expediente :: createNew(expedientes);										
+						tarea.setTarget(expediente);
+					}
+					tarea.setLabel(Label);
+					tarea.setShPtap(parte);
+					tarea.save;
+					var ficha = expediente.fichaExpediente;
+					ficha.ptField.addNew(parte.toLink());
+					ficha.save;
+					ptap :: Importador :: doImportOf(parte).atScope(expediente);
+					var post = Post :: createRequest();
+					post.setTitle("Ha llegado un parte de trabajo preventivo: " + Label);
+					post.setTitleLink(tarea.toMonetLink());
+					NewsService :: postAndNotifyToAll(post);
+					var notificacion = "Ha llegado un trabajo preventivo de actuación: ";
+					var mensaje = "";
+					SendMail :: sendNotification(notificacion + tarea.getLabel() + mensaje, tarea);
+				}
+			}
+			response Observaciones {
+				code = "observaciones";
+				constructor(CustomerResponse msg) {
+					var tarea = this.^task;
+					var expediente = tarea.^target;
+					var ficha = expediente.fichaExpediente;
+					for(respuesta : ficha.seccionRespuestaField.allFields) {
+						var seccionRespuesta = respuesta as fichaexpediente.SeccionRespuesta;
+						if(seccionRespuesta.ultima.equals(tarea.getFlag("nobservaciones"))) {
+							msg.attachString("observaciones", seccionRespuesta.observaciones);
+							msg.attachString("novalidado", String :: valueOf(seccionRespuesta.noValidado));
+							return;
+						}
+					}
+					msg.attachString("observaciones", tarea.getFlag("observaciones"));
+					msg.attachString("novalidado", tarea.getFlag("novalidado"));
+				}
+			}
+		}
+
+		["mk3o8qg"]
+		place Iniciado {
+			is-initial;
+		}
+
+		["mmzgcta"]
+		place RellenarObservaciones {
+
+			["mqzes4a"]
+			edition {
+				goto = ref EnviarObservaciones;
+				history = "Observaciones rellenadas";
+				label = "Rellenar observaciones";
+				use {
+					form = ref ObservacionesPtap;
+					with-view = ref ObservacionesPtap.Vista;
+				}
+
+				onSolve(coordinacion.modulos.asistentes.ObservacionesPtap f) {
+					var expediente = this.^target;
+					var ficha = expediente.fichaExpediente;
+					var nobservaciones = 1;
+					if(ficha.getFlag("nobservaciones") != null) {
+						nobservaciones = Integer :: valueOf(ficha.getFlag("nobservaciones")) + 1;
+					}
+					ficha.setFlag("nobservaciones", String :: valueOf(nobservaciones));
+					var seccionRespuesta = ficha.seccionRespuestaField.addNew as fichaexpediente.SeccionRespuesta;
+					seccionRespuesta.fechaObservaciones = new Date();
+					seccionRespuesta.observaciones = f.observaciones;
+					seccionRespuesta.noValidado = f.noValidado;
+					seccionRespuesta.ultima = String :: valueOf(nobservaciones);
+					this.setFlag("observaciones", seccionRespuesta.observaciones);
+					this.setFlag("novalidado", String :: valueOf(seccionRespuesta.noValidado));
+					var seccionControl = ficha.seccionControlField as fichaexpediente.SeccionControl;
+					seccionControl.setEstado(new Term("e002","Revisado"));
+					ficha.save;
+					expediente.lock;
+					if (f.noValidado == false){
+						HechosOperacionesPreventivas::hechoOperacionControl(expediente.resultadoPa);
+						HechosOperacionesPreventivas::hechoOperacionRevisionPreventivo(expediente.resultadoPa);
+					}
+				}
+			}
+		}
+
+		["mkpqgbg"]
+		place EnviarObservaciones {
+
+			["m965z_g"]
+			send-response {
+				response = ref Observaciones;
+				goto = ref ConfirmarObservaciones;
+				history = "Observaciones enviadas";
+				label = "Enviando observaciones";
+			}
+		}
+
+		["mkefgow"]
+		place ConfirmarObservaciones {
+
+			["muui9mw"]
+			door {
+				label = "Comprobando";
+
+				["mb19pqw"]
+				exit ExitConfirmar {
+					goto = ref Terminado;
+					history = "Envía realizado con éxito";
+				}
+			}
+		}
+
+
+		["mw5onea"]
+		place Terminado {
+			is-final;
+		}
+
+	}
+}
+  

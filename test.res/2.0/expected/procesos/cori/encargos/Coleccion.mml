@@ -1,0 +1,44 @@
+import coordinacion.modulos.*
+
+package coordinacion.procesos.cori.encargos {
+
+	["mg6jnlg"]
+	definition Coleccion is collection extends encargos.Coleccion {
+		label = "Encargos";
+		is-component;
+		is-readonly;
+		index = ref encargos.Coleccion.Index;
+		add {
+			node = ref encargos.Encargo;
+		}
+
+		["mtmmodw"]
+		view Vista {
+			
+			is-default;
+			show {
+				index {
+					sort-by = ref encargos.Coleccion.Index.FechaEnvioOT;
+					sort-mode = ASC;
+					with-view = ref encargos.Coleccion.Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref encargos.Coleccion.Index.FechaEnvioOT;
+					attribute = ref encargos.Coleccion.Index.FechaRecepcionPT;
+					attribute = ref encargos.Coleccion.Index.Codigo;
+					attribute = ref encargos.Coleccion.Index.CalculoCoste;
+					attribute = ref encargos.Coleccion.Index.CalculoCosteFacturable;
+				}
+				dimension {
+					attribute = ref encargos.Coleccion.Index.FechaEnvioOT;
+					attribute = ref encargos.Coleccion.Index.FechaRecepcionPT;
+					attribute = ref encargos.Coleccion.Index.CalculoCoste;
+					attribute = ref encargos.Coleccion.Index.CalculoCosteFacturable;
+				}
+			}
+		}
+
+	}
+}

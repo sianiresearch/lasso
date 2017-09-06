@@ -1,0 +1,61 @@
+package coordinacion.modulos.asistentes {
+
+	["mselmkw"]
+	definition FormResultado is form {
+		label = "Configuración de la prioridad de un trabajo
+      correctivo";
+
+		["masinta"]
+		field-date FechaInicioReal {
+			label = "Fecha y hora de inicio real";
+			precision = MINUTES;
+		}
+
+		["mshdycw"]
+		field-date FechaFinReal {
+			label = "Fecha y hora final real";
+			precision = MINUTES;
+		}
+
+		["mnstldg"]
+		field-text Responsable {
+			label = "Responsable";
+			allow-history;
+		}
+
+		["mekmaeg"]
+		field-memo ObsResultado {
+			label = "Observaciones";
+		}
+
+		["ms_c6tw"]
+		field-picture ImagenResultado {
+			label = "Foto";
+			size {
+				height = 480;
+				width = 640;
+			}
+		}
+
+		["mdyk_bw"]
+		field-file AdjuntosResultado {
+			is-multiple;
+			label = "Adjuntos";
+		}
+
+		["mopqtcq"]
+		view Vista {
+			is-default;
+			show {
+				field = ref FechaInicioReal;
+				field = ref FechaFinReal;
+				field = ref Responsable;
+				field = ref ObsResultado;
+				field = ref ImagenResultado;
+				field = ref AdjuntosResultado;
+			}
+		}
+
+	}
+}
+  

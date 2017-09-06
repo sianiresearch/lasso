@@ -1,0 +1,11 @@
+package coordinacion {
+
+	["mjpoyhw"]
+	definition RoleCoordinador is role {
+		label = "Coordinador";
+		enable-services {
+			ontology = "ServicioVerificacionInterna";
+			ontology = "ServicioInspeccionInterna";
+		}
+	}
+}

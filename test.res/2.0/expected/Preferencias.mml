@@ -1,0 +1,76 @@
+package coordinacion {
+
+	["mcxlv5g"]
+	definition Preferencias is form {
+		label = "Preferencias";
+		is-singleton;
+
+		["miw1c2q"]
+		field-composite Notificaciones {
+			label = "Notificaciones";
+
+			["m9o5kow"]
+			field-text Correo {
+				label = "Cuentas de correo";
+				is-multiple;
+			}
+
+			["mnljipq"]
+			field-boolean Activar {
+				label = "Notificar encargos";
+			}
+		}
+		
+		["mmvvcvw"]
+		field-composite NotificacionesRetrasos {
+			label = "Notificar tareas retrasadas";
+			
+			["mqtr2fg"]
+			field-text CorreoRetrasos {
+				label = "Cuentas de correo";
+				is-multiple;
+			}
+			
+			["mpwb7jq"]
+			field-number DiasRetrasos {
+				label = "Notificar, determinado número de días, después de la fecha fin límite";
+				format = "0";
+			}
+			
+			["mjzw87a"]
+			field-boolean ActivarRetrasos {
+				label = "Notificar tareas fuera de plazo";
+			}			
+			
+			view {  
+				show { 
+					field = ref ActivarRetrasos;
+					field = ref CorreoRetrasos;
+					field = ref DiasRetrasos;
+				}
+			}
+		}		
+		
+		
+		["me_3xpa"]
+		field-date FechaCuboIncidenciasAbiertas {
+			label = "Última actualización de incidencias abiertas (Debug)";
+			precision = DAYS;
+		}
+		["mppvtwa"]
+		field-date FechaFinalCuboAbiertas {
+			label = "Fecha final cubo abiertas(Debug)";
+			precision = DAYS;
+		}
+
+		["m2_kgng"]
+		view {
+			label = "Preferencias";
+			show {
+				field = ref Notificaciones;
+				field = ref NotificacionesRetrasos;
+			}
+		}
+
+	}
+}

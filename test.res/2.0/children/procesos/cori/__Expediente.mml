@@ -1,0 +1,170 @@
+package coordinacion.procesos.cori {
+
+	["mqvoeng"]
+	definition Expediente is container extends coordinacion.Expedientes.Expediente {
+		label = "Expediente correctivo";
+		is-readonly;
+
+		contain {
+			node = ref FichaExpedienteCorrectivo;
+			node = ref encargos.Coleccion;
+		}
+
+		["mgllpzw"]
+		view InformacionGeneral{
+			label = "Información general";
+			is-default;
+			show {
+				component = ref FichaExpedienteCorrectivo.Vista;
+			}
+		}
+
+		["mswqhda"]
+		view {
+			label = "Encargos";
+			show {
+				component = ref encargos.Coleccion.Vista;
+			}
+		}
+
+		["m0m3xyq"]
+		view {
+			label = "Tareas vinculadas";
+			show {
+				tasks;
+			}
+		}
+
+		["mvk4abg"]
+		definition FichaExpedienteCorrectivo is form {
+			label = "Expediente correctivo";
+			is-readonly;
+
+			is-component;
+			mapping {
+				index = ref coordinacion.Expedientes.Index;
+
+				calculate() {
+					var nodo = this.getNode();
+					var referencia = this.^reference;
+					if(nodo.estado != null) {
+						var estado = nodo.estado.^label;
+						if(estado.equals("Cerrado") || estado.equals("Cancelado") || estado.equals("No procedente")) {
+							if (estado.equals("Cancelado")){
+								referencia.filtroEstado = "cancelado";								
+							}else{
+								if (estado.equals("Cerrado") || estado.equals("No procedente")){
+									referencia.filtroEstado = "resuelto";
+								}
+							}
+						}else{
+							referencia.filtroEstado = "ejecucion";
+						}
+					}					
+				}
+			}
+
+			["mbxekiw"]
+			field-date FechaApertura {
+				label = "Fecha de apertura";
+				precision = DAYS;
+			}
+
+			["mukyqpw"]
+			field-date FechaArchivo {
+				label = "Fecha de archivo";
+				precision = DAYS;
+			}
+
+			["mid0k2w"]
+			field-link ObjetoActuacion {
+				label = "Objeto de actuación";
+				allow-history;
+				allow-search;
+				source {
+					index = ref coordinacion.CatalogoObjetosActuacion.Index;
+				}
+			}
+
+			["mymwo1g"]
+			field-link EnlaceIncidencia {
+				label = "Enlace de la incidencia";
+				source {
+					index = ref coordinacion.incidencias.Coleccion.Index;
+				}
+				allow-history;
+				allow-search;
+			}
+
+			["mtes5gq"]
+			field-select Prioridad {
+				label = "Prioridad";
+				terms {
+					term {
+						key = "p001";
+						label = "Alta";
+						is-category;
+					}
+					term {
+						key = "p002";
+						label = "Media";
+					}
+					term {
+						key = "p003";
+						label = "Baja";
+					}
+				}
+				select {
+					is-embedded;
+				}
+			}
+
+			["mylsajg"]
+			field-select Estado {
+				label = "Estado de trabajo correctivo";
+				source = ref coordinacion.TesauroEstadosCori;
+			}
+
+			["ma0h_oq"]
+			field-serial Codigo {
+				label = "Nº Expediente";
+				serial GeneratorCodigoExpedienteCo {
+					format = "C-%4S/%2Y";
+				}
+			}
+			properties {
+				calculate() {
+					var String codigo = getNode.getCodigo();
+					var String objeto;
+					if(codigo.isEmpty()) codigo = "Sin código";
+					if(getNode().getObjetoActuacionAsTerm() != null) objeto = this.getNode().getObjetoActuacionAsTerm().getLabel();
+					if(objeto == null || objeto.isEmpty()) {
+						this.getProperties().setLabel(codigo + " " + "sin objeto de actuación");
+					}
+					else {
+						this.getProperties().setLabel(codigo + " " + objeto);
+					}
+				}
+			}
+
+			["mox49ag"]
+			view Vista {
+				label = "Información general";
+				is-default;
+				
+				show {
+					field = ref Codigo;
+					field = ref FechaApertura;
+					field = ref ObjetoActuacion;
+					field = ref EnlaceIncidencia;
+					field = ref Prioridad;
+					field = ref Estado;
+					field = ref FechaArchivo;
+				}
+			}
+
+		}
+
+	}
+}
+  

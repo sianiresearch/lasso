@@ -1,0 +1,29 @@
+package coordinacion.modulos.asistentes {
+
+	["m4odx7a"]
+	definition ConfigurarIntervalo is form {
+		label = "Seleccionar fecha inicial y fecha final";
+		
+		["moflq_g"]
+		field-date FechaInicial {
+			label = "Fecha inicial";
+			precision = DAYS;
+		}
+		
+		["mu1b4iw"]
+		field-date FechaFinal {
+			label = "Fecha final";
+			precision = DAYS;
+		}
+		
+		
+		["mrnqc6a"]
+		view Vista{
+			label = "ConfigurarIntervalo";
+			show {
+				field = ref FechaInicial;
+				field = ref FechaFinal;
+			}			
+		}		
+	}
+}

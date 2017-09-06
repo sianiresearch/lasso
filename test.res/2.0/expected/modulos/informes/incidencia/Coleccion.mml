@@ -1,0 +1,19 @@
+package coordinacion.modulos.informes.incidencia {
+
+	["md6x_dg"]
+	definition Coleccion is collection {
+		label = "Informe de incidencias";
+		is-singleton;
+		add {
+			node = ref Ficha;
+		}
+
+		["mg_e_zq"]
+		view Vista {
+			label = "Incidencias";
+			show {
+				items;
+			}
+		}
+	}
+}

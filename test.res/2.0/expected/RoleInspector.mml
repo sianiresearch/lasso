@@ -1,0 +1,7 @@
+package coordinacion {
+
+	["mw_zs_q"]
+	definition RoleInspector is role {
+		label = "Inspector";
+	}
+}

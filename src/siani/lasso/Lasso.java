@@ -3,6 +3,8 @@ package siani.lasso;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +39,8 @@ public class Lasso {
 	}
 
 	public void execute() {
-		if (!parent.file().exists() || !child.file().exists()) return;
+		if (!parent.file().exists()) return;
+		if (!child.file().exists() && copyFile()) return;
 		int blockSize;
 		for (blockSize = parent.linesSize(); blockSize >= 1; blockSize--) {
 			List<Block> matches = matchBlocksInChild(parent.split(blockSize));
@@ -49,6 +52,15 @@ public class Lasso {
 			}
 		}
 		writeSyncedFile(propagateChanges());
+	}
+
+	private boolean copyFile() {
+		try {
+			Files.copy(parent.file().toPath(), getDestiny().toPath(), StandardCopyOption.REPLACE_EXISTING);
+			return true;
+		} catch (IOException e) {
+		}
+		return false;
 	}
 
 	private List<Block> matchBlocksInChild(List<Block> blocks) {
@@ -129,7 +141,7 @@ public class Lasso {
 
 	private int calculatePositionOf(Block block) {
 		return block != null ?
-			block.lines().get(block.size() - 1).number() + 1 : 0;
+				block.lines().get(block.size() - 1).number() + 1 : 0;
 	}
 
 	private Block blockOfPreviousLine(LassoFile.Line line) {
@@ -144,7 +156,9 @@ public class Lasso {
 
 	private void writeSyncedFile(List<String> lines) {
 		try {
-			final FileWriter writer = new FileWriter(getDestiny());
+			final File destiny = getDestiny();
+			destiny.getParentFile().mkdirs();
+			final FileWriter writer = new FileWriter(destiny);
 			for (String line : lines) writer.write(line + LassoFile.NEW_LINE);
 			writer.close();
 		} catch (IOException e) {

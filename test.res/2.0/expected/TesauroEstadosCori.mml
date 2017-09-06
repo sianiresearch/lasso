@@ -1,0 +1,48 @@
+package coordinacion {
+
+	["mlxzghw"]
+	definition TesauroEstadosCori is thesaurus {
+		label = "Estados de expedientes correctivos";
+		ontology = "OntologiaTesauroEstadosCori";
+
+		terms {
+			term {
+				key = "programado";
+				label = "Programado";
+			}
+			term {
+				key = "pendienteDeVerificacion";
+				label = "Pendiente de verificación";
+			}
+			term {
+				key = "pendienteDeOperation";
+				label = "Pendiente de operación";
+			}
+			term {
+				key = "pendienteDeResolucion";
+				label = "Pendiente de resolución";
+			}
+			term {
+				key = "corregida";
+				label = "Ejecutado";
+			}
+			term {
+				key = "pendiente";
+				label = "Pendiente de inspección";
+			}
+			term {
+				key = "cerrado";
+				label = "Cerrado";
+			}
+			term {
+				key = "noProcedente";
+				label = "No procedente";
+			}
+			term {
+				key = "cancelada";
+				label = "Cancelado";
+			}
+		}
+	}
+}
+  

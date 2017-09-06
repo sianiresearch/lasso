@@ -1,0 +1,35 @@
+package coordinacion {
+
+	["mfpjylg"]
+	definition TesauroTipoElemento is thesaurus {
+		label = "Tipos de elemento";
+		ontology = "OntologiaTesauroTipoElemento";
+		terms {
+			term {
+				key = "e001";
+				label = "Arquetas";
+			}
+			term {
+				key = "e002";
+				label = "Pozos";
+			}
+			term {
+				key = "e003";
+				label = "Zonas ajardinadas";
+			}
+			term {
+				key = "e004";
+				label = "Dependencias generales";
+			}
+			term {
+				key = "e005";
+				label = "Imbornales";
+			}
+			term {
+				key = "e006";
+				label = "Registros";
+			}
+		}
+	}
+}
+ 

@@ -1,0 +1,76 @@
+package coordinacion.procesos.ani {
+
+	["moxpj6g"]
+	definition Ni is document {
+		label = "Notificación de incidencia";
+		schema {
+			Cliente String;
+			Proveedor String;
+			Edificio String;
+			ObjetoActuacionLabel String;
+			Lugar String;
+			Zona String;
+			ObjetoActuacionId String;
+			TipoIncidenciaLabel String;
+			many TipoIncidencia Term;
+			FechaIncidencia Date;
+			Corregida Boolean;
+			Descripcion String;
+			ImagenIncidencia Picture;
+			many Anexo {
+				Imagen1 Picture;
+				Imagen2 Picture;
+			}
+			many adjuntosIncidencia File;
+			ImagenMapa Picture;
+			NumeroGobiernoInicio String;
+			NumeroGobiernoFin String;
+		}
+
+		["mekaxvq"]
+		definition Importador is importer {
+			label = "Exportador";
+			target = ref Ni;
+			onImportItem(coordinacion.procesos.ani.ni.Schema item) {
+				var incidencia = this.scope as coordinacion.incidencias.Incidencia;
+				importarCampos(item, incidencia);
+				importarImagenes(item, incidencia);
+				incidencia.save;
+			}
+
+			function obtenerObjeto(coordinacion.procesos.ani.ni.Schema item) : Node {
+				return NodeService :: get(item.objetoActuacionId);
+			}
+
+			function importarCampos(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {
+				incidencia.setObjetoActuacion(obtenerObjeto(item).toLink);
+				coordinacion::modulos::utilidades::Utilidad::asignarMultiple(item.tipoIncidencia,incidencia.tipoIncidenciaField);
+				incidencia.fechaIncidencia = item.fechaIncidencia;
+				incidencia.corregida = item.corregida;
+				importarCampos2(item,incidencia);
+			}
+
+			function importarCampos2(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {
+				incidencia.descripcion = item.descripcion;
+				coordinacion::modulos::utilidades::Utilidad::asignarMultiple(item.adjuntosIncidencia,incidencia.adjuntosIncidenciaField);
+				if (item.corregida)
+					incidencia.unidad = item.proveedor;				
+			}
+
+			function importarImagenes(coordinacion.procesos.ani.ni.Schema item, coordinacion.incidencias.Incidencia incidencia) {
+				incidencia.imagenIncidenciaField.addNew(item.imagenIncidencia);
+				for(anexo : item.anexo) {
+					incidencia.imagenIncidenciaField.addNew(anexo.imagen1);
+					if(anexo.imagen2 != null) {
+						incidencia.imagenIncidenciaField.addNew(anexo.imagen2);
+					}
+				}
+                incidencia.setNumeroGobiernoInicio(item.numeroGobiernoInicio);
+                incidencia.setNumeroGobiernoFin(item.numeroGobiernoFin);
+			}
+
+		}
+
+	}
+}
+  

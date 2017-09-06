@@ -1,0 +1,64 @@
+package coordinacion.procesos.cori.jobs {
+
+	["ml_56ow"]
+	definition Verificar is job {
+		label = "Verificar";
+
+		["mrklpiw"]
+		step Resultado {
+			label = "Descripción";
+
+			["mgqvfra"]
+			edit-picture Imagen {
+				label = "Fotos";
+				is-multiple;
+				size {
+					width = 640;
+					height = 480;
+				}
+				
+			}
+
+			["mtrixsa"]
+			edit-memo Observaciones {
+				label = "Observaciones";
+			}
+			view {
+				show = ref Imagen;
+				show = ref Observaciones;
+			}
+		}
+
+		["ml_zmfg"]
+		step Resultado2 {
+			label = "¿Se ha verificado la incidencia?";
+
+			["mosebuw"]
+			edit-date FechaInicio {
+				label = "Fecha de inicio";
+			}
+			
+			["m6einnq"]
+			edit-date FechaFin {
+				label = "Fecha de finalización";
+			}
+			
+			["mzewnfq"]
+			edit-picture FirmaOperario {
+				label = "Firma inspector";
+				is-hand-written;
+			}										
+
+			["m5ki9jw"]
+			edit-boolean Verificado {
+				label = "Incidencia verificada";
+			}
+			view {
+				show = ref FechaInicio;
+				show = ref FechaFin;
+				show = ref Verificado;
+			}
+		}
+
+	}
+}

@@ -1,0 +1,130 @@
+import coordinacion.modulos.asistentes.*
+import coordinacion.modulos.util.*
+import coordinacion.procesos.cori.*
+
+package coordinacion.procesos.cori.actividades {
+
+	["mdcqdiq"]
+	definition VerificacionInterna is service {
+		label = "Verificación interna";
+		ontology = "ServicioVerificacionInterna";
+		shortcut shEncargoCV;
+		shortcut shIncidencia;
+		customer {
+			request Otv {
+				code = "otv";
+				goto = ref IniciarVerificacion;
+				import(CustomerRequest msg) {
+					var idtareapadre = msg.getString("idtareapadre");
+					var idencargo = msg.getString("idencargocv");
+					var idincidencia = msg.getString("idincidencia");
+					idtareapadre = idtareapadre.replaceAll("[\n\r]", "");
+					idencargo = idencargo.replaceAll("[\n\r]", "");
+					idincidencia = idincidencia.replaceAll("[\n\r]", "");
+					
+					var tareaPadre = TaskService.get(idtareapadre);
+					
+					var tarea = this.getTask();
+					var links = new ArrayList <MonetLink>;
+					links.^add(tarea.toMonetLink);
+					tareaPadre.addLog("Encargo interno de Verifición", "Rellenar resultados del trabajo de verificación", links);
+					tareaPadre.save;					
+					tarea.setShEncargoCV(NodeService :: get(idencargo));
+					tarea.setShIncidencia(NodeService :: get(idincidencia));
+					tarea.^label = msg.content;
+					tarea.save;
+				}
+			}
+		}
+
+		["m_akoxa"]
+		place Iniciado {
+			is-initial;
+			onArrive() { doGoto(Place :: IniciarVerificacion, "Iniciar verificación") }
+		}
+
+		["m_o2vda"]
+		place IniciarVerificacion {
+
+			["msucsiq"]
+			line {
+
+				["mio9jpq"]
+				stop StopResultadoVerificacion {
+					history = "Verificación iniciada";
+					goto = ref ResultadoVerificacion;
+					label = "Iniciar verificación";
+				}
+				label = "Iniciar verificación";
+			}
+		}
+
+		["mvcgyvq"]
+		place ResultadoVerificacion {
+
+			["mksydga"]
+			edition {
+				history = "Resultados de la verificación completados";
+				use {
+					form = ref FormResultado;
+					with-view = ref FormResultado.Vista;
+				}
+				onSolve(coordinacion.modulos.asistentes.FormResultado f) {
+					var encargo = this.shEncargoCV as encargos.EncargoCV;
+					var ficha = encargo.ficha;
+					ficha.setFechaInicioReal(f.getFechaInicioReal());
+					ficha.setFechaFinReal(f.getFechaFinReal());
+					ficha.setObservacionesResultado(f.getObsResultado());
+					ficha.setImagenResultado(f.getImagenResultado());
+					ficha.setFechaRecepcionPT(new Date());
+					coordinacion::modulos::utilidades::Utilidad::asignarMultiple(f.getAdjuntosResultado(),ficha.getAdjuntosResultadoField());
+					ficha.save();
+				}
+				label = "Resultados de la verificación";
+				goto = ref Finalizado;
+			}
+		}
+
+		["m_zuuza"]
+		place ResueltoVerificacionInterna {
+
+			["mwmprnw"]
+			line {
+				label = "¿Se ha verificado la incidencia?";
+
+				["mw2riuq"]
+				stop Verificada {
+					label = "Verificada";
+					goto = ref Finalizado;
+					history = "Incidencia verificada";
+					onTake() {
+						var encargo = this.shEncargoCV as encargos.EncargoCV;
+						var ficha = encargo.ficha;
+						var incidencia = this.shIncidencia as coordinacion.incidencias.Incidencia ficha.resultado = true;
+						ficha.save;
+					}
+				}
+
+				["md7btwq"]
+				stop NoVerificada {
+					label = "No verificada";
+					goto = ref Finalizado;
+					history = "Incidencia no verificada";
+					onTake() {
+						var encargo = this.shEncargoCV as encargos.EncargoCV;
+						var ficha = encargo.ficha;
+						ficha.resultado = false;
+						ficha.save;
+					}
+				}
+			}
+		}
+
+		["m72mq1w"]
+		place Finalizado {
+			is-final;
+		}
+
+	}
+}
+  

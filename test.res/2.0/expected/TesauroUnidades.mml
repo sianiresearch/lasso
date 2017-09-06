@@ -1,0 +1,24 @@
+import coordinacion.proveedores.*
+
+package coordinacion {
+
+	["mh7raew"]
+	definition TesauroUnidades is thesaurus {
+		label = "Unidades";
+
+		ontology = "OntologiaTesauroUnidades";
+
+		terms {
+			term {
+				label = "Unidad 1";
+				key = "U001";
+			}
+			term {
+				label = "Unidad 2";
+				key = "U002";
+			}
+		}
+
+	}
+}
+  

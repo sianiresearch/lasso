@@ -1,0 +1,33 @@
+package coordinacion.modulos.controlcalidad {
+
+	["mu_dyza"]
+	definition Contenedor is container {
+		label = "Control de calidad";
+		description = "Cálculo del control de calidad del servicio";
+		is-singleton;
+
+		contain {
+			node = ref Coleccion;
+			node = ref Configuracion;
+		}
+
+		["mkk8rbw"]
+		view {
+			label = "Certificaciones";
+			is-default;
+			show {
+				component = ref Coleccion.Vista;
+			}
+		}
+		
+		["m9vrbgg"]
+		view {
+			label = "Configuración";
+			show {  
+				component = ref Configuracion.Vista;
+			}
+		}
+
+
+	}
+}

@@ -1,0 +1,183 @@
+package coordinacion.modulos.componentes {
+
+	["mepjt4a"]
+	definition Coleccion is collection {
+		label = "Piezas";
+
+		is-component;
+		add {
+			node = ref Componente;
+		}
+
+		index = ref Index;
+
+		["m6_0hwg"]
+		view Vista {
+			is-default;
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.Codigo;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+					attribute = ref Index.Lugar;
+					attribute = ref Index.Zona;
+					attribute = ref Index.Inactivo;
+				}
+				dimension {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+					attribute = ref Index.Lugar;
+					attribute = ref Index.Zona;
+					attribute = ref Index.Inactivo;
+				}
+			}
+		}
+
+		["mg7jetq"]
+		view Prototipos {
+			is-default;
+			is-visible-when-embedded;
+			show {
+				shared-prototypes;
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Nombre;
+				}
+			}
+		}
+
+		["mira77q"]
+		definition Componente is container {
+
+			is-prototypable;
+			label = "Componente";
+
+			contain {
+				node = ref Ficha;
+			}
+
+			["mbazotw"]
+			view {
+				is-default;
+				label = "Descripción";
+				show {
+					component = ref Ficha.Vista;
+				}
+			}
+
+			["mxxxarw"]
+			view {
+				label = "Parámetros";
+				show {
+					component = ref Ficha.VistaParametros;
+				}
+			}
+
+			["mbmy4bg"]
+			view {
+				label = "Expedientes vinculados";
+				show {
+					links:in {
+						node = ref coordinacion.procesos.cori.Expediente;
+					}
+				}
+			}
+
+		}
+
+		["myly5og"]
+		definition Index is index {
+			label = "componentes";
+
+			reference {
+
+				["mea8nvw"]
+				attribute Imagen {
+					label = "Foto";
+					type = PICTURE;
+				}
+
+				["mziqd7q"]
+				attribute Codigo {
+					type = STRING;
+					label = "Código";
+				}
+
+				["mjfssdw"]
+				attribute Nombre {
+					type = STRING;
+					label = "Nombre";
+				}
+
+				["mv2eshq"]
+				attribute Inactivo {
+					label = "Inactivo";
+					type = BOOLEAN;
+				}
+
+				["mlniycq"]
+				attribute InactivoLabel {
+					label = "Inactivo";
+					type = STRING;
+				}
+
+				["mxpueiw"]
+				attribute Lugar {
+					label = "Módulo";
+					type = STRING;
+				}
+
+				["mszflzq"]
+				attribute Zona {
+					label = "Sección";
+					type = STRING;
+				}
+
+				["m0y3b5a"]
+				attribute LabelPadre {
+					label = "Padre";
+					type = STRING;
+				}
+
+				["mf3_weg"]
+				attribute IdPadre {
+					label = "IdPadre";
+					type = STRING;
+				}
+			}
+
+			["mmmebpq"]
+			view Vista {
+				show {
+					picture = ref Imagen;
+					title = ref Nombre;
+					line = ref Codigo;
+					line-below = ref Lugar;
+					line-below = ref Zona;
+					highlight = ref InactivoLabel;
+				}
+			}
+
+			["mjyjwhg"]
+			view VistaLink {
+				show {
+					line = ref LabelPadre;
+					line = ref Codigo;
+					line = ref Nombre;
+					line = ref Lugar;
+					line = ref Zona;
+					line = ref Inactivo;
+				}
+			}
+
+		}
+
+	}
+}
+  

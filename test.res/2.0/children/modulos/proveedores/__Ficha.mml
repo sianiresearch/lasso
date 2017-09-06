@@ -1,0 +1,40 @@
+import coordinacion.*
+
+package coordinacion.modulos.proveedores {
+
+	["mweprqq"]
+	definition Ficha is form {
+
+		label = "Proveedor";
+
+		["mrw4w1g"]
+		field-text Codigo {
+			label = "Código";
+		}
+
+		["mjv8d0g"]
+		field-text Nombre {
+			label = "Nombre";
+		}
+		
+		mapping {
+			index = ref Coleccion.Index;
+		}
+		properties {
+			calculate() {
+				this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
+			}
+		}
+
+		["myxwtjw"]
+		view Vista {
+			is-default;
+			show {
+				field = ref Codigo;
+				field = ref Nombre;
+			}
+		}
+
+	}
+}
+  

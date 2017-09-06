@@ -1,0 +1,30 @@
+package coordinacion {
+
+	["m0xlbag"]
+	definition TesauroLugar is thesaurus {
+		label = "Lugar";
+		ontology = "OntologiaTesauroLugar";
+		terms {
+			term {
+				key = "1";
+				label = "CENTRO";
+			}
+			term {
+				key = "2";
+				label = "TAMARACEITE-SAN LORENZO";
+			}
+			term {
+				key = "3";
+				label = "ISLETA-PUERTO-GUANARTEME";
+			}
+			term {
+				key = "4";
+				label = "CIUDAD ALTA";
+			}
+			term {
+				key = "5";
+				label = "VEGUETA-CONO SUR-TAFIRA";
+			}
+		}
+	}
+}

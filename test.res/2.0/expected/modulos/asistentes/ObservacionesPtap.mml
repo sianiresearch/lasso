@@ -1,0 +1,27 @@
+package coordinacion.modulos.asistentes {
+
+	["m8x__ra"]
+	definition ObservacionesPtap is form {
+		label = "Observaciones al trabajo preventivo";
+
+		["mltvefq"]
+		field-memo Observaciones {
+			label = "Observaciones";
+		}
+
+		["mjapjjq"]
+		field-boolean NoValidado {
+			label = "No validado";
+		}
+
+		["meqaneg"]
+		view Vista {
+			show {
+				field = ref Observaciones;
+				field = ref NoValidado;
+			}
+		}
+
+	}
+}
+  

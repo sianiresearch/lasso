@@ -1,0 +1,8 @@
+package coordinacion {
+
+	["mbk1syq"]
+	definition RoleAdministradorServicio is role {
+		label = "Soporte servicio";
+		disable-edition;
+	}
+}

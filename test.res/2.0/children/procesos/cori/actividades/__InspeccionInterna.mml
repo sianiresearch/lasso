@@ -1,0 +1,62 @@
+import coordinacion.modulos.asistentes.*
+
+package coordinacion.procesos.cori.actividades {
+
+	["m6zus7q"]
+	definition InspeccionInterna is service {
+		label = "Inspección interna";
+		ontology = "ServicioInspeccionInterna";
+		customer {
+			request Otic {
+				code = "otic";
+				goto = ref IniciarInspeccion;
+			}
+		}
+
+		["memldiw"]
+		place Iniciado {
+			is-initial;
+			onArrive() { doGoto(Place :: IniciarInspeccion, "Iniciar inspección") }
+		}
+
+		["mjtwzlg"]
+		place IniciarInspeccion {
+
+			["muvjjpw"]
+			line {
+
+				["mvaae_q"]
+				stop StopResultadoInspeccion {
+					history = "Inspección iniciada";
+					goto = ref ResultadoInspeccion;
+					label = "Iniciar inspección";
+				}
+				label = "Iniciar inspección";
+			}
+		}
+
+		["mvho_fg"]
+		place ResultadoInspeccion {
+
+			["m1_4r_a"]
+			edition {
+				history = "Resultados de la inspección completados";
+				use {
+					form = ref FormResultado;
+					with-view = ref FormResultado.Vista;
+				}
+				onSolve(coordinacion.modulos.asistentes.FormResultado f) {
+				}
+				label = "Resultados de la inspección";
+				goto = ref Finalizado;
+			}
+		}
+
+		["mxgotfw"]
+		place Finalizado {
+			is-final;
+		}
+
+	}
+}
+  

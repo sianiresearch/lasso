@@ -1,0 +1,33 @@
+import coordinacion.analytics.dashboardincidencias.datastoreincidencia.*
+package coordinacion.analytics {
+
+	["m3b2gqw"]
+	definition DataStoreBuilderIncidencia is datastore-builder {
+		label = "Builder de Incidencia";
+		source = ref coordinacion.incidencias.Incidencia;
+		to {
+			datastore = ref DashBoardIncidencias.DataStoreIncidencia;
+			onBuild(coordinacion.incidencias.Incidencia nodeInstance, coordinacion.analytics.dashboardincidencias.DataStoreIncidencia dataStoreInstance) {
+				var dimensionIncidencia = dataStoreInstance.getIncidencias();
+				var componenteIncidencia = insertarComponenteIncidencia(nodeInstance, dimensionIncidencia);
+				rellenarComponenteIncidencia(nodeInstance, componenteIncidencia);				
+				dimensionIncidencia.save();
+			}
+		}
+		
+		function insertarComponenteIncidencia(coordinacion.incidencias.Incidencia nodeInstance, IncidenciasDimension dimensionIncidencia): IncidenciasDimensionComponent{
+			var componenteIncidencia = dimensionIncidencia.insertComponent(nodeInstance.toLink().getId());
+			return componenteIncidencia;
+		}
+		
+		function rellenarComponenteIncidencia(coordinacion.incidencias.Incidencia nodeInstance, IncidenciasDimensionComponent componenteIncidencia){
+			componenteIncidencia.addCodigo(nodeInstance.getCodigoIncidencia());
+			if(nodeInstance.origen != null) {
+				componenteIncidencia.addOrigen(nodeInstance.origen.^label) }
+			else {
+				componenteIncidencia.addOrigen("Sin especificar");
+			}
+		}
+
+	}
+}

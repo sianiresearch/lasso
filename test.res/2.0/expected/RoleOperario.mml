@@ -1,0 +1,8 @@
+package coordinacion {
+
+	["mjzkenq"]
+	definition RoleOperario is role {
+		label = "Operario";
+
+	}
+}

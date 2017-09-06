@@ -1,0 +1,530 @@
+package coordinacion {
+
+	["mc1hcyq"]
+	definition TesauroBarrios is thesaurus {
+		label = "Barrios";
+		ontology = "OntologiaTesauroBarrios";
+		terms {
+			term {
+				label = "ALCARAVANERAS";
+				key = "t0001";
+			}
+			term {
+				label = "ALMATRICHE ALTO";
+				key = "t0002";
+			}
+			term {
+				label = "ALMATRICHE BAJO";
+				key = "t0003";
+			}
+			term {
+				label = "ALTAVISTA";
+				key = "t0004";
+			}
+			term {
+				label = "LA ISLETA";
+				key = "t0005";
+			}
+			term {
+				label = "LA BALLENA";
+				key = "t0006";
+			}
+			term {
+				label = "EL BATAN";
+				key = "t0007";
+			}
+			term {
+				label = "LA CALZADA";
+				key = "t0008";
+			}
+			term {
+				label = "CAMPUS UNIVERSITARIO";
+				key = "t0009";
+			}
+			term {
+				label = "CANALEJAS";
+				key = "t0010";
+			}
+			term {
+				label = "LA CANTERA";
+				key = "t0011";
+			}
+			term {
+				label = "CAÑADA HONDA";
+				key = "t0012";
+			}
+			term {
+				label = "EL CARDÓN";
+				key = "t0013";
+			}
+			term {
+				label = "CASA AYALA";
+				key = "t0014";
+			}
+			term {
+				label = "CASABLANCA I";
+				key = "t0015";
+			}
+			term {
+				label = "CASABLANCA III";
+				key = "t0016";
+			}
+			term {
+				label = "LA CAZUELA";
+				key = "t0017";
+			}
+			term {
+				label = "CHUMBERAS";
+				key = "t0018";
+			}
+			term {
+				label = "CIUDAD DEL CAMPO";
+				key = "t0019";
+			}
+			term {
+				label = "CIUDAD DEL MAR";
+				key = "t0020";
+			}
+			term {
+				label = "CIUDAD JARDÍN";
+				key = "t0021";
+			}
+			term {
+				label = "COSTA AYALA";
+				key = "t0022";
+			}
+			term {
+				label = "LA CRUZ";
+				key = "t0023";
+			}
+			term {
+				label = "CRUZ DEL OVEJERO";
+				key = "t0024";
+			}
+			term {
+				label = "CUESTA RAMÓN";
+				key = "t0025";
+			}
+			term {
+				label = "CUEVAS BLANCAS";
+				key = "t0026";
+			}
+			term {
+				label = "CUEVAS TORRES";
+				key = "t0027";
+			}
+			term {
+				label = "LA DATA";
+				key = "t0028";
+			}
+			term {
+				label = "DÍAZ CASANOVA";
+				key = "t0029";
+			}
+			term {
+				label = "DISEMINADO DE ALMATRICHE";
+				key = "t0030";
+			}
+			term {
+				label = "DISEMINADO DE LA MONTAÑETA";
+				key = "t0031";
+			}
+			term {
+				label = "DISEMINADO DE LAS PALMAS";
+				key = "t0032";
+			}
+			term {
+				label = "DISEMINADO DE LOS GILES";
+				key = "t0033";
+			}
+			term {
+				label = "DISEMIONADO DE LOS HOYOS";
+				key = "t0034";
+			}
+			term {
+				label = "DISEMINADO DE MARZAGAN";
+				key = "t0035";
+			}
+			term {
+				label = "DISEMINADO DE SAN LORENZO";
+				key = "t0036";
+			}
+			term {
+				label = "DISEMINADO DE TAFIRA";
+				key = "t0037";
+			}
+			term {
+				label = "DISEMINADO DE TAMARACEITE";
+				key = "t0038";
+			}
+			term {
+				label = "DISEMINADO DE TENOYA";
+				key = "t0039";
+			}
+			term {
+				label = "DON ZOILO";
+				key = "t0040";
+			}
+			term {
+				label = "DRAGONAL ALTO";
+				key = "t0041";
+			}
+			term {
+				label = "DRAGONAL BAJO";
+				key = "t0042";
+			}
+			term {
+				label = "ESCALERITAS";
+				key = "t0043";
+			}
+			term {
+				label = "LA FERIA";
+				key = "t0044";
+			}
+			term {
+				label = "FINCAS UNIDAS";
+				key = "t0045";
+			}
+			term {
+				label = "EL FONDILLO";
+				key = "t0046";
+			}
+			term {
+				label = "LA GALERA";
+				key = "t0047";
+			}
+			term {
+				label = "LOS GILES";
+				key = "t0048";
+			}
+			term {
+				label = "GUANARTEME";
+				key = "t0049";
+			}
+			term {
+				label = "HOYA ANDREA";
+				key = "t0050";
+			}
+			term {
+				label = "HOYA DE LA PLATA";
+				key = "t0051";
+			}
+			term {
+				label = "LOS HOYOS";
+				key = "t0052";
+			}
+			term {
+				label = "ISLA PERDIDA";
+				key = "t0053";
+			}
+			term {
+				label = "LA ISLETA";
+				key = "t0054";
+			}
+			term {
+				label = "JINAMAR";
+				key = "t0055";
+			}
+			term {
+				label = "LADERA ALTA";
+				key = "t0056";
+			}
+			term {
+				label = "EL LASSO";
+				key = "t0057";
+			}
+			term {
+				label = "LLANO DE LAS NIEVES";
+				key = "t0058";
+			}
+			term {
+				label = "LLANOS DE LA BARRERA";
+				key = "t0059";
+			}
+			term {
+				label = "LLANOS DE Mª RIVERA";
+				key = "t0060";
+			}
+			term {
+				label = "LOMO APOLINARIO";
+				key = "t0061";
+			}
+			term {
+				label = "LOMO BLANCO";
+				key = "t0062";
+			}
+			term {
+				label = "LOMO CORCOBADO";
+				key = "t0063";
+			}
+			term {
+				label = "LOMO DE EN MEDIO";
+				key = "t0064";
+			}
+			term {
+				label = "LOMO EL SABINAL";
+				key = "t0065";
+			}
+			term {
+				label = "LOMO LOS FRAILES";
+				key = "t0066";
+			}
+			term {
+				label = "LOMO VERDEJO";
+				key = "t0067";
+			}
+			term {
+				label = "LUGO";
+				key = "t0068";
+			}
+			term {
+				label = "LAS MAJADILLAS";
+				key = "t0069";
+			}
+			term {
+				label = "MARZAGAN";
+				key = "t0070";
+			}
+			term {
+				label = "MASAPEZ";
+				key = "t0071";
+			}
+			term {
+				label = "MERCALASPALMAS";
+				key = "t0072";
+			}
+			term {
+				label = "LAS MESAS";
+				key = "t0073";
+			}
+			term {
+				label = "LA MILAGROSA";
+				key = "t0074";
+			}
+			term {
+				label = "MILLER";
+				key = "t0075";
+			}
+			term {
+				label = "MILLER INDUSTRIAL";
+				key = "t0076";
+			}
+			term {
+				label = "LA MINILLA";
+				key = "t0077";
+			}
+			term {
+				label = "LA MONTAÑETA";
+				key = "t0078";
+			}
+			term {
+				label = "MONTELUZ";
+				key = "t0079";
+			}
+			term {
+				label = "MONTEQUEMADO";
+				key = "t0080";
+			}
+			term {
+				label = "LA PALMA";
+				key = "t0081";
+			}
+			term {
+				label = "LA PATERNA";
+				key = "t0082";
+			}
+			term {
+				label = "PEDRO HIDALGO";
+				key = "t0083";
+			}
+			term {
+				label = "LAS PERRERAS";
+				key = "t0084";
+			}
+			term {
+				label = "PICO VIENTO";
+				key = "t0085";
+			}
+			term {
+				label = "PILETAS";
+				key = "t0086";
+			}
+			term {
+				label = "EL PINTOR";
+				key = "t0087";
+			}
+			term {
+				label = "LAS REHOYAS";
+				key = "t0088";
+			}
+			term {
+				label = "RISCO NEGRO";
+				key = "t0089";
+			}
+			term {
+				label = "EL ROMÁN";
+				key = "t0090";
+			}
+			term {
+				label = "EL ROQUE";
+				key = "t0091";
+			}
+			term {
+				label = "SALTO DEL NEGRO";
+				key = "t0092";
+			}
+			term {
+				label = "SAN ANTONIO";
+				key = "t0093";
+			}
+			term {
+				label = "SAN CRISTOBAL";
+				key = "t0094";
+			}
+			term {
+				label = "SAN FRANCISCO-SAN NICOLÁS";
+				key = "t0095";
+			}
+			term {
+				label = "SAN FRANCISCO DE PAULA";
+				key = "t0096";
+			}
+			term {
+				label = "SAN JOSE DEL ÁLAMO";
+				key = "t0097";
+			}
+			term {
+				label = "SAN JUAN-SAN JOSÉ";
+				key = "t0098";
+			}
+			term {
+				label = "SAN LÁZARO";
+				key = "t0099";
+			}
+			term {
+				label = "SAN LORENZO";
+				key = "t0100";
+			}
+			term {
+				label = "SAN ROQUE";
+				key = "t0101";
+			}
+			term {
+				label = "SANTA CATALINA-CANTERAS";
+				key = "t0102";
+			}
+			term {
+				label = "SANTA MARGARITA";
+				key = "t0103";
+			}
+			term {
+				label = "SCHAMANN";
+				key = "t0104";
+			}
+			term {
+				label = "EL SECADERO";
+				key = "t0105";
+			}
+			term {
+				label = "SIETE PUERTAS";
+				key = "t0106";
+			}
+			term {
+				label = "LA SUERTE";
+				key = "t0107";
+			}
+			term {
+				label = "TAFIRA ALTA";
+				key = "t0108";
+			}
+			term {
+				label = "TAFIRA BAJA";
+				key = "t0109";
+			}
+			term {
+				label = "TAMARACEITE";
+				key = "t0110";
+			}
+			term {
+				label = "LOS TARAHALES";
+				key = "t0111";
+			}
+			term {
+				label = "TENOYA";
+				key = "t0112";
+			}
+			term {
+				label = "LAS TORRES";
+				key = "t0113";
+			}
+			term {
+				label = "LAS TORRES INDUSTRIAL";
+				key = "t0114";
+			}
+			term {
+				label = "EL TOSCÓN";
+				key = "t0115";
+			}
+			term {
+				label = "TRES PALMAS";
+				key = "t0116";
+			}
+			term {
+				label = "TRIANA";
+				key = "t0117";
+			}
+			term {
+				label = "VEGA DE SAN JOSÉ";
+				key = "t0118";
+			}
+			term {
+				label = "VEGUETA";
+				key = "t0119";
+			}
+			term {
+				label = "ZÁRATE";
+				key = "t0120";
+			}
+			term {
+				label = "EL ZARDO";
+				key = "t0121";
+			}
+			term {
+				label = "ZURBARAN";
+				key = "t0122";
+			}
+			term {
+				label = "EL POLVORÍN";
+				key = "t0123";
+			}
+			term {
+				label = "EL PILAR";
+				key = "t0124";
+			}
+			term {
+				label = "PARQUE CENTRAL";
+				key = "t0125";
+			}
+			term {
+				label = "MONTE QUEMADO";
+				key = "t0126";
+			}
+			term {
+				label = "POLÍGONO DE CRUZ DE PIEDRA";
+				key = "t0127";
+			}
+			term {
+				label = "CRUZ DE PIEDRA";
+				key = "t0128";
+			}
+			term {
+				label = "LAS TORRES ALTAS";
+				key = "t0129";
+			}
+			term {
+				label = "SIETE PALMAS";
+				key = "t0130";
+			}
+		}
+	}
+}

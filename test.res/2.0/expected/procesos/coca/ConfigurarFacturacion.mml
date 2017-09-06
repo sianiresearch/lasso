@@ -1,0 +1,96 @@
+package coordinacion.procesos.coca {
+
+	["mjfa1ia"]
+	definition ConfigurarFacturacion is form {
+		label = "Configurar facturación";
+		
+		["mg9jprg"]
+		field-date FechaCertificacion {
+			label = "Fecha de certificación";
+			precision = DAYS;
+		}
+		
+		["mn0pbma"]
+		field-number CuantiaMaximaTotal {
+			label = "Cuantía máxima a percibir";
+			format = "###.## €";
+		}
+		
+		["mykzlsg"]
+		field-composite Indicadores {
+			label = "Ponderación de los indicadores";
+			is-multiple;
+			
+			["ml73epg"]
+			field-select Nombre {
+				label = "Indicador";
+				source = ref coordinacion.TesauroTiposIncidencia;
+				is-readonly;
+			}
+			
+			["mcouwka"]
+			field-number Indicador {
+				label = "Ponderación del indicador (%)";
+				format = "### %";
+			}
+		}
+		
+//		["mnxirya"]
+//		field-number Indicador1 {
+//			label = "Ponderación del indicador 1 (%)";
+//			format = "### %";
+//		}
+//		["mtfusaa"]
+//		field-number Indicador2 {
+//			label = "Ponderación del indicador 2 (%)";
+//			format = "### %";
+//		}
+//		["m2lkbsg"]
+//		field-number Indicador3 {
+//			label = "Ponderación del indicador 3 (%)";
+//			format = "### %";
+//		}
+//		["mqmaz8q"]
+//		field-number Indicador4 {
+//			label = "Ponderación del indicador 4 (%)";
+//			format = "### %";
+//		}
+//		["mlqjzyg"]
+//		field-number Indicador5 {
+//			label = "Ponderación del indicador 5 (%)";
+//			format = "### %";
+//		}
+		
+		["mygyduq"]
+		field-text Tecnico {
+			label = "Nombre del técnico";
+		}
+		
+		["mkyaluq"]
+		view Vista{
+			label = "Configurar facturación";
+			show {
+				field = ref FechaCertificacion;
+				field = ref CuantiaMaximaTotal;
+				field = ref Indicadores;
+//				field = ref Indicador1;
+//				field = ref Indicador2;
+//				field = ref Indicador3;
+//				field = ref Indicador4;
+//				field = ref Indicador5;
+				field = ref Tecnico;
+			}			
+		}
+		
+		constructor() {
+			var controlcalidad = coordinacion.modulos.controlcalidad.Contenedor.instance;
+			var configuracion = controlcalidad.getConfiguracion;
+			configuracion.seccionIndicadoresField
+			for (indicadores: configuracion.getSeccionIndicadoresField().getAllFields()){
+				var indicador = indicadores as coordinacion.modulos.controlcalidad.configuracion.SeccionIndicadores; 
+				var cfIndicador = this.indicadoresField.addNew as Indicadores;
+				cfIndicador.setNombre(indicador.nombre);
+			}
+		}		
+	}
+}

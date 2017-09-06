@@ -1,0 +1,10 @@
+package coordinacion {
+
+	["mdasvba"]
+	definition RoleActuacionCorrectivo is role {
+		label = "Actuación correctiva";
+		enable-services {
+			ontology = "ServicioActuacion";
+		}
+	}
+}

@@ -1,0 +1,74 @@
+package coordinacion.modulos.proveedores {
+
+	["mdipp3q"]
+	definition Coleccion is collection {
+		label = "Proveedores";
+		is-singleton;
+
+		add {
+			node = ref Ficha;
+		}
+
+		index = ref Index;
+
+		["mftgb4q"]
+		view Vista {
+			is-default;
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.Codigo;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+				}
+				dimension {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Nombre;
+				}
+			}
+		}
+
+		["mo2coga"]
+		definition Index is index {
+			label = "proveedores";
+
+			reference {
+
+				["morgmaq"]
+				attribute Codigo {
+					type = STRING;
+					label = "Código";
+				}
+
+				["mcg5w2a"]
+				attribute Nombre {
+					type = STRING;
+					label = "Nombre";
+				}
+			}
+
+			["m__oawg"]
+			view Vista {
+				show {
+					title = ref Nombre;
+					line = ref Codigo;
+				}
+			}
+
+			["mxhk1mw"]
+			view VistaLink {
+				show {
+					line = ref Codigo;
+					line = ref Nombre;
+				}
+			}
+
+		}
+
+	}
+}
+  

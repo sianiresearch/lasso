@@ -1,0 +1,62 @@
+package coordinacion.procesos.ini {
+
+	["mkabpwa"]
+	definition RellenarDummy is activity {
+		label = "Rellenar con datos Dummy";
+//		target = ref coordinacion.incidencias.Incidencia;
+		
+		["m4brt4w"]
+		place Inicio {
+			is-initial;
+			onArrive() {
+				var ArrayList<Link> objetos = new ArrayList<Link>;
+				var ArrayList<Term> tipos = new ArrayList<Term>;
+				var ArrayList<Term> origenes = new ArrayList<Term>;
+				var incidencias = coordinacion.incidencias.Coleccion.instance;
+				
+				var catalogo = coordinacion.CatalogoObjetosActuacion.instance;
+				for (coordinacion.catalogoobjetosactuacion.Index ind : catalogo.getAll){					
+					var nodo = ind.getIndexedNode();
+					objetos.^add(nodo.toLink);
+				}
+				var Source vsource = SourceService.get("coordinacion.TesauroTiposIncidencia", null);
+				var TermList listado = vsource.getTermList();
+				for (tipo : listado.getAll()){
+					tipos.^add(tipo);
+				}
+				
+				var Source vsourceorigen = SourceService.get("coordinacion.TesauroOrigenesIncidencia", null);
+				var TermList lorigenes = vsourceorigen.getTermList();
+				for (origen : lorigenes.getAll()){
+					origenes.^add(origen);
+				}
+				
+				var Integer total = 0;
+				while (total < 10){
+					var incidencia = coordinacion.incidencias.Incidencia.createNew(incidencias);
+					var ranObj = coordinacion.modulos.utilidades.Utilidad.aleatorio(objetos.^size);
+					var ranTip = coordinacion.modulos.utilidades.Utilidad.aleatorio(tipos.^size);
+					var ranOri = coordinacion.modulos.utilidades.Utilidad.aleatorio(origenes.^size);				
+					incidencia.objetoActuacion = objetos.get(ranObj);
+					incidencia.tipoIncidenciaField.addNew(tipos.get(ranTip));
+					incidencia.origen = origenes.get(ranOri);
+					incidencia.setDescripcion("Incidencia de prueba " + incidencia.codigoIncidencia); 
+					incidencia.save();
+					total = total + 1;
+				}
+				doGoto(Place.Terminado,"Terminado");
+			}
+			
+		}
+		
+		
+		["myl23vg"]
+		place Terminado {
+			is-final;
+		}
+		
+		
+
+	}
+}
+  

@@ -1,0 +1,131 @@
+package coordinacion.procesos.asi {
+
+	["mkbeg4a"]
+	definition Workmap is service {
+		ontology = "ServicioSincronizacion";
+		label = "Enviar inventario";
+		target = ref coordinacion.incidencias.Incidencia;
+
+		onAbort() {
+			doGoto(Place :: Terminado, "Tarea abortada");
+		}
+
+		onInitialize() {
+			var tarea = this;
+			var post = Post :: createRequest();
+			post.setTitle("Se ha recibido una petición de sincronización");
+			post.setTitleLink(tarea.toMonetLink());
+			post.setBody("¿Desea autorizar la sincronización?");
+			post.setBodyLink(tarea.toMonetLink());
+			NewsService :: postAndNotifyToAll(post);
+		}
+
+		customer {
+			request Terminar {
+				code = "Terminar";
+				import(CustomerRequest msg) {
+					var tarea = this.^task;
+					var bloqueo = Lock :: EsperarFinal_EsperarFinalExit;
+					tarea.doUnlock(bloqueo);
+				}
+			}
+			response Sincronizar {
+				code = "sincronizar";
+				constructor(CustomerResponse msg) {
+					var sin = sincronia :: Exportador :: doExportOf(null).toNewDocument;
+					msg.attachSchema("sincronia", sin.^schema);
+				}
+			}
+			response NoSincronizar {
+				code = "nosincronizar";
+				constructor(CustomerResponse msg) {
+					msg.attachString("respuesta", BusinessUnit :: ^name);
+				}
+			}
+		}
+
+		["mqdlqyw"]
+		place Iniciado {
+			is-initial;
+
+			onArrive() {
+				if (Setup::getVariable("SincronizacionSilenciosa") != null){
+					if (Setup::getVariable("SincronizacionSilenciosa").equals("true")){
+						doGoto(Place :: EnviarSincronia, "Petición de sincronización");					
+						return;					
+					}
+				}					
+				doGoto(Place :: Decision, "Petición de sincronización");
+			}
+		}
+
+		["mjvpaww"]
+		place Decision {
+
+			["muveueq"]
+			line {
+				label = "Petición de sincronización de inventario. ¿Desea permitir la sincronización del inventario?";
+
+				["mwerhjw"]
+				stop Si {
+					label = "Si";
+					goto = ref EnviarSincronia;
+					history = "Permiso concedido";
+				}
+
+				["mcegkfg"]
+				stop CerrarExpediente {
+					label = "No";
+					goto = ref NoEnviarSincronia;
+					history = "Permiso denegado";
+				}
+			}
+		}
+
+		["m3sbgqw"]
+		place EnviarSincronia {
+
+			["m8kjhhg"]
+			send-response {
+				response = ref Sincronizar;
+				goto = ref EsperarFinal;
+				history = "Respuesta enviada";
+				label = "Enviando respuesta";
+			}
+		}
+
+		["m1c5qhg"]
+		place NoEnviarSincronia {
+
+			["mnkqgow"]
+			send-response {
+				response = ref NoSincronizar;
+				goto = ref EsperarFinal;
+				history = "Respuesta enviada";
+				label = "Enviando respuesta";
+			}
+		}
+
+		["mngmt5g"]
+		place EsperarFinal {
+
+			["mn_fz6a"]
+			door {
+				label = "Sincronizando";
+
+				["mt8eb3w"]
+				exit EsperarFinalExit {
+					goto = ref Terminado;
+					history = "Sincronizado";
+				}
+			}
+		}
+
+		["mges5kg"]
+		place Terminado {
+			is-final;
+		}
+
+	}
+}
+  

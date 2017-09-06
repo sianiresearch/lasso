@@ -1,0 +1,117 @@
+import coordinacion.modulos.encargos.*
+
+package coordinacion.procesos.cori.encargos {
+
+	["muf8r_q"]
+	definition EncargoCA is container extends coordinacion.modulos.encargos.Encargo {
+		label = "Encargo de actuación";
+		is-readonly;
+
+		contain {
+			node = ref Ficha;
+		}
+
+		["mtwv3na"]
+		view {
+			is-default;
+			label = "Petición";
+			show {
+				component = ref Ficha.VistaPropuesta;
+			}
+		}
+
+		["mnngnyq"]
+		view {
+			label = "Resultado";
+			show {
+				component = ref Ficha.VistaResultado;
+			}
+		}
+
+		["magcbgg"]
+		view {
+			label = "Documentos";
+			show {
+				component = ref Ficha.VistaDocumentos;
+			}
+		}
+
+		["mutuiew"]
+		definition Ficha is form extends coordinacion.modulos.encargos.Encargo.Ficha {
+			label = "Encargo de actuación";
+			is-readonly;
+			is-component;
+
+			mapping {
+				index = ref Coleccion.Index;
+				calculate() {
+					this.getReference().setTipoEncargo("A");
+				}
+			}
+
+			["mzhhlna"]
+			field-boolean Resultado {
+				label = "Incidencia corregida";
+			}
+
+			["m0f7pha"]
+			field-node Ot {
+				label = "Orden de trabajo";
+				add {
+					node = ref coordinacion.procesos.cori.documentos.Otac;
+				}
+			}
+
+			["m7hir0q"]
+			field-node Pt {
+				label = "Parte de trabajo";
+				add {
+					node = ref coordinacion.procesos.cori.documentos.Ptac;
+				}
+			}
+
+			["mayuv_w"]
+			view VistaPropuesta {
+				is-default;
+				
+				show {
+					field = ref Encargo.Ficha.Codigo;
+					field = ref Encargo.Ficha.FechaEnvioOT;
+					field = ref Encargo.Ficha.FechaInicio;
+					field = ref Encargo.Ficha.FechaFinLimite;
+					field = ref Encargo.Ficha.Prioridad;
+					field = ref Encargo.Ficha.Observaciones;
+					field = ref Encargo.Ficha.Adjuntos;
+				}
+			}
+
+			["mrlk7zq"]
+			view VistaResultado {
+				
+				show {
+					field = ref Encargo.Ficha.FechaRecepcionPT;
+					field = ref Encargo.Ficha.FechaInicioReal;
+					field = ref Encargo.Ficha.FechaFinReal;
+					field = ref Resultado;
+					field = ref Encargo.Ficha.ImagenResultado;
+					field = ref Encargo.Ficha.ObservacionesResultado;
+					field = ref Encargo.Ficha.AdjuntosResultado;
+					field = ref Encargo.Ficha.CalculoCoste;
+					field = ref Encargo.Ficha.CalculoCosteFacturable;
+				}
+			}
+
+			["mwshstw"]
+			view VistaDocumentos {
+				
+				show {
+					field = ref Encargo.Ficha.Ot;
+					field = ref Encargo.Ficha.Pt;
+				}
+			}
+
+		}
+
+	}
+}
+  

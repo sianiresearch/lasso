@@ -1,0 +1,40 @@
+package coordinacion.procesos.cori {
+
+	["mtqnika"]
+	definition ConfiguracionExpediente is form {
+		label = "Configuración de la prioridad de un trabajo correctivo";
+
+		["mcih22w"]
+		field-select Prioridad {
+			label = "Prioridad";
+			terms {
+				term {
+					key = "p001";
+					label = "Alta";
+				}
+				term {
+					key = "p002";
+					label = "Media";
+				}
+				term {
+					key = "p003";
+					label = "Baja";
+				}
+			}
+			select {
+				is-embedded;
+			}
+		}
+
+		["ma5hzwg"]
+		view Ficha {
+			is-default;
+			
+			show {
+				field = ref Prioridad;
+			}
+		}
+
+	}
+}
+  

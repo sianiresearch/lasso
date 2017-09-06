@@ -1,0 +1,107 @@
+import coordinacion.incidencias.*
+
+package coordinacion.procesos.nim {
+
+	["mutgwwq"]
+	definition Workmap is activity {
+		label = "Notificador incidencia mobile";
+		target = ref Incidencia;
+		shortcut shNi;
+		
+		["msaytnw"]
+		view {
+			label = "Notificación";
+			show {
+				shortcut = "shNi";
+			}
+		}
+
+		onAbort() {
+			doGoto(Place :: Terminado, "Tarea abortada");
+		}
+
+		["mqzrvaq"]
+		place Inicio {
+			is-initial;
+			onArrive() {
+				doGoto(Place :: IniciarNotificacion, "Iniciando notificación de incidencia");
+			}
+		}
+
+		["mj5p1dg"]
+		place IniciarNotificacion {
+
+			["m9m8mzw"]
+			delegation {
+				provider = ref ServicioNotificacionIncidencias;
+				goto = ref EnviarNotificacion;
+				history = "Incidencia notificada";
+				label = "Notificar incidencia";
+				onSetup(DelegationSetup ds) {
+					ds.cancel;
+				}
+			}
+		}
+
+		["mk6ruzq"]
+		place EnviarNotificacion {
+
+			["mrnieoq"]
+			send-request {
+				request = ref ServicioNotificacionIncidencias.Ni;
+				provider = ref ServicioNotificacionIncidencias;
+				goto = ref Terminado;
+				history = "Incidencia enviada";
+				label = "Enviando incidencia";
+			}
+		}
+
+		["mbsd1eq"]
+		place EnviandoIncidencia {
+
+			["my2enwg"]
+			door {
+				label = "Enviando incidencia";
+
+				["mqrg8ew"]
+				exit ExitEnviandoIncidencia {
+					goto = ref Terminado;
+					history = "Incidencia enviada";
+				}
+			}
+		}
+
+		["mvdqbtq"]
+		provider ServicioNotificacionIncidencias {
+			role = ref coordinacion.RoleSistema;
+			internal {
+				service = ref coordinacion.procesos.ani.Workmap;
+				request Ni {
+					code = "ni";
+					constructor(InsourcingRequest msg) {
+						var tarea = this.getTask();
+						var incidencia = tarea.getTarget();
+						var ni = coordinacion.procesos.ani.ni.Exportador.doExportOf(incidencia).toNewDocument;
+						ni.save;
+						ni.consolidate;
+						msg.attachDocument("ni", ni);
+						msg.attachString("mobile", "true");
+						if(tarea.getFlag("corregida") != null) {
+							msg.attachString("corregida", tarea.getFlag("corregida"));
+						}
+						var esquemaNi = ni.^schema;
+						tarea.setLabel("Notificación de incidencia mobile: " + esquemaNi.proveedor + " " + esquemaNi.tipoIncidenciaLabel + " " + esquemaNi.getObjetoActuacionLabel());
+						tarea.shNi = ni;
+						tarea.save;
+						var bloqueo = Lock :: EnviandoIncidencia_ExitEnviandoIncidencia;
+					}
+				}
+			}
+		}
+
+		["mlw9a1w"]
+		place Terminado {
+			is-final;
+		}
+	}
+}

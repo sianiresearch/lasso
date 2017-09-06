@@ -1,0 +1,667 @@
+import coordinacion.procesos.cori.*
+import coordinacion.modulos.utilidades.*
+
+package coordinacion.incidencias {
+
+	["mubhmxw"]
+	definition Incidencia is form {
+		label = "Incidencia";
+//MERGE
+//		is-georeferenced;
+
+		["mjwtxga"]
+		field-text CreadaPor {
+			label = "Creada por";
+			is-readonly;
+		}
+
+		["ms90pka"]
+		field-serial CodigoIncidencia {
+			label = "Código";
+			serial GeneratorIdIncidencia {
+				format = "I-%4S/%2Y";
+			}
+		}
+
+		["my4isiq"]
+		field-picture ImagenIncidencia {
+			label = "Foto";
+			is-multiple;
+			size {
+				height = 480;
+				width = 640;
+			}
+		}
+
+		["mvybhfg"]
+		field-link ObjetoActuacion {
+			label = "Objeto de actuación";
+			allow-search;
+			allow-history;
+			source {
+				index = ref coordinacion.CatalogoObjetosActuacion.Index;
+				view = ref coordinacion.CatalogoObjetosActuacion.Index.VistaLink;
+			}
+		}
+		
+//MERGE
+//		["ml_p54g"]
+//		field-text CodigoNotificacionIncidencia {
+//			is-readonly;
+//			label = "Código de notificación";
+		["mwxjzpq"]
+		field-text NumeroGobiernoInicio {
+			label = "Nº de gobierno de inicio";
+		}
+
+//MERGE
+//		["mpi_ldg"]
+//		field-picture ImagenMapa {
+//			label = "Mapa";
+//			size {
+//				width = 600;
+//				height = 600;
+		["myadlsg"]
+		field-text NumeroGobiernoFin {
+			label = "Nº de gobierno de fin";
+		}
+
+		["mwesr9w"]
+		field-date FechaCreacion {
+			label = "Fecha de creación";
+			precision = DAYS;
+		}
+
+		["m0upxkq"]
+		field-date FechaIncidencia {
+			label = "Fecha de notificación";
+			precision = DAYS;
+		}
+
+		["mjv5etq"]
+		field-date FechaModificacion {
+			label = "Fecha de modificación";
+			precision = DAYS;
+		}
+
+		["mpebmsa"]
+		field-date FechaEjecucion {
+			label = "Fecha de ejecución";
+			precision = DAYS;
+		}
+
+		["maanxpq"]
+		field-date FechaVerificacion {
+			label = "Fecha de verificación";
+			precision = DAYS;
+		}
+
+		["mlnea9w"]
+		field-date FechaInspeccion {
+			label = "Fecha de inspección";
+			precision = DAYS;
+		}		
+
+		["msxxyya"]
+		field-date FechaEnvioOtv {
+			label = "Fecha de orden de verificación";
+			precision = DAYS;
+		}
+		
+		["m9dpxqg"]
+		field-date FechaEnvioOtac {
+			label = "Fecha de orden de actuación";
+			precision = DAYS;
+		}
+		
+		["mssuvia"]
+		field-date FechaEnvioOtic {
+			label = "Fecha de orden de inspección";
+			precision = DAYS;
+		}
+		
+		["mmc2eug"]
+		field-text ResultadoEjecucion {
+			label = "Resultado de la ejecución";
+			is-readonly;
+		}
+
+		["ms2bcqg"]
+		field-date FechaCierre {
+			label = "Fecha de cierre";
+			precision = DAYS;
+		}
+
+		["m0j_mha"]
+		field-date FechaIcc {
+			label = "Fecha de primera otac";
+			precision = DAYS;
+		}
+		
+		["msej7bw"]
+		field-date FechaUltimaOt {
+			label = "Fecha de última OT";
+			precision = DAYS;
+//MERGE
+//
+//		["mczhatw"]
+//		field-number TiempoMedioVerificacion {
+//			label = "Tiempo medio de verificación";
+		}
+
+		["mngvibw"]
+		field-select Origen {
+			label = "Origen";
+			source = ref coordinacion.TesauroOrigenesIncidencia;
+		}
+//MERGE
+//		["mrvmf4g"]
+//		field-number TiempoMedioActuacion {
+//			label = "Tiempo medio de actuación";
+		
+		["meknpsg"]
+		field-select ElementoTratar {
+			label = "Elemento a tratar";
+			source = ref coordinacion.TesauroElementoTratar;
+		}
+		
+		["mi_skxq"]
+		field-select NivelInfestacion {
+			label = "Nivdel de infestación";
+			source = ref coordinacion.TesauroNivelInfestacion;
+		}
+
+		["majatcw"]
+		field-select Prioridad {
+			label = "Prioridad de la resolución";
+			terms {
+				term {
+					label = "Alta";
+					key = "p001";
+				}
+				term {
+					label = "Media";
+					key = "p002";
+				}
+				term {
+					label = "Baja";
+					key = "p003";
+				}
+			}
+			select {
+				is-embedded;
+			}
+		}
+
+		["mdetkkw"]
+		field-boolean Urgente {
+			label = "Urgente";
+		}
+
+		["mf0hqma"]
+		field-text ObjetoPadre {
+			label = "Objeto padre";
+		}
+
+		["mfm2e6g"]
+		field-boolean Corregida {
+			label = "Corregida";
+		}
+
+		["m_od4bg"]
+		field-text RegistroEntrada {
+			label = "Nº de registro de entrada";
+		}
+
+		["msdjusg"]
+		field-text RegistroSalida {
+			label = "Nº de registro de salida";
+		}
+
+		["mtl2cmg"]
+		field-select TipoIncidencia {
+			label = "Tipo de incidencia";
+			description = "Tipo de la incidencia";
+			is-multiple;
+			source = ref coordinacion.TesauroTiposIncidencia;
+		}
+
+		["m4ojktq"]
+		field-memo Descripcion {
+			label = "Descripción";
+		}
+
+		["munulcg"]
+		field-text Unidad {
+			label = "Unidad de destino";
+		}
+
+		["mn_hnhq"]
+		field-select Estado {
+			label = "Estado incidencia";
+			source = ref coordinacion.TesauroEstadosIncidencia;
+		}
+
+		["m_gimsw"]
+		field-file AdjuntosIncidencia {
+			is-multiple;
+			label = "Adjuntos";
+		}
+
+		["mm9orjq"]
+		field-text TipoIcc {
+			label = "Tipo de ICC";
+		}
+
+		["m409big"]
+		field-composite Demandante {
+			label = "Datos de contacto";
+
+			["mgp5jcw"]
+			field-text Nombre {
+				label = "Nombre y apellidos";
+			}
+
+			["mgfw7ra"]
+			field-text Nif {
+				label = "NIF";
+			}
+
+			["mqeor9q"]
+			field-text CorreoElectronico {
+				label = "Correo electrónico";
+			}
+
+			["myrcjua"]
+			field-text Direccion {
+				label = "Dirección";
+			}
+
+			["m9or3og"]
+			field-text Localidad {
+				label = "Localidad";
+				allow-history;
+			}
+
+			["mhklpzw"]
+			field-text Provincia {
+				label = "Provincia";
+				allow-history;
+			}
+
+			["med2rkw"]
+			field-text Pais {
+				label = "País";
+				allow-history;
+			}
+
+			["mg2zl7a"]
+			field-text Telefono {
+				label = "Teléfono del contacto";
+			}
+
+			["ml6vijq"]
+			field-text CodigoPostal {
+				label = "Código postal";
+			}
+		}
+		mapping {
+			index = ref Coleccion.Index;
+			calculate() {
+				var referencia = this.^reference;
+				var nodo = this.^node;
+				var String estado = "";
+				if(nodo.estado != null) {
+					estado = nodo.estado.^label;
+					if(estado.equals("Notificada")) {
+						referencia.filtroEstado = "notificadas";
+					}
+					if(estado.equals("Verificada") || estado.equals("Verificando") || estado.equals("Ejecutada") || estado.equals("Corrigiendo") || estado.equals("Inspeccionada") || estado.equals("Inspeccionando"))
+							{
+						referencia.filtroEstado = "abiertas";
+					}
+					if(estado.equals("Cerrada") || estado.equals("Cancelada")) {
+						referencia.filtroEstado = "cerradas";
+					}
+				}
+				if(nodo.tipoIncidencia.^size > 0) {
+					referencia.tiposIncidencia = nodo.tipoIncidenciaField.toString;
+					var tipo="";
+					for (Term tipoIncidenciaField : nodo.getTipoIncidenciaField().getAll()){
+       					if (tipoIncidenciaField != null){
+       						if (tipoIncidenciaField.^label.contains("ICC")){
+       							if (tipo.equals("")){
+    	  							tipo = tipoIncidenciaField.^label;       						
+       							}else{
+    	  							tipo = tipo + ", " + tipoIncidenciaField.^label;       						
+       							}
+       							referencia.tipoIcc = tipo;       							
+   							}    	  					    		  				
+      					}
+      				}
+				}
+				if(nodo.objetoActuacion != null) {
+					var objeto = NodeService :: get(nodo.objetoActuacion.id);
+					if(objeto instanceof coordinacion.objetosactuacion.ObjetoActuacion) {
+						var objetoActuacion = objeto as coordinacion.objetosactuacion.ObjetoActuacion;
+						var ficha = objetoActuacion.ficha;
+						var seccionLocalizacion = ficha.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+//MERGE
+//						if (seccionLocalizacion.zona != null )
+						if (seccionLocalizacion.zona != null)
+							referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;
+						if (seccionLocalizacion.lugar != null)
+							referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;
+					}
+					else {
+						if(objeto instanceof coordinacion.modulos.componentes.coleccion.Componente) {
+							var componente = objeto as coordinacion.modulos.componentes.coleccion.Componente;
+							var padre = ObjetoActuacionTools :: obtenerPadreNode(componente);
+							var fichaObjeto = padre.ficha;
+							var seccionLocalizacion = fichaObjeto.localizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+							if (seccionLocalizacion.lugar != null)
+//MERGE
+//								referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;
+								referencia.lugarObjetoActuacion = seccionLocalizacion.lugar.^label;							
+							if (seccionLocalizacion.zona != null)
+								referencia.zonaObjetoActuacion = seccionLocalizacion.zona.^label;
+							var ficha = componente.ficha;
+							var seccionUbicacion = ficha.ubicacionField as coordinacion.modulos.componentes.ficha.Ubicacion;
+							referencia.lugarComponente = seccionUbicacion.lugar;
+							referencia.zonaComponente = seccionUbicacion.zona;
+						}
+					}
+//MERGE
+//				}
+//				if (nodo.tiempoMedioActuacion != null){
+//					if (nodo.tiempoMedioActuacion.doubleValue > 0){
+//						var Double horas = nodo.tiempoMedioActuacion.doubleValue / 3600;
+//						var Integer truncado = horas.intValue; 
+//						referencia.tiempoMedioActuacionLabel = String.valueOf(truncado) + " Horas";				
+//					}
+//					
+				}
+			}
+		}
+		properties {
+			calculate() {
+				var nodo = this.getNode();
+				var codigo = nodo.codigoIncidencia;
+				var objeto = "sin objeto de actuación";
+				if(nodo.objetoActuacion != null) {
+					objeto = nodo.objetoActuacion.getLabel();
+				}
+				if(codigo == null) {
+					codigo = "Sin código";
+				}
+				this.getProperties().setLabel(codigo + " " + objeto);
+			}
+		}
+
+//MERGE
+//		["m_c72gq"]
+//		operation OperacionLocalizar {
+//			label = "Localizar";
+//			execute() {
+//				if (this.objetoActuacion != null){
+//					var objpadre =  ObjetoActuacionTools :: obtenerPadreNode(this.objetoActuacionField.^node);
+//					this.location = objpadre.location;
+//					var localizacion = objpadre.location;
+//					this.save;					
+//					this.setImagenMapa(MapRequest.getMapaCoordenadas("objeto actuacion", localizacion.geometry.centroid));					
+//				}
+		["m1garxw"]
+		operation OperacionTramitar {
+			label = "Tramitar";
+			for {
+				role = ref coordinacion.RoleCoordinador;
+			}
+			execute() {
+				if (camposObligatorios() == -1) return;
+				if(this.getFlag("tramitado") == null) {
+					var cori = coordinacion :: procesos :: cori :: Workmap :: createNew();
+					cori.shIncidencia = this;
+					cori.save;
+					cori.resume;
+					//HechosIncidencia :: hechoIncidenciaTramitada(this);
+					ClientService :: redirectUserTo(cori.toMonetLink());
+					this.setFlag("tramitado", "true");
+				}
+				else {
+					ClientService :: sendMessageToUser("La incidencia ya ha sido tramitada");
+				}
+			}
+		}
+
+		function camposObligatorios(): Integer {
+			if (this.origen == null){
+				ClientService :: sendMessageToUser("Falta añadir origen");
+				return -1;
+			}
+			if(this.objetoActuacion == null) {
+				ClientService :: sendMessageToUser("Falta añadir objeto de actuación");
+				return -1;
+			}
+			else {
+				if(this.tipoIncidenciaField.getCount() == 0) {
+					ClientService :: sendMessageToUser("Falta añadir tipo de incidencia");
+					return -1;
+				}
+				try {
+					var i = 0;
+					for(valor : this.tipoIncidenciaField.all) {
+						i = i + 1;
+						if(valor.getKey().empty) {
+							ClientService :: sendMessageToUser("Campo tipo de incidencia cumplimentado de forma incorrecta");
+							return -1;
+						}
+					}
+					if(i != this.tipoIncidenciaField.count) {
+						ClientService :: sendMessageToUser("Campo tipo de incidencia cumplimentado de forma incorrecta");
+						return -1;
+					}
+				}
+				catch(Exception e) {
+					ClientService :: sendMessageToUser("Campo tipo de incidencia cumplimentado de forma incorrecta");
+					return -1;
+				}
+				if(this.tipoIncidencia == null || this.tipoIncidencia.^size <= 0) {
+					ClientService :: sendMessageToUser("Falta añadir tipo de incidencia");
+					return -1;
+				}
+			}
+			var nodo = this.objetoActuacionField.^node;
+			if (nodo instanceof coordinacion.objetosactuacion.ObjetoActuacion){
+				var objeto = nodo as coordinacion.objetosactuacion.ObjetoActuacion; 
+				var ficha = objeto.ficha;
+				if (ficha.codigo == null) {
+					ClientService :: sendMessageToUser("Objeto de actuación SIN CÓDIGO");
+					return -1;					
+				}
+				if (ficha.codigo.isEmpty) {
+					ClientService :: sendMessageToUser("Objeto de actuación SIN CÓDIGO");
+					return -1;					
+				}
+				if (ficha.inactivo){
+					ClientService :: sendMessageToUser("Objeto de actuación INACTIVO");
+					return -1;
+				} 				
+			}else{
+				if (nodo instanceof coordinacion.modulos.componentes.coleccion.Componente){
+					var objeto = nodo as coordinacion.modulos.componentes.coleccion.Componente;
+					var ficha = objeto.ficha;
+					if (ficha.codigo == null) {
+						ClientService :: sendMessageToUser("Objeto de actuación SIN CÓDIGO");
+						return -1;					
+					}
+					if (ficha.codigo.isEmpty) {
+						ClientService :: sendMessageToUser("Objeto de actuación SIN CÓDIGO");
+						return -1;					
+					}
+					if (ficha.inactivo){
+						ClientService :: sendMessageToUser("Objeto de actuación INACTIVO");
+						return -1;
+					}
+				}				
+			}			
+			return 0;
+		}
+
+		onSave() {
+			if(this.objetoActuacion != null) {
+				var objeto = NodeService :: get(this.objetoActuacion.id);
+				this.objetoPadre = ObjetoActuacionTools :: obtenerPadreLabel(objeto);
+//MERGE
+//				var objpadre =  ObjetoActuacionTools :: obtenerPadreNode(objeto);
+//				this.location = objpadre.location;
+			}
+			if(this.tipoIncidencia.^size > 0) {				
+				var tipo="";
+				for (Term tipoIncidenciaField : this.getTipoIncidenciaField().getAll()){
+   					if (tipoIncidenciaField != null){
+   						if (tipoIncidenciaField.^label.contains("ICC")){
+   							if (tipo.equals("")){
+	  							tipo = tipoIncidenciaField.^label;       						
+   							}else{
+	  							tipo = tipo + ", " + tipoIncidenciaField.^label;       						
+   							}
+   							this.tipoIcc = tipo;       							
+						}    	  					    		  				
+  					}
+  				}
+			}
+		}
+
+		["m7jnjlq"]
+//MERGE
+//		["msvju_g"]
+//		field-number TiempoMedioInspeccion{
+//			label = "Tiempo medio de inspección";
+		view {
+			is-default;
+			label = "Descripción";
+			show {
+//MERGE
+//				layout = layout LayoutIncidencia;
+				field = ref CodigoIncidencia;
+				field = ref ImagenIncidencia;
+				field = ref ObjetoActuacion;
+				field = ref NumeroGobiernoInicio;
+				field = ref NumeroGobiernoFin;
+				field = ref ElementoTratar;
+				field = ref TipoIncidencia;
+//				field = ref NivelInfestacion;
+				field = ref Origen;
+				field = ref Descripcion;
+				field = ref AdjuntosIncidencia;
+			}
+		}
+
+		["mpbw50a"]
+		view {
+			label = "Gestión";
+			show {
+//MERGE
+//				field = ref ImagenMapa;
+				field = ref FechaCreacion;
+				field = ref FechaIncidencia;
+				field = ref FechaModificacion;
+				field = ref Prioridad;
+//MERGE
+//		}
+//
+				field = ref Urgente;
+				field = ref Corregida;
+				field = ref Estado;
+				field = ref CreadaPor;
+				field = ref RegistroEntrada;
+				field = ref RegistroSalida;
+			}
+		}
+		
+		["mkbp6ew"]
+		view{
+			label ="Demandante";
+			show{
+				field = ref Demandante;
+			}
+		}
+
+		["mzqw5qg"]
+		view {
+			label = "Tareas vinculadas";
+			show {
+				tasks;
+			}
+		}
+
+		["mtd7ydw"]
+		view {
+			label = "Expedientes vinculados";
+			show {
+				links:in {
+					node = ref coordinacion.procesos.cori.Expediente;
+				}
+			}
+		}
+
+		["mjcm8fw"]
+		view VistaDescripcion {
+			is-default;
+			is-visible-when-embedded;
+			
+			show {
+//MERGE
+//				layout = layout LayoutIncidencia;
+				field = ref CodigoIncidencia;
+				field = ref ImagenIncidencia;
+				field = ref ObjetoActuacion;
+				field = ref NumeroGobiernoInicio;
+				field = ref NumeroGobiernoFin;
+				field = ref ElementoTratar;
+				field = ref TipoIncidencia;
+//				field = ref NivelInfestacion;
+				field = ref Origen;
+				field = ref Descripcion;
+				field = ref AdjuntosIncidencia;
+			}
+		}
+
+		["m37utxg"]
+		view VistaNotificacion {
+			is-default;
+			is-visible-when-embedded;
+			show {
+				field = ref CodigoIncidencia;
+				field = ref ImagenIncidencia;
+				field = ref ObjetoActuacion;
+				field = ref NumeroGobiernoInicio;
+				field = ref NumeroGobiernoFin;
+				field = ref TipoIncidencia;
+				field = ref Descripcion;
+				field = ref AdjuntosIncidencia;
+				field = ref FechaCreacion;
+				field = ref FechaIncidencia;
+				field = ref Prioridad;
+				field = ref Urgente;
+				field = ref Corregida;
+				field = ref Estado;
+			}
+		}
+
+		constructor() { this.setFechaCreacion(new Date());
+			this.setEstado(new Term("Notificada", "Notificada"));
+			this.fechaIncidencia = new Date();
+			this.fechaCreacion = new Date();
+			this.prioridad = new Term("p002", "Media");
+			this.unidad = "Sin asignar";
+			if(this.^author != null) {
+				this.creadaPor = this.^author.fullName;
+			}
+			else {
+				this.creadaPor = "Sistema";
+			}
+		}
+		
+	}
+}

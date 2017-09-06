@@ -1,0 +1,270 @@
+import coordinacion.modulos.*
+import coordinacion.*
+import coordinacion.modulos.utilidades.*
+
+package coordinacion.objetosactuacion {
+
+	["m76kjua"]
+	definition ObjetoActuacion is container {
+		label = "Lugar de actuación";
+		is-georeferenced;
+		contain {
+			node = ref Ficha;
+			node = ref historial.Coleccion;
+			node = ref componentes.Coleccion;
+		}
+
+		["m_hnaaq"]
+		view {
+			label = "Descripción";
+			show {
+				component = ref Ficha.Vista;
+			}
+		}
+
+		["mf9ahxw"]
+		view {
+			label = "Características";
+			show {
+				component = ref Ficha.VistaCaracteristicas;
+			}
+		}
+
+		["mastvyq"]
+		view {
+			label = "Componentes";
+			show {
+				component = ref componentes.Coleccion.Vista;
+			}
+		}
+
+		["mobsrhq"]
+		view {
+			label = "Historias";
+			show {
+				component = ref historial.Coleccion.Vista;
+			}
+		}
+
+		["mmlybma"]
+		operation NotificarIncidencia {
+			label = "Generar incidencia";
+			for {
+				role = ref coordinacion.RoleCoordinador;
+			}
+			execute() {
+				var incidencia = coordinacion :: incidencias :: Incidencia :: createNew(coordinacion :: incidencias :: Coleccion :: instance);
+				incidencia.setObjetoActuacion(this.toLink);
+				var ficha = this.ficha;
+				var localizacion =  ficha.localizacionField as ficha.Localizacion; 
+				incidencia.setNumeroGobiernoInicio(localizacion.getNumeroGobiernoMinimo());
+				incidencia.setNumeroGobiernoFin(localizacion.getNumeroGobiernoMaximo());
+				incidencia.save;
+				ClientService :: redirectUserTo(incidencia.toMonetLink(true));
+			}
+		}
+		
+		["mu7qnoa"]
+		operation DocumentosAsociados {
+			label = "Trabajos realizados";
+			for {
+				role = ref coordinacion.RoleCoordinador;
+			}
+			execute() {
+				var ficha = this.ficha;
+				var tmp = "/tmp/";
+				var nombre = "Objeto";
+				if (ficha.codigo != null && ficha.nombre != null){ 
+					nombre = ficha.codigo + " " + ficha.nombre;
+					nombre = Utilidad.normalize(nombre);
+				}
+				createRepository(tmp + nombre);
+			}
+		}
+
+		function createRepository(String path){
+			var zipPath = path + ".zip";
+
+			var Repository repositorio = null;
+			var ObjectIterator iterator = null;
+			try{
+				repositorio = new Repository(path);
+				iterator = new ObjectIterator(this, repositorio);
+				iterator.fillRepository();
+
+				if (!repositorio.isEmpty()){
+					repositorio.zip(zipPath);
+					var monetFile = File.fromFile(repositorio.getZipFile());
+					ClientService :: sendFileToUser(monetFile);
+				}
+				else{
+					ClientService :: sendMessageToUser("Este objeto no dispone de documentos asociados");
+				}
+			}
+			catch (Exception e){
+				ClientService :: sendMessageToUser("No se ha podido generar el documento ZIP");
+				e.printStackTrace();
+			}
+			finally{
+				if (repositorio != null) repositorio.delete();
+			}
+		}				
+
+		["mqmx4vw"]
+		definition Ficha is form {
+			is-component;
+			label = "Objeto";
+
+			["mqxyxnw"]
+			field-text Codigo {
+				label = "Codigo";
+			}
+
+			["mxvmpsg"]
+			field-text Nombre {
+				label = "Nombre";
+			}
+
+			["me70a3q"]
+			field-picture Imagen {
+				label = "Foto";
+				size {
+					width = 640;
+					height = 480;
+				}
+			}
+
+			["mnto2ja"]
+			field-composite Localizacion {
+				label = "Localización";
+
+				["mme0tka"]
+				field-select Lugar {
+					label = "Lugar";
+					source = ref coordinacion.TesauroDistritos;
+				}
+
+				["mxy0wbg"]
+				field-select Zona {
+					label = "Zona";
+					source = ref coordinacion.TesauroBarrios;
+				}
+
+				["mw5fp6a"]
+				field-text Direccion {
+					label = "Direccion";
+				}
+
+				["m8tvnyq"]
+				field-text Telefono {
+					label = "Teléfono de contacto";
+				}
+				
+				["mga5wnq"]
+				field-text NumeroGobiernoMinimo {
+					label = "Número de gobierno mínimo";
+				}
+				
+				["mjh92ya"]
+				field-text NumeroGobiernoMaximo {
+					label = "Número de gobierno máximo";
+				}
+			}
+
+			["mm44kka"]
+			field-composite Caracteristicas {
+				label = "Características técnicas";
+				is-multiple;
+
+				["m_2z39a"]
+				field-select Atributo {
+					label = "Atributo";
+					source = ref TesauroAtributo;
+				}
+
+				["mw5hvcg"]
+				field-text Valor {
+					label = "Valor";
+				}
+
+				["mqoqdjq"]
+				field-select Unidad {
+					label = "Unidad";
+					source = ref TesauroUnidades;
+				}
+				view {
+					mode = EXPANDED;
+					show {
+						field = ref Atributo;
+						field = ref Valor;
+						field = ref Unidad;
+					}
+				}
+			}
+
+			["mu2_udw"]
+			field-boolean Inactivo {
+				label = "Inactivo";
+			}
+			mapping {
+				index = ref Coleccion.Index;
+				calculate() { var referencia = this.^reference;
+					var nodo = this.^node;
+					var seccionLocalizacion = nodo.localizacionField as ficha.Localizacion;
+					if (seccionLocalizacion.lugar != null)
+						referencia.lugar = seccionLocalizacion.lugar.^label;
+					if (seccionLocalizacion.zona != null)
+						referencia.zona = seccionLocalizacion.zona.^label;
+					referencia.direccion = seccionLocalizacion.direccion;
+					referencia.numeroGobiernoMinimo = seccionLocalizacion.numeroGobiernoMinimo;
+					referencia.numeroGobiernoMaximo = seccionLocalizacion.numeroGobiernoMaximo;
+					referencia.telefono = seccionLocalizacion.telefono;
+					if (nodo.inactivo){					
+						referencia.inactivoLabel = "Inactivo";						
+					}else{
+						referencia.inactivoLabel = null;						
+					}
+				}
+			}
+			mapping {
+				index = ref coordinacion.CatalogoObjetosActuacion.Index;
+				calculate() { var referencia = this.^reference;
+					var nodo = this.^node;
+					var ubicacion = nodo.localizacionField as Localizacion;
+					if (ubicacion.lugar != null)
+						referencia.lugar = ubicacion.lugar.^label;
+					if (ubicacion.zona != null)
+						referencia.zona = ubicacion.zona.^label;
+					referencia.labelPadre = nodo.nombre;
+					referencia.numeroGobiernoMinimo = ubicacion.numeroGobiernoMinimo;
+					referencia.numeroGobiernoMaximo = ubicacion.numeroGobiernoMaximo;
+				}
+			}
+			properties {
+				calculate() { this.getProperties().setLabel(this.getNode().getCodigo() + " " + this.getNode().getNombre());
+				}
+			}
+
+			["mevxxmg"]
+			view Vista {
+				
+				show {
+//					field = ref Imagen;
+					field = ref Codigo;
+					field = ref Nombre;
+					field = ref Localizacion;
+					field = ref Inactivo;
+				}
+			}
+
+			["mu7yjlq"]
+			view VistaCaracteristicas {
+				show {
+					field = ref Caracteristicas;
+				}
+			}
+
+		}
+
+	}
+}

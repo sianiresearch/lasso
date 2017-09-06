@@ -1,0 +1,41 @@
+import coordinacion.territorio.*
+import coordinacion.inventario.*
+import coordinacion.proveedores.*
+
+package coordinacion {
+
+	["murwoqg"]
+	definition EscritorioCoordinador is desktop {
+		label = "Inicio";
+		is-singleton;
+		help = "version.html";
+
+		for {
+			role = ref RoleCoordinador;
+			role = ref RoleAdministradorServicio;
+		}
+
+		["ml8tidw"]
+		view Gestion {
+			is-default;
+			label = "Gestión";
+			show {
+				link = ref Expedientes;
+				link = ref incidencias.Coleccion;
+				link = ref objetosactuacion.Coleccion;
+//				link = ref modulos.controlcalidad.Contenedor;
+			}
+		}
+
+		["mci72ha"]
+		view {
+			label = "Maestros";
+			show {
+				link = ref proveedores.Coleccion;
+				link = ref Piezas;
+				link = ref Preferencias;
+			}
+		}
+	}
+}
+  

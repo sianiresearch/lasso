@@ -1,0 +1,10 @@
+package coordinacion {
+
+	["mhgip5a"]
+	definition RoleInspeccionInterna is role {
+		label = "Inspección Interna";
+		enable-services {
+			ontology = "ServicioInspeccionInterna";
+		}
+	}
+}

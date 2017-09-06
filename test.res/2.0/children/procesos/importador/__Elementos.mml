@@ -1,0 +1,71 @@
+package coordinacion.procesos.importador {
+
+	["m12lpfq"]
+	definition Elementos is document {
+		label = "Elementos";
+		schema {
+			codigo String;
+			nombre String;
+			lugar String;
+			zona String;
+			direccion String;
+			many componente {
+				codigo String;
+				nombre String;
+				numeroSerie String;
+				modulo String;
+				seccion String;
+				subseccion String;
+			}
+		}
+
+		["mclbqxg"]
+		definition ImportadorElementos is importer {
+			label = "Importador elementos";
+			target = ref Elementos;
+			
+			onInitialize() {
+												
+			}
+			onImportItem(elementos.Schema item) {
+				if(item.getCodigo != null) {
+					var objetosactuacion = coordinacion.objetosactuacion.Coleccion.instance;					
+					var objetoactuacion = coordinacion:: objetosactuacion :: ObjetoActuacion :: createNew(objetosactuacion);
+					var ficha = objetoactuacion.getFicha;
+					ficha.setCodigo(item.getCodigo);
+					ficha.setNombre(item.getNombre);
+					var seccionLocalizacion = ficha.getLocalizacionField as coordinacion.objetosactuacion.objetoactuacion.ficha.Localizacion;
+					if (item.direccion != null){
+						seccionLocalizacion.direccion = item.getDireccion;
+					}
+					if (item.getLugar != null && !item.lugar.isEmpty()){
+						seccionLocalizacion.setLugar(new Term(null, item.getLugar));						
+					}
+					if (item.getZona != null && !item.zona.isEmpty()){
+						seccionLocalizacion.setZona(new Term(null, item.getZona));					
+					}					
+					var ccomponentes = objetoactuacion.coleccionComponentes;
+					for(itemC : item.componente) {
+						var nodoComponente = coordinacion::modulos::componentes::coleccion::Componente:: createNew(ccomponentes);
+						var fichac = nodoComponente.ficha as coordinacion.modulos.componentes.Ficha;
+						fichac.setCodigo(itemC.codigo);
+						fichac.setNombre(itemC.nombre);
+						var ubicacion = fichac.ubicacionField as coordinacion.modulos.componentes.ficha.Ubicacion;
+						ubicacion.lugar = itemC.modulo;
+						ubicacion.zona = itemC.seccion;
+						ubicacion.direccion = itemC.subseccion;
+						//ConsoleService.println("--------Item hijo:" + itemC.codigo +" "+ itemC.nombre);						
+						fichac.save();											
+					}
+					ficha.save();
+				}
+				else {
+					ConsoleService:: println("Error importando item, Item NULL");
+				}
+			}
+
+		}
+
+	}
+}
+

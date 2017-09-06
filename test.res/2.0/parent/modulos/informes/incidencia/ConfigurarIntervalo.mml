@@ -1,0 +1,48 @@
+package coordinacion.modulos.informes.incidencia {
+
+	["mqdbgda"]
+	definition ConfigurarIntervalo is form {
+		label = "Seleccionar fecha inicial y fecha final";
+
+		["msb89pw"]
+		field-date FechaInicial {
+			label = "Fecha inicial";
+			precision = DAYS;
+		}
+
+		["mpzfa9g"]
+		field-date FechaFinal {
+			label = "Fecha final";
+			precision = DAYS;
+		}
+		
+		["mucvawa"]
+		field-select TipoInforme {
+			label = "Tipo de informe";
+			terms {
+				term {
+					label = "Informe de incidencias ejecutadas";
+					key = "i001";
+				}
+				term {
+					label = "Informe de incidencias enviadas";
+					key = "i002";
+				}
+			}
+			select {
+				is-embedded;
+			}
+		}
+
+		["mwqfdjw"]
+		view Vista {
+			label = "ConfigurarIntervalo";
+			show {
+				field = ref TipoInforme;
+				field = ref FechaInicial;
+				field = ref FechaFinal;
+			}
+		}
+
+	}
+}

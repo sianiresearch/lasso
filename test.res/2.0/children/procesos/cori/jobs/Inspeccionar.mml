@@ -1,0 +1,64 @@
+package coordinacion.procesos.cori.jobs {
+
+	["m27ogfq"]
+	definition Inspeccionar is job {
+		label = "Inspeccionar";
+
+		["mrklpiw"]
+		step Resultado {
+			label = "Descripción";
+
+			["mgqvfra"]
+			edit-picture Imagen {
+				label = "Foto";
+				is-multiple;
+				size {
+					width = 640;
+					height = 480;
+				}
+			}
+
+			["mtrixsa"]
+			edit-memo Observaciones {
+				label = "Observaciones";
+			}
+			
+			view {
+				show = ref Imagen;
+				show = ref Observaciones;
+			}
+		}
+
+		["ml_zmfg"]
+		step Resultado2 {
+			label = "¿Se ha solucionado la incidencia?";
+
+			["mmjqgeq"]
+			edit-date FechaInicio {
+				label = "Fecha de inicio";
+			}
+			
+			["md7grew"]
+			edit-date FechaFin {
+				label = "Fecha de finalización";
+			}
+			
+			["mycnitg"]
+			edit-picture FirmaOperario {
+				label = "Firma inspector";
+				is-hand-written;
+			}
+
+			["m5ki9jw"]
+			edit-boolean Inspeccionada {
+				label = "Incidencia solucionada";
+			}
+			view {
+				show = ref FechaInicio;
+				show = ref FechaFin;
+				show = ref Inspeccionada;
+			}
+		}
+
+	}
+}

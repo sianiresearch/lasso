@@ -1,0 +1,10 @@
+package coordinacion {
+
+	["mgad6bq"]
+	definition RoleVerificacion is role {
+		label = "Verificación correctiva externa";
+		enable-services {
+			ontology = "ServicioVerificacion";
+		}
+	}
+}

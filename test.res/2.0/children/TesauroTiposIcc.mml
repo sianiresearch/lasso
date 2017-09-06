@@ -1,0 +1,24 @@
+package coordinacion {
+	
+	["mp0hnxq"]
+	definition TesauroTiposIcc is thesaurus {
+		label = "Tipos de ICC";
+		ontology = "OntologiaTesauroTiposIcc";
+
+		terms {
+			term {
+				label = "ICC 1. Incumplimiento 1";
+				key = "ticc001";
+			}
+			term {
+				label = "ICC 2. Inclumplimiento 2";
+				key = "ticc002";
+			}
+			term {
+				label = "ICC 3. Incumplimiento 3";
+				key = "ticc003";
+			}
+		}
+	}
+}
+ 

@@ -1,0 +1,91 @@
+package coordinacion {
+
+	["m4qvhgg"]
+	definition TesauroTiposIncidencia is thesaurus {
+		label = "Tipos de incidencia";
+		ontology = "OntologiaTesauroTiposIncidencia";
+
+		terms {
+	term {
+//MERGE
+//				label = "Tipo de incidencia 1";
+//				key = "t001";
+				key = "t007";
+				label = "Otras plagas";
+			}
+			term {
+//MERGE
+//				label = "Tipo de incidencia 2";
+//				key = "t002";
+				key = "t008";
+				label = "Plaga de cucarachas";
+			}
+			term {
+//MERGE
+//				label = "Tipo de incidencia 3";
+//				key = "t003";
+				key = "t009";
+				label = "Plaga de ratas";
+			}
+			term {
+//MERGE
+//				label = "ICC 1. Incumplimiento 1";
+//				key = "t004";
+				key = "t010";
+				label = "Plaga de ratones";
+			}
+			term {
+//MERGE
+//				label = "ICC 2. Incumplimiento 2";
+//				key = "t005";
+				key = "t011";
+				label = "Plaga de mosquitos";
+			}
+			term {
+				key = "t012";
+				label = "Plaga de pulgas";
+			}
+			term {
+				key = "t013";
+				label = "Plaga de abejas";
+			}
+			term {
+				key = "t014";
+				label = "Plaga de avispas";
+			}
+			term {
+				key = "t015";
+				label = "Plaga de piojos";
+			}
+			term {
+				key = "t016";
+				label = "Plaga de garrapatas";
+			}
+			term {
+				key = "t017";
+				label = "Plaga de arañas";
+			}
+			term {
+				key = "t018";
+				label = "Plaga de gorgojos";
+			}
+			term {
+				key = "t019";
+				label = "Plaga de chinches";
+			}
+			term {
+				key = "t020";
+				label = "Plaga de palomas";
+			}
+			term {
+				key = "t021";
+				label = "Plaga de hormigas";
+			}
+			term {
+				key = "t022";
+				label = "Plaga de moscas";
+			}
+		}
+	}
+}
+ 

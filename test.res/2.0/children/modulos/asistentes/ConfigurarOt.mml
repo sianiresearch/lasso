@@ -1,0 +1,36 @@
+package coordinacion.modulos.asistentes {
+
+	["mxghpva"]
+	definition ConfigurarOt is form {
+		label = "Configuración de la prioridad de un trabajo correctivo";
+
+		["miqm6lg"]
+		field-date FechaInicio {
+			label = "Fecha de inicio propuesta";
+			precision = DAYS;
+		}
+
+		["m0_ktnw"]
+		field-date FechaFinLimite {
+			label = "Fecha fin límite de realización";
+			precision = DAYS;
+		}
+
+		["mqflp_w"]
+		field-memo ObsResultado {
+			label = "Observaciones";
+		}
+
+		["mopqtcq"]
+		view Vista {
+			is-default;
+			show {
+				field = ref FechaInicio;
+				field = ref FechaFinLimite;
+				field = ref ObsResultado;
+			}
+		}
+
+	}
+}
+  

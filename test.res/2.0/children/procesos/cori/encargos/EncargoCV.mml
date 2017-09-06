@@ -1,0 +1,141 @@
+import coordinacion.modulos.encargos.*
+
+package coordinacion.procesos.cori.encargos {
+
+	["masimhq"]
+	definition EncargoCV is container extends coordinacion.modulos.encargos.Encargo {
+		label = "Encargo de verificación";
+		is-readonly;
+
+		contain {
+			node = ref Ficha;
+		}
+
+		["ml450sg"]
+		view {
+			is-default;
+			label = "Petición";
+			show {
+				component = ref Ficha.VistaPropuesta;
+			}
+		}
+
+		["m8ofita"]
+		view {
+			label = "Resultado";
+			show {
+				component = ref Ficha.VistaResultado;
+			}
+		}
+
+		["m4tc0sw"]
+		view {
+			label = "Documentos";
+			show {
+				component = ref Ficha.VistaDocumentos;
+			}
+		}
+
+		["m6ccodw"]
+		definition Ficha is form extends coordinacion.modulos.encargos.Encargo.Ficha {
+			label = "Encargo de verificación";
+			is-readonly;
+
+			is-component;
+
+			mapping {
+				index = ref Coleccion.Index;
+				calculate() {
+					this.getReference().setTipoEncargo("V");
+				}
+			}
+
+			properties {
+				calculate() {
+					var nodo = this.getNode();
+					var propiedades = this.getProperties();
+					var codigo = nodo.getCodigo();
+					if(codigo != null) {
+						propiedades.setLabel(codigo);
+					}
+					else {
+						propiedades.setLabel("sin código");
+					}
+				}
+			}
+
+			["mvb1xuw"]
+			field-boolean Resultado {
+				label = "Incidencia verificada";
+			}
+
+			["m7upisg"]
+			field-node Ot {
+				label = "Orden de trabajo";
+				add {
+					node = ref coordinacion.procesos.cori.documentos.Otv;
+				}
+			}
+
+			["mwslqzq"]
+			field-node Pt {
+				label = "Parte de trabajo";
+				add {
+					node = ref coordinacion.procesos.cori.documentos.Ptv;
+				}
+			}
+
+			["m7muo5a"]
+			view VistaPropuesta {
+				is-default;
+				
+				show {
+					field = ref Encargo.Ficha.Codigo;
+					field = ref Encargo.Ficha.FechaEnvioOT;
+					field = ref Encargo.Ficha.FechaInicio;
+					field = ref Encargo.Ficha.FechaFinLimite;
+					field = ref Encargo.Ficha.Prioridad;
+					field = ref Encargo.Ficha.Observaciones;
+					field = ref Encargo.Ficha.Adjuntos;
+				}
+			}
+
+			["mluhr4a"]
+			view VistaResultado {
+				
+				show {
+					field = ref Encargo.Ficha.FechaRecepcionPT;
+					field = ref Encargo.Ficha.FechaInicioReal;
+					field = ref Encargo.Ficha.FechaFinReal;
+					field = ref Resultado;
+					field = ref Encargo.Ficha.ImagenResultado;
+					field = ref Encargo.Ficha.ObservacionesResultado;
+					field = ref Encargo.Ficha.AdjuntosResultado;
+					field = ref Encargo.Ficha.CalculoCoste;
+					field = ref Encargo.Ficha.CalculoCosteFacturable;
+				}
+			}
+
+			["m7dcsjg"]
+			view Documentos {
+				
+				show {
+					field = ref Encargo.Ficha.Ot;
+					field = ref Encargo.Ficha.Pt;
+				}
+			}
+
+			["mpg2ysw"]
+			view VistaDocumentos {
+				
+				show {
+					field = ref Encargo.Ficha.Ot;
+					field = ref Encargo.Ficha.Pt;
+				}
+			}
+
+		}
+
+	}
+}
+  

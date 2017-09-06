@@ -1,0 +1,79 @@
+package coordinacion.procesos.cori {
+
+	["m2redua"]
+	abstract definition Otc is document {
+		label = "Orden de trabajo";
+		schema {
+			NombreDemandante String; 
+			TelefonoDemandante String;
+			DireccionDemandante String;
+//			NivelInfestacion Term;
+			ElementoTratar Term;
+			Codigo String;
+			ObjetoActuacion Term;
+			Prioridad Term;
+			FechaInicio Date;
+			FechaFinLimite Date;
+			FechaCreacion Date;
+			Observaciones String;
+			IdIncidencia String;
+//MERGE
+//			CodigoNotificacionIncidencia String;
+			Origen Term;
+			FechaIncidencia Date;
+			TipoIncidenciaLabel String;
+			many TipoIncidencia Term;
+			Descripcion String;
+//MERGE
+//			many VisorImagenIncidencia{
+//				ImagenIncidencia Picture;
+//			}
+//			many VisorMapa{
+//				ImagenMapa Picture;			
+//			}
+			ImagenIncidencia Picture;
+			Urgente Boolean;
+			many Adjuntos File;
+			many AdjuntosIncidencia File;
+			Cliente String;
+			CodigoCliente String;
+			Instalacion Term;
+			Tipo Term;
+			many Anexo {
+				Imagen1 Picture;
+				Imagen2 Picture;
+			}
+			Edificio String;
+			Centro String;
+			Departamento String;
+			Planta String;
+			Modulo String;
+			ObjetoSyn {
+				Imagen Picture;
+				CodigoTarget String;
+				Codigo String;
+				Nombre String;
+				Lugar String;
+				Zona String;
+				IdExtranjera String;
+				NumeroGobiernoMinimo String;
+				NumeroGobiernoMaximo String;
+				Componente {
+					Imagen Picture;
+					Codigo String;
+					Nombre String;
+					Lugar String;
+					Zona String;
+					IdExtranjera String;
+				}
+			}
+			
+			Lugar String;
+			Zona String;
+			Direccion String;
+			Telefono String;
+			NumeroGobiernoInicio String;
+			NumeroGobiernoFin String;
+		}
+	}
+}

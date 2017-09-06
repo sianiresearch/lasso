@@ -1,0 +1,143 @@
+package coordinacion.modulos.informes.incidencia {
+
+	["mpwuqeq"]
+	definition FiltroDatos is form {
+		label = "Ficha de datos";
+
+
+		["me_uwgq"]
+		field-select Estado {
+			label = "Estado";
+			terms { 
+				term {
+					label = "Cerrada";
+					key = "e001";
+				}
+				term {
+					label = "No cerrada";
+					key = "e002";
+				}
+			}
+		}
+		
+		["m_ypeua"]
+		field-select ResultadoEjecucion {
+			label = "Resultado de la ejecución";
+			is-required;
+			terms { 
+				term {
+					label = "Corregida";
+					key = "c001";
+				}
+				term {
+					label = "No corregida";
+					key = "c002";
+				}
+			}
+		}
+		
+		["mel9pug"]
+		field-link Objeto {
+			label = "Objeto";
+			allow-search;
+			allow-history;
+			source {
+				index = ref coordinacion.CatalogoObjetosActuacion.Index;
+				view = ref coordinacion.CatalogoObjetosActuacion.Index.VistaLink;
+			}
+		}
+
+		["moftewa"]
+		field-select Lugar {
+			label = "Lugar";
+			source = ref coordinacion.TesauroLugar;
+		}
+
+		["mz9adaa"]
+		field-select Zona {
+			label = "Zona";
+			source = ref coordinacion.TesauroZona;
+		}
+
+		["mipmufg"]
+		field-select OrdenacionEjecutadas {
+			label = "Ordenación de incidencias";
+			terms {
+				term {
+					label = "Lugar";
+					key = "o001";
+				}
+				term {
+					label = "Zona";
+					key = "o002";
+				}
+				term {
+					label = "Objeto";
+					key = "o003";
+				}
+				term {
+					label = "Fecha de ejecución";
+					key = "o004";
+				}
+			}
+		}
+		
+		["mv1__uq"]
+		field-select OrdenacionEnviadas {
+			label = "Ordenación de incidencias";
+			terms {
+				term {
+					label = "Lugar";
+					key = "o001";
+				}
+				term {
+					label = "Zona";
+					key = "o002";
+				}
+				term {
+					label = "Objeto";
+					key = "o003";
+				}
+				term {
+					label = "Fecha de envío";
+					key = "o004";
+				}
+			}
+		}
+
+		["mewhqqg"]
+		field-select Unidad {
+			label = "Unidad";
+			terms {  
+				term {
+					label = "Ejecución";
+					key = "u001";
+				}
+			}
+		}
+
+		["mh6_cgq"]
+		view VistaEjecutadas {
+			label = "Ficha";
+			show {
+				field = ref Lugar;
+				field = ref Zona;
+				field = ref Objeto;
+				field = ref Estado;
+				field = ref ResultadoEjecucion;
+				field = ref OrdenacionEjecutadas;
+			}
+		}
+		
+		["m2dvaoa"]
+		view VistaEnviadas {
+			show {
+				field = ref Lugar;
+				field = ref Zona;
+				field = ref Objeto;
+				field = ref Unidad;
+				field = ref OrdenacionEnviadas;
+			}
+		}
+	}
+}

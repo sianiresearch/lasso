@@ -1,0 +1,30 @@
+package coordinacion {
+
+	["m0xlbag"]
+	definition TesauroDistritos is thesaurus {
+		label = "Distritos";
+		ontology = "OntologiaTesauroDistritos";
+		terms {
+			term {
+				label = "VEGUETA CONO SUR Y TAFIRA";
+				key = "t001";
+			}
+			term {
+				label = "CENTRO";
+				key = "t002";
+			}
+			term {
+				label = "ISLETA-PUERTO-GUANARTEME";
+				key = "t003";
+			}
+			term {
+				label = "CIUDAD ALTA";
+				key = "t004";
+			}
+			term {
+				label = "TAMARACEITE-SAN LORENZO-TENOYA";
+				key = "t005";
+			}
+		}
+	}
+}

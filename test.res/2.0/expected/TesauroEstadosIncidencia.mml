@@ -1,0 +1,52 @@
+package coordinacion {
+
+	["mtm5usg"]
+	definition TesauroEstadosIncidencia is thesaurus {
+		label = "Estado Incidencias";
+		ontology = "OntologiaTesauroEstadosIncidencia";
+
+		terms {
+			term {
+				key = "e001";
+				label = "Notificada";
+			}
+			term {
+				key = "e002";
+				label = "Verificada";
+			}
+			term {
+				key = "e003";
+				label = "Verificando";
+			}
+			term {
+				key = "e004";
+				label = "Derivada";
+			}
+			term {
+				key = "e005";
+				label = "Ejecutada";
+			}
+			term {
+				key = "e006";
+				label = "Corrigiendo";
+			}
+			term {
+				key = "e007";
+				label = "Inspeccionada";
+			}
+			term {
+				key = "e008";
+				label = "Inspeccionando";
+			}
+			term {
+				key = "e009";
+				label = "Cancelada";
+			}
+			term {
+				key = "e010";
+				label = "Cerrada";
+			}
+		}
+	}
+}
+  

@@ -1,0 +1,19 @@
+package coordinacion {
+
+	["mp_v__a"]
+	definition TesauroOrigenesIncidencia is thesaurus {
+		label = "Origen de incidencia";
+		ontology = "OntologiaTesauroOrigenesIncidencia";
+		terms {
+			term {
+				key = "t001";
+				label = "De parte";
+			}
+			term {
+				key = "t002";
+				label = "De oficio";
+			}
+		}
+	}
+}
+  

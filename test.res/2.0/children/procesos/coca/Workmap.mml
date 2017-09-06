@@ -1,0 +1,137 @@
+package coordinacion.procesos.coca {
+
+	["mj_fptg"]
+	definition Workmap is activity {
+		label = "Realizar certificación";
+		target = ref coordinacion.modulos.controlcalidad.Ficha;
+		shortcut shCertificacion;
+		shortcut shFacturacion;
+		
+		["megkmeq"]
+		view {
+			label = "Certificacion";
+			show {  
+				shortcut = "shCertificacion";
+			}
+		}
+		
+		["m785kaw"]
+		view {
+			label = "Facturación";
+			show {  
+				shortcut = "shFacturacion";
+			}
+		}
+		
+
+		["m7seoma"]
+		place Inicio {
+			is-initial;
+			onArrive() {
+				var controlCalidad = coordinacion.modulos.controlcalidad.Contenedor.instance;
+				var coleccion = controlCalidad.getColeccion();
+				var ficha = coordinacion.modulos.controlcalidad.Ficha.createNew(coleccion);
+				this.^target = ficha;
+				this.save();				
+				doGoto(Place::IntervaloConfigurado, "Certificación iniciada");				
+			}
+		}
+
+		["mbzg_tw"]
+		place IntervaloConfigurado {
+
+			["mbiirnw"]
+			edition {
+				goto = ref PorcentajeConfigurado;
+				history = "Intervalo de certificación configurada";
+				label = "Configurar intervalo de certificación";
+				use {
+					form = ref coordinacion.modulos.asistentes.ConfigurarIntervalo;
+					with-view = ref coordinacion.modulos.asistentes.ConfigurarIntervalo.Vista;
+				}
+				onValidate(coordinacion.modulos.asistentes.ConfigurarIntervalo f,ValidationResult vr) {
+					if (f.fechaInicial == null){
+						vr.addError("Error en campo fecha", "Introducir fecha inicial");						
+					}
+					if (f.fechaFinal == null){
+						vr.addError("Error en campo fecha", "Introducir fecha final");
+					}				
+				}
+				
+				onSolve(coordinacion.modulos.asistentes.ConfigurarIntervalo f) {
+					var ficha = this.^target;
+					ficha.setFechaInicial(f.fechaInicial);
+					ficha.setFechaFinal (f.fechaFinal);
+					ficha.save();
+					var certificacion = coordinacion::procesos::coca::certificacion::Exportador.doExportOf(ficha).toNewDocument;
+					certificacion.setLabel("Certificación: " + ficha.getFechaInicial() + " - " + ficha.getFechaFinal());
+					certificacion.consolidate;
+					certificacion.save;
+					ficha.setCertificacion(certificacion.toLink);
+					ficha.save();
+					this.setLabel("Realizar certificación: " + f.fechaInicial + " - " + f.fechaFinal);
+					this.shCertificacion = certificacion;
+					this.save();
+				}
+			}
+		}
+
+		["mqlpu7q"]
+		place PorcentajeConfigurado {
+
+			["mvhgzaq"]
+			edition {
+				goto = ref Terminar ; 
+				history = "Facturación configurada";
+				label = "Configurar la facturación";
+				use {
+					form = ref ConfigurarFacturacion; 
+					with-view = ref ConfigurarFacturacion.Vista;
+				}
+				
+				onValidate(coordinacion.procesos.coca.ConfigurarFacturacion f,ValidationResult vr) {
+					if (f.fechaCertificacion == null){
+						vr.addError("Error campo fecha","Introducir fecha de certificación");
+					}
+				
+				}
+				onSolve(coordinacion.procesos.coca.ConfigurarFacturacion f) {
+					var ficha = this.^target;
+					ficha.setFechaCertificacion(f.fechaCertificacion);
+					if (f.getCuantiaMaximaTotal != null){
+						ficha.setCuantiaMaximaTotal(f.getCuantiaMaximaTotal);						
+					}else{
+						ficha.setCuantiaMaximaTotal(0);						
+					}
+					for (sindicador : f.indicadoresField.allFields){						
+						var indicador =   sindicador as coordinacion.procesos.coca.configurarfacturacion.Indicadores;
+						var findicador = ficha.indicadoresField.addNew() as coordinacion.modulos.controlcalidad.ficha.Indicadores;
+						if (indicador.indicador != null){
+							findicador.setIndicador(indicador.indicador);
+						}else{
+							findicador.setIndicador(0);
+						}
+						findicador.setNombre(indicador.nombre);						
+					}
+					ficha.setTecnico(f.tecnico);
+					ficha.save();
+					var facturacion = coordinacion::procesos::coca::facturacion::Exportador.doExportOf(ficha).toNewDocument;
+					facturacion.setLabel("Facturación: " + ficha.getFechaInicial() + " - " + ficha.getFechaFinal());
+					facturacion.consolidate;
+					facturacion.save;
+					ficha.setCertificacion(facturacion.toLink);
+					ficha.save();
+					this.shFacturacion = facturacion;
+					this.save();					
+				}
+			}
+		}
+
+		["mtorzmq"]
+		place Terminar {						
+			is-final;
+		}
+
+	}
+}
+  

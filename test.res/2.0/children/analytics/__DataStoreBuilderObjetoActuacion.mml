@@ -1,0 +1,63 @@
+import coordinacion.modulos.utilidades.*
+import coordinacion.objetosactuacion.*
+import coordinacion.analytics.dashboardincidencias.datastoreincidencia.*
+package coordinacion.analytics {
+
+	["mnfqa_a"]
+	definition DataStoreBuilderObjetoActuacion is datastore-builder {
+		label = "Builder de Incidencia";
+		source = ref coordinacion.objetosactuacion.ObjetoActuacion.Ficha;
+
+		to {
+			datastore = ref DashBoardIncidencias.DataStoreIncidencia;
+			onBuild(coordinacion.objetosactuacion.objetoactuacion.Ficha nodeInstance, coordinacion.analytics.dashboardincidencias.DataStoreIncidencia datastoreInstance) {
+				var dimensionObjetosActuacion = datastoreInstance.getObjetosActuacion();
+				var componenteObjetoActuacion = insertarComponenteObjeto(nodeInstance, dimensionObjetosActuacion);
+				rellenarComponenteObjeto(nodeInstance,componenteObjetoActuacion);
+				dimensionObjetosActuacion.save();
+			}
+		}
+		
+		function insertarComponenteObjeto(objetoactuacion.Ficha nodeInstance, ObjetosActuacionDimension dimensionObjetosActuacion) : ObjetosActuacionDimensionComponent {
+				var componenteObjetoActuacion = dimensionObjetosActuacion.insertComponent(nodeInstance.owner.toLink.getId());
+				return componenteObjetoActuacion; 			
+		}
+		
+		function rellenarComponenteObjeto(objetoactuacion.Ficha nodeInstance, ObjetosActuacionDimensionComponent componenteObjetoActuacion) {
+			componenteObjetoActuacion.addCodigo(nodeInstance.getCodigo);
+			componenteObjetoActuacion.addNombre(new Term(nodeInstance.getCodigo, nodeInstance.getNombre), new ArrayList<Term>);
+			var seccionLocalizacion = obtenerLocalizacion(nodeInstance);
+			if (seccionLocalizacion.zona != null && !seccionLocalizacion.zona.equals("")){
+				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));			
+			}
+		}
+		
+		function crearJerarquiaObjeto(objetoactuacion.Ficha nodeInstance) : ArrayList <Term> {
+			var ArrayList <Term> jerarquia = new ArrayList <Term>;
+			var ficha = nodeInstance;
+			jerarquia.^add(new Term(ficha.getCodigo, ficha.getNombre));
+			return jerarquia;
+		}
+
+		function crearJerarquiaLocalizacion(objetoactuacion.Ficha nodeInstance) : ArrayList <Term> {
+			var seccionLocalizacion = obtenerLocalizacion(nodeInstance);
+			var ArrayList <Term> padres = new ArrayList <Term>;
+			if (seccionLocalizacion.lugar != null)
+//MERGE
+//				padres.^add(new Term(seccionLocalizacion.lugar.^label, seccionLocalizacion.lugar.^label));
+			padres.^add(new Term(seccionLocalizacion.lugar.^label, seccionLocalizacion.lugar.^label));
+			return padres;
+		}
+
+		function obtenerFicha(objetoactuacion.Ficha nodeInstance) : objetoactuacion.Ficha {
+			var padre = ObjetoActuacionTools :: obtenerPadreNode(nodeInstance);
+			var ficha = padre.getFicha;
+			return ficha;
+		}
+
+		function obtenerLocalizacion(objetoactuacion.Ficha ficha) : objetoactuacion.ficha.Localizacion {
+			return ficha.localizacionField as objetoactuacion.ficha.Localizacion;
+		}
+
+	}
+}

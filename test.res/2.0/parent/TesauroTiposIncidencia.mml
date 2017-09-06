@@ -1,0 +1,32 @@
+package coordinacion {
+
+	["m4qvhgg"]
+	definition TesauroTiposIncidencia is thesaurus {
+		label = "Tipos de incidencia";
+		ontology = "OntologiaTesauroTiposIncidencia";
+
+		terms {
+			term {
+				label = "Tipo de incidencia 1";
+				key = "t001";
+			}
+			term {
+				label = "Tipo de incidencia 2";
+				key = "t002";
+			}
+			term {
+				label = "Tipo de incidencia 3";
+				key = "t003";
+			}
+			term {
+				label = "ICC 1. Incumplimiento 1";
+				key = "t004";
+			}
+			term {
+				label = "ICC 2. Incumplimiento 2";
+				key = "t005";
+			}
+		}
+	}
+}
+ 

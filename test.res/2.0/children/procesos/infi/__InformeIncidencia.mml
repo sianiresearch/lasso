@@ -1,0 +1,110 @@
+package coordinacion.procesos.infi {
+
+	["mjednog"]
+	definition InformeIncidencia is document {
+		label = "Informe Incidencia";
+		template = template InformeIncidencia;
+
+		schema {
+			FechaInforme Date;
+			FechaInicioFiltrado Date;
+			FechaFinFiltrado Date;
+			Corregida String;
+			many Incidencias {
+				Codigo String;
+				Lugar String;
+				Zona String;
+				Objeto String;
+				FechaEjecucion Date;
+				Tipo String;
+				Descripcion String;
+				Estado String;
+			}
+		}
+
+		["mzec7fq"]
+		definition Exporter is exporter {
+			label = "exporter";
+			target = ref InformeIncidencia;
+			onExportItem(coordinacion.procesos.infi.informeincidencia.Schema i) {
+				
+				var Expression expresion = null;
+				var incidencias = coordinacion::incidencias::Coleccion::getInstance();
+				var ficha = this.scope as coordinacion.modulos.informes.incidencia.Ficha;
+				
+				expresion = coordinacion :: modulos :: utilidades :: Filtros :: filtrarEjecutadas(ficha);
+				
+				var org.monet.bpi.OrderExpression orden = new org.monet.bpi.OrderExpression();
+				var Param datoOrdenar = ordenarPor(ficha);
+				orden.^add(datoOrdenar);
+
+				var listaIncidencias = incidencias.getAll(orden);
+				if (expresion != null)
+					listaIncidencias = incidencias.get(expresion, orden);
+				
+				for (referencia : listaIncidencias){
+			  		var incidenciaInforme = new coordinacion.procesos.infi.informeincidencia.^schema.Incidencias;
+			  		rellenarInformeIncidencia(incidenciaInforme, referencia);
+			  		i.incidencias.^add(incidenciaInforme);
+				}
+				i.setFechaInforme(ficha.fechaInforme);
+				i.setFechaInicioFiltrado(ficha.fechaInicio);
+				i.setFechaFinFiltrado(ficha.fechaFin);
+				if (ficha.resultadoEjecucion != null)
+					i.setCorregida(ficha.resultadoEjecucion.getLabel);
+			}
+			
+			function ordenarPor(coordinacion.modulos.informes.incidencia.Ficha ficha) : Param {
+
+				if (ficha.ordenacionEjecutadas.^key.equals("o001"))
+					return coordinacion.incidencias.coleccion.Index.LugarObjetoActuacion;
+					
+				if (ficha.ordenacionEjecutadas.^key.equals("o002"))
+					return coordinacion.incidencias.coleccion.Index.ZonaObjetoActuacion;
+					
+				if (ficha.ordenacionEjecutadas.^key.equals("o003"))
+					return coordinacion.incidencias.coleccion.Index.ObjetoActuacion;
+
+				return coordinacion.incidencias.coleccion.Index.FechaEjecucion;
+			}
+			
+			function rellenarInformeIncidencia(coordinacion.procesos.infi.informeincidencia.^schema.Incidencias incidenciaInforme,
+				coordinacion.incidencias.coleccion.Index i) {
+
+				if (i.lugarObjetoActuacion != null)
+					incidenciaInforme.setLugar(i.lugarObjetoActuacion);
+					
+				if (i.zonaObjetoActuacion != null)
+					incidenciaInforme.setZona(i.zonaObjetoActuacion);
+					
+				if (i.objetoActuacion != null && i.objetoActuacion.id != null)
+					incidenciaInforme.setObjeto(i.objetoActuacion.^label);
+	
+		  		if (i.codigoIncidencia != null)
+		  			incidenciaInforme.setCodigo(i.codigoIncidencia);
+
+		  		if (i.tipoIncidencia != null && i.tipoIncidencia.^key != null)
+		  			incidenciaInforme.setTipo(i.tiposIncidencia);
+
+		  		if (i.estado != null && i.estado.^key != null)
+		  			incidenciaInforme.setEstado(i.estado.^label);
+		  			
+		  		if (i.descripcion != null)
+		  			incidenciaInforme.setDescripcion(i.descripcion);
+		  			
+		  		if (i.fechaEjecucion != null)
+		  			incidenciaInforme.setFechaEjecucion(i.fechaEjecucion);
+			}
+		}
+
+		["mewsnwq"]
+		definition Importer is importer {
+			label = "importer";
+			target = ref InformeIncidencia;
+			onImportItem(coordinacion.procesos.infi.informeincidencia.Schema item) {
+			
+			}
+		}
+	}
+}
+  

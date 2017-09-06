@@ -1,0 +1,23 @@
+package coordinacion.procesos.importador {
+
+	["mhy2p9g"]
+	definition ImportarElementos is activity {
+		label = "Importar elementos";
+
+		["mfvoqma"]
+		place Iniciar {
+			is-initial;
+			onArrive(){
+				coordinacion::procesos::importador::elementos::ImportadorElementos::doImportOf(Assets::Elementos).atGlobalScope;
+				doGoto(coordinacion :: procesos :: importador :: importarelementos :: Place :: Final, null);
+			}
+		} 
+
+		["mgbholg"]
+		place Final {
+			is-final;
+		}
+
+	}
+}
+  

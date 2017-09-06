@@ -1,0 +1,94 @@
+package coordinacion.objetosactuacion.historial {
+
+	["mn7q6lq"]
+	definition Historia is form {
+		label = "Historia";
+		mapping {
+			index = ref Coleccion.Index;
+		}
+
+		["mhnd8iq"]
+		field-picture Imagen {
+			label = "Imagen del activo";
+			description = "Foto del activo afectado";
+			size {
+				height = 480;
+				width = 640;
+			}
+		}
+
+		["m2b5lxg"]
+		field-serial Codigo {
+			label = "Código";
+			serial GeneratorCodigoHistoria {
+				format = "H%4S/%2Y";
+			}
+		}
+
+		["m6u05cg"]
+		field-link Componente {
+			label = "Componente";
+			source {
+				index = ref coordinacion.modulos.componentes.Coleccion.Index;
+			}
+		}
+
+		["mtn5w4g"]
+		field-date Fecha {
+			label = "Fecha";
+			precision = DAYS;
+		}
+
+		["mbfivcg"]
+		field-memo Descripcion {
+			label = "Descripción";
+		}
+
+		["mggml3w"]
+		field-boolean Inactivo {
+			label = "Inactivo";
+		}
+
+		["m5hiecg"]
+		field-select Propiedades {
+			label = "Propiedades";
+			source = ref coordinacion.TesauroPropiedades;
+		}
+
+		["m8trzda"]
+		field-link ObjetoVinculado {
+			label = "Objeto vinculado";
+			source {
+				index = ref coordinacion.objetosactuacion.Coleccion.Index;
+			}
+		}
+
+		["mfvos9q"]
+		field-file Adjuntos {
+			is-multiple;
+			label = "Adjuntos";
+		}
+		properties {
+			calculate() { this.getProperties().setLabel(this.getNode().getCodigo());
+			}
+		}
+
+		["mnnxucq"]
+		view {
+			is-default;
+			label = "Historial";
+			show {
+				field = ref Imagen;
+				field = ref Codigo;
+				field = ref Fecha;
+				field = ref Inactivo;
+				field = ref Componente;
+				field = ref Descripcion;
+				field = ref Propiedades;
+				field = ref ObjetoVinculado;
+				field = ref Adjuntos;
+			}
+		}
+
+	}
+}

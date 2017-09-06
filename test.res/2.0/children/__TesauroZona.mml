@@ -1,0 +1,474 @@
+package coordinacion {
+
+	["mc1hcyq"]
+	definition TesauroZona is thesaurus {
+		label = "Zona";
+		ontology = "OntologiaTesauroZona";
+		terms {
+			term {
+				key = "1";
+				label = "ALCARAVANERAS";
+			}
+			term {
+				key = "2";
+				label = "ALMATRICHE ALTO";
+			}
+			term {
+				key = "3";
+				label = "ALMATRICHE BAJO";
+			}
+			term {
+				key = "4";
+				label = "ALTAVISTA";
+			}
+			term {
+				key = "5";
+				label = "CANALEJAS";
+			}
+			term {
+				key = "6";
+				label = "CAÑADA HONDA";
+			}
+			term {
+				key = "7";
+				label = "CASA AYALA";
+			}
+			term {
+				key = "8";
+				label = "CASABLANCA I";
+			}
+			term {
+				key = "9";
+				label = "CASABLANCA III";
+			}
+			term {
+				key = "10";
+				label = "CHUMBERAS";
+			}
+			term {
+				key = "11";
+				label = "CIUDAD DEL CAMPO";
+			}
+			term {
+				key = "12";
+				label = "CIUDAD DEL MAR";
+			}
+			term {
+				key = "13";
+				label = "CIUDAD JARDÍN";
+			}
+			term {
+				key = "14";
+				label = "COSTA AYALA";
+			}
+			term {
+				key = "15";
+				label = "CRUZ DEL OVEJERO";
+			}
+			term {
+				key = "16";
+				label = "CUESTA RAMÓN";
+			}
+			term {
+				key = "17";
+				label = "CUEVAS BLANCAS";
+			}
+			term {
+				key = "18";
+				label = "CUEVAS TORRES";
+			}
+			term {
+				key = "19";
+				label = "DÍAZ CASANOVA";
+			}
+			term {
+				key = "20";
+				label = "DISEMINADO DE ALMATRICHE";
+			}
+			term {
+				key = "21";
+				label = "DISEMINADO DE LA MONTAÑETA";
+			}
+			term {
+				key = "22";
+				label = "DISEMINADO DE LAS PALMAS DE GRAN CANARIA";
+			}
+			term {
+				key = "23";
+				label = "DISEMINADO DE LOS GILES";
+			}
+			term {
+				key = "24";
+				label = "DISEMINADO DE LOS HOYOS";
+			}
+			term {
+				key = "25";
+				label = "DISEMINADO DE SAN LORENZO";
+			}
+			term {
+				key = "26";
+				label = "DISEMINADO DE TAFIRA";
+			}
+			term {
+				key = "27";
+				label = "DISEMINADO DE TAMARACEITE";
+			}
+			term {
+				key = "28";
+				label = "DISEMINADO DE TENOYA";
+			}
+			term {
+				key = "29";
+				label = "DON ZOILO";
+			}
+			term {
+				key = "30";
+				label = "DRAGONAL ALTO";
+			}
+			term {
+				key = "31";
+				label = "DRAGONAL BAJO";
+			}
+			term {
+				key = "32";
+				label = "EL BATÁN";
+			}
+			term {
+				key = "33";
+				label = "EL CARDÓN";
+			}
+			term {
+				key = "34";
+				label = "EL FONDILLO";
+			}
+			term {
+				key = "35";
+				label = "EL LASSO";
+			}
+			term {
+				key = "36";
+				label = "EL PINTOR";
+			}
+			term {
+				key = "37";
+				label = "EL ROMÁN";
+			}
+			term {
+				key = "38";
+				label = "EL ROQUE";
+			}
+			term {
+				key = "39";
+				label = "EL SECADERO";
+			}
+			term {
+				key = "40";
+				label = "EL TOSCÓN";
+			}
+			term {
+				key = "41";
+				label = "EL ZARDO";
+			}
+			term {
+				key = "42";
+				label = "ESCALERITAS";
+			}
+			term {
+				key = "43";
+				label = "FINCAS UNIDAS";
+			}
+			term {
+				key = "44";
+				label = "GUANARTEME";
+			}
+			term {
+				key = "45";
+				label = "HOYA ANDREA";
+			}
+			term {
+				key = "46";
+				label = "HOYA DE LA PLATA";
+			}
+			term {
+				key = "47";
+				label = "ISLA PERDIDA";
+			}
+			term {
+				key = "48";
+				label = "JINÁMAR";
+			}
+			term {
+				key = "49";
+				label = "LA CALZADA";
+			}
+			term {
+				key = "50";
+				label = "LA CANTERA";
+			}
+			term {
+				key = "51";
+				label = "LA DATA";
+			}
+			term {
+				key = "52";
+				label = "LA FERIA";
+			}
+			term {
+				key = "53";
+				label = "LA GALERA";
+			}
+			term {
+				key = "54";
+				label = "LA ISLETA";
+			}
+			term {
+				key = "55";
+				label = "LA MILAGROSA";
+			}
+			term {
+				key = "56";
+				label = "LA MINILLA";
+			}
+			term {
+				key = "57";
+				label = "LA MONTAÑETA";
+			}
+			term {
+				key = "58";
+				label = "LA PALMA";
+			}
+			term {
+				key = "59";
+				label = "LA PATERNA";
+			}
+			term {
+				key = "60";
+				label = "LA SUERTE";
+			}
+			term {
+				key = "61";
+				label = "LADERA ALTA";
+			}
+			term {
+				key = "62";
+				label = "LAS CUEVAS";
+			}
+			term {
+				key = "63";
+				label = "LAS MAJADILLAS";
+			}
+			term {
+				key = "64";
+				label = "LAS MESAS";
+			}
+			term {
+				key = "65";
+				label = "LAS PERRERAS";
+			}
+			term {
+				key = "66";
+				label = "LAS REHOYAS";
+			}
+			term {
+				key = "67";
+				label = "LAS TORRES";
+			}
+			term {
+				key = "68";
+				label = "LAS TORRES INDUSTRIAL";
+			}
+			term {
+				key = "69";
+				label = "LLANO DE LAS NIEVES";
+			}
+			term {
+				key = "70";
+				label = "LLANOS DE LA BARRERA";
+			}
+			term {
+				key = "71";
+				label = "LLANOS DE Mª RIVERA";
+			}
+			term {
+				key = "72";
+				label = "LOMO APOLINARIO";
+			}
+			term {
+				key = "73";
+				label = "LOMO BLANCO";
+			}
+			term {
+				key = "74";
+				label = "LOMO DE ENMEDIO";
+			}
+			term {
+				key = "75";
+				label = "LOMO EL SABINAL";
+			}
+			term {
+				key = "76";
+				label = "LOMO LOS FRAILES";
+			}
+			term {
+				key = "77";
+				label = "LOMO VERDEJO";
+			}
+			term {
+				key = "78";
+				label = "LOS GILES";
+			}
+			term {
+				key = "79";
+				label = "LOS HOYOS";
+			}
+			term {
+				key = "80";
+				label = "LOS TARAHALES";
+			}
+			term {
+				key = "81";
+				label = "LUGO";
+			}
+			term {
+				key = "82";
+				label = "MARZAGÁN";
+			}
+			term {
+				key = "83";
+				label = "MASAPEZ";
+			}
+			term {
+				key = "84";
+				label = "MILLER";
+			}
+			term {
+				key = "85";
+				label = "MILLER INDUSTRIAL";
+			}
+			term {
+				key = "86";
+				label = "MONTELUZ";
+			}
+			term {
+				key = "87";
+				label = "PEDRO HIDALGO";
+			}
+			term {
+				key = "88";
+				label = "PICO VIENTO";
+			}
+			term {
+				key = "89";
+				label = "PILETAS";
+			}
+			term {
+				key = "90";
+				label = "REHOYAS ALTAS";
+			}
+			term {
+				key = "91";
+				label = "RISCO NEGRO";
+			}
+			term {
+				key = "92";
+				label = "SALTO DEL NEGRO";
+			}
+			term {
+				key = "93";
+				label = "SAN ANTONIO";
+			}
+			term {
+				key = "94";
+				label = "SAN CRISTÓBAL";
+			}
+			term {
+				key = "95";
+				label = "SAN FRANCISCO - SAN NICOLÁS";
+			}
+			term {
+				key = "96";
+				label = "SAN FRANCISCO DE PAULA";
+			}
+			term {
+				key = "97";
+				label = "SAN JOSÉ DEL ÁLAMO";
+			}
+			term {
+				key = "98";
+				label = "SAN JUAN - SAN JOSÉ";
+			}
+			term {
+				key = "99";
+				label = "SAN LÁZARO";
+			}
+			term {
+				key = "100";
+				label = "SAN LORENZO";
+			}
+			term {
+				key = "101";
+				label = "SAN ROQUE";
+			}
+			term {
+				key = "102";
+				label = "SANTA CATALINA - CANTERAS";
+			}
+			term {
+				key = "103";
+				label = "SANTA MARGARITA";
+			}
+			term {
+				key = "104";
+				label = "SCHAMANN";
+			}
+			term {
+				key = "105";
+				label = "SIETE PUERTAS";
+			}
+			term {
+				key = "106";
+				label = "TAFIRA ALTA";
+			}
+			term {
+				key = "107";
+				label = "TAFIRA BAJA";
+			}
+			term {
+				key = "108";
+				label = "TAMARACEITE";
+			}
+			term {
+				key = "109";
+				label = "TENOYA";
+			}
+			term {
+				key = "110";
+				label = "TRES PALMAS";
+			}
+			term {
+				key = "111";
+				label = "TRIANA";
+			}
+			term {
+				key = "112";
+				label = "VEGA DE SAN JOSÉ";
+			}
+			term {
+				key = "113";
+				label = "VEGUETA";
+			}
+			term {
+				key = "114";
+				label = "ZÁRATE";
+			}
+			term {
+				key = "115";
+				label = "ZURBARÁN";
+			}
+			term {
+				key = "116";
+				label = "CONFITAL";
+			}			
+		}
+	}
+}

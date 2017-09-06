@@ -1,0 +1,8 @@
+package coordinacion {
+
+	["mcfgw5g"]
+	definition RoleSistema is role {
+		label = "Sistema";
+
+	}
+}

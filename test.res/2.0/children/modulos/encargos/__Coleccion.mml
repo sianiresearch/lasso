@@ -1,0 +1,136 @@
+package coordinacion.modulos.encargos {
+
+	["m4ipl5w"]
+	abstract definition Coleccion is collection {
+		label = "Encargos";
+		is-readonly;
+
+		is-component;
+		index = ref Index;
+
+		add {
+			node = ref Encargo;
+		}
+
+		["mbxlwtg"]
+		view Vista {
+			label = "Encargos";
+			
+			is-default;
+			show {
+				index {
+					sort-by = ref Index.FechaEnvioOT;
+					sort-mode = DESC;
+					with-view = ref Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.FechaEnvioOT;
+					attribute = ref Index.FechaRecepcionPT;
+					attribute = ref Index.Codigo;
+					attribute = ref Index.CalculoCoste;
+					attribute = ref Index.CalculoCosteFacturable;
+				}
+				dimension {
+					attribute = ref Index.FechaEnvioOT;
+					attribute = ref Index.FechaRecepcionPT;
+					attribute = ref Index.CalculoCoste;
+					attribute = ref Index.CalculoCosteFacturable;
+				}
+			}
+		}
+
+		["mkfbpvg"]
+		definition Index is index {
+			label = "Encargos";
+			reference {
+
+				["mpez3kw"]
+				attribute Codigo {
+					type = STRING;
+					label = "Código";
+				}
+
+				["mgbaftg"]
+				attribute FechaEnvioOT {
+					precision = MONTHS;
+					type = DATE;
+					label = "Fecha de envío de la orden";
+				}
+
+				["muvwn1a"]
+				attribute FechaRecepcionPT {
+					precision = MONTHS;
+					type = DATE;
+					label = "Fecha de recepción del parte";
+				}
+
+				["m3r_r6a"]
+				attribute FechaFinLimite {
+					precision = MONTHS;
+					type = DATE;
+					label = "Fecha límite propuesta";
+				}
+
+				["mrrl9xw"]
+				attribute FechaFinReal {
+					precision = MONTHS;
+					type = DATE;
+					label = "Fecha límite";
+				}
+
+				["mmtkgjg"]
+				attribute Trabajador {
+					type = STRING;
+					label = "Trabajador";
+				}
+
+				["m2xj4cg"]
+				attribute CalculoCoste {
+					type = STRING;
+					label = "Coste total";
+				}
+
+				["mkzpxlg"]
+				attribute CalculoCosteFacturable {
+					type = STRING;
+					label = "Coste total facturable";
+				}
+
+				["m_9tuaq"]
+				attribute IdPadre {
+					type = STRING;
+					label = "Código del nodo padre";
+				}
+
+				["mwrh49q"]
+				attribute Contador {
+					type = INTEGER;
+					label = "contador";
+				}
+
+				["mdguxcq"]
+				attribute TipoEncargo {
+					type = STRING;
+					label = "Tipo de encargo";
+				}
+			}
+
+			["m6mkn5g"]
+			view Vista {
+				is-default;
+				show {
+					title = ref Codigo;
+					line = ref FechaEnvioOT;
+					line = ref FechaRecepcionPT;
+					line = ref CalculoCoste;
+					line = ref CalculoCosteFacturable;
+				}
+			}
+
+		}
+
+	}
+}
+  

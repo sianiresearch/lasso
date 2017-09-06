@@ -1,0 +1,66 @@
+package coordinacion {
+	
+	["mn9whqa"]
+	definition TesauroElementoTratar is thesaurus {
+		label = "Elementos a tratar";
+		ontology = "OntologiaTesauroElementoTratar";
+
+		terms {
+			term {
+				label = "Solares";
+				key = "t001";
+			}
+			term {
+				label = "Laderas/Barrancos";
+				key = "t002";
+			}
+			term {
+				label = "Casas abandonadas";
+				key = "t003";
+			}
+			term {
+				label = "Dependencias Municipales";
+				key = "t004";
+			}
+			term {
+				label = "Parques";
+				key = "t005";
+			}
+			term {
+				label = "Palmeras";
+				key = "t006";
+			}
+			term {
+				label = "Paseos/Avenidas en playa";
+				key = "t007";
+			}
+			term {
+				label = "Instalaciones Deportivas";
+				key = "t008";
+			}
+			term {
+				label = "Pozos";
+				key = "t009";
+			}
+			term {
+				label = "Colegios. Ladera";
+				key = "t010";
+			}
+			
+			term {
+				label = "Colegios. Solar";
+				key = "t011";
+			}
+			
+			term {
+				label = "Colegios. Alcantarillado";
+				key = "t012";
+			}
+			term {
+				label = "Otros";
+				key = "t013";
+			}
+		}
+	}
+}
+ 

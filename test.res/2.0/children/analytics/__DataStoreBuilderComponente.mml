@@ -1,0 +1,64 @@
+import coordinacion.modulos.utilidades.*
+import coordinacion.objetosactuacion.*
+import coordinacion.analytics.dashboardincidencias.datastoreincidencia.*
+
+package coordinacion.analytics {
+
+	["ml7ys0q"]
+	definition DataStoreBuilderComponente is datastore-builder {
+		label = "Builder de Incidencia";
+		source = ref coordinacion.modulos.componentes.Ficha;
+
+		to {
+			datastore = ref DashBoardIncidencias.DataStoreIncidencia;
+			onBuild(coordinacion.modulos.componentes.Ficha nodeInstance, dashboardincidencias.DataStoreIncidencia datastoreInstance) {
+				if (nodeInstance.owner.prototype) return;
+				var dimensionObjetosActuacion = datastoreInstance.getObjetosActuacion();
+				var componenteObjeto = insertarComponenteObjeto(nodeInstance, dimensionObjetosActuacion);
+				rellenarComponenteObjeto(nodeInstance, componenteObjeto);
+				dimensionObjetosActuacion.save();
+			}
+		}
+
+		function insertarComponenteObjeto(coordinacion.modulos.componentes.Ficha nodeInstance, ObjetosActuacionDimension dimensionObjetosActuacion) : ObjetosActuacionDimensionComponent {
+			var componenteObjetoActuacion = dimensionObjetosActuacion.insertComponent(nodeInstance.owner.toLink.getId());
+			return componenteObjetoActuacion;
+		}
+
+		function rellenarComponenteObjeto(coordinacion.modulos.componentes.Ficha nodeInstance, ObjetosActuacionDimensionComponent componenteObjetoActuacion) {
+			componenteObjetoActuacion.addCodigo(nodeInstance.getCodigo);
+			componenteObjetoActuacion.addNombre(new Term(nodeInstance.getCodigo, nodeInstance.getNombre), crearJerarquiaObjeto(nodeInstance));
+			var seccionLocalizacion = obtenerLocalizacion(obtenerFicha(nodeInstance));
+			if (seccionLocalizacion.zona != null)
+//MERGE
+//				componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));
+			componenteObjetoActuacion.addLocalizacion(new Term(seccionLocalizacion.zona.^label, seccionLocalizacion.zona.^label), crearJerarquiaLocalizacion(nodeInstance));
+		}
+
+		function crearJerarquiaObjeto(coordinacion.modulos.componentes.Ficha nodeInstance) : ArrayList <Term> {
+			var ArrayList <Term> jerarquia = new ArrayList <Term>();
+			var ficha = obtenerFicha(nodeInstance);
+			jerarquia.^add(new Term(ficha.getCodigo, ficha.getNombre));
+			return jerarquia;
+		}
+
+		function crearJerarquiaLocalizacion(coordinacion.modulos.componentes.Ficha nodeInstance) : ArrayList <Term> {
+			var ficha = obtenerFicha(nodeInstance);
+			var seccionLocalizacion = obtenerLocalizacion(ficha);
+			var ArrayList <Term> padres = new ArrayList <Term>;
+			if (seccionLocalizacion.lugar != null)
+				padres.^add(new Term(seccionLocalizacion.lugar.^label, seccionLocalizacion.lugar.^label));
+			return padres;
+		}
+
+		function obtenerFicha(coordinacion.modulos.componentes.Ficha nodeInstance) : objetoactuacion.Ficha {
+			var padre = ObjetoActuacionTools :: obtenerPadreNode(nodeInstance);
+			return padre.getFicha;
+		}
+
+		function obtenerLocalizacion(objetoactuacion.Ficha ficha) : objetoactuacion.ficha.Localizacion {
+			return ficha.localizacionField as objetoactuacion.ficha.Localizacion;
+		}
+
+	}
+}

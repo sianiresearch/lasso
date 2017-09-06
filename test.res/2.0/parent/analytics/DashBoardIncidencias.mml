@@ -1,0 +1,582 @@
+package coordinacion.analytics {
+
+	["mnsudsg"]
+	definition DashBoardIncidencias is dashboard {
+		label = "Análisis";
+		use = ref DataStoreIncidencia;
+		for {
+			role = ref coordinacion.RoleCoordinador;
+		}
+
+		["mnxxscw"]
+		indicator IncidenciasTramitadas {
+			range = POSITIVE;
+			label = "Tramitadas";
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboIncidenciasTramitadas.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+		}
+
+		["miwf65q"]
+		indicator IncidenciasCorregidas {
+			range = POSITIVE;
+			label = "Ejecutadas";
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboIncidenciasCorregidas.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+		}
+
+		["mwlldsg"]
+		indicator IncidenciasVerificadas {
+			range = POSITIVE;
+			label = "Verificadas";
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboIncidenciasVerificadas.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+		}
+
+		["msxiouq"]
+		indicator IncidenciasInspeccionadas {
+			range = POSITIVE;
+			label = "Inspeccionadas";
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboIncidenciasInspeccionadas.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+		}
+
+		["m0_ueqa"]
+		indicator IncidenciasCerradas {
+			range = POSITIVE;
+			label = "Finalizadas";
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboIncidenciasCerradas.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+		}
+
+//		["m4j0ova"]
+//		indicator IncidenciasAbiertas {
+//			label = "Abiertas";
+//			range = POSITIVE;
+//			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+//			level {
+//				secondary {
+//					use = ref IncidenciasTramitadas;
+//					use = ref IncidenciasCerradas;
+//					use = ref IncidenciasCanceladas;
+//					formula = {
+//						var incidenciasCerradas = IncidenciasCerradas;
+//						if(Double.isNaN(IncidenciasCerradas)) {
+//							incidenciasCerradas = 0;
+//						}
+//						var incidenciasCanceladas = IncidenciasCanceladas;
+//						if(Double.isNaN(IncidenciasCanceladas)) {
+//							incidenciasCanceladas = 0;
+//						}(IncidenciasTramitadas - incidenciasCerradas) - incidenciasCanceladas;
+//					}
+//				}
+//			}
+//		}
+
+		["menyyxw"]
+		indicator IncidenciasCanceladas {
+			range = POSITIVE;
+			label = "Canceladas";
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboIncidenciasCanceladas.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+		}
+
+		["mnmavma"]
+		indicator OperacionesControl {
+			label = "Control";
+			range = POSITIVE;
+			measure-unit = ref DataStoreIncidencia.MedidaOperaciones;
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboOperacionesControl.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+		}
+
+		["mamqbmq"]
+		indicator OperacionesRevision {
+			label = "Revisión";
+			range = POSITIVE;
+			measure-unit = ref DataStoreIncidencia.MedidaOperaciones;
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboOperacionesRevision.Metrica;
+					operator = COUNT;
+					interpolation = LEFT;
+				}
+			}
+		}
+
+		["momwybg"]
+		indicator OperacionesControlPredictivas {
+			label = "Operaciones";
+			range = POSITIVE;
+			measure-unit = ref DataStoreIncidencia.MedidaOperacionesPredictivas;
+			level {
+				primary {
+					metric = ref DataStoreIncidencia.CuboOperacionesControl.MetricaPredictiva;
+					operator = AVERAGE;
+					interpolation = LEFT;
+				}
+			}
+		}
+		
+		["mmmoveq"]
+		indicator EvolucionTrabajosPendiente {
+			label = "Trabajos pendientes";
+			range = POSITIVE;
+			measure-unit = ref DataStoreIncidencia.MedidaIncidencia;
+			level {  
+				primary {
+					metric = ref DataStoreIncidencia.CuboEvolucionTrabajosPendiente.Metrica;
+					operator = COUNT;
+				}
+			}
+			filter {
+				resolution = DAYS;
+			}
+		}
+
+		["mvypcja"]
+		taxonomy Codigo {
+			label = "Incidencia";
+			ontology = "f7ac1dad-495b-4ac5-96cf-a9e5310c2522";
+			implicit;
+			feature = ref DataStoreIncidencia.Incidencias.Codigo;
+		}
+
+		["m5xsjbw"]
+		taxonomy ObjetoActuacion {
+			label = "Objeto de actuación";
+			ontology = "547f93b2-0b4a-49b7-87dd-d62efed17e60";
+			feature = ref DataStoreIncidencia.ObjetosActuacion.Nombre;
+		}
+
+		["mpvwucq"]
+		taxonomy TipoIncidencia {
+			label = "Tipo de incidencia";
+			ontology = "f91143c8-69b5-44d7-be4a-bbb0164cb07f";
+			feature = ref DataStoreIncidencia.TiposIncidencia.TipoIncidencia;
+		}
+
+		["mq5zzow"]
+		taxonomy Localizacion {
+			label = "Localización";
+			ontology = "5164dcfc-dd75-40f7-92b2-db7c9fadd886";
+			feature = ref DataStoreIncidencia.ObjetosActuacion.Localizacion;
+		}
+
+		["mz8bryq"]
+		taxonomy Operacion {
+			label = "Operación";
+			ontology = "d413d2bb-26ac-42e3-9379-3d24072c73f2";
+			feature = ref DataStoreIncidencia.OperacionesControl.Nombre;
+		}
+
+		["mwf5mmg"]
+		taxonomy TipoTrabajo {
+			label = "Tipo de trabajo";
+			ontology = "f4476d38-4a80-4561-a2d3-51eb2413f792";
+			feature = ref DataStoreIncidencia.TipoTrabajo.Nombre;
+		}
+
+		["md1pylg"]
+		taxonomy Proveedor {
+			label = "Proveedor";
+			ontology = "1380c789-a43c-4425-b66b-4b62c6901f1e";
+			feature = ref DataStoreIncidencia.Proveedores.Nombre;
+		}
+
+		["mcl0sna"]
+		taxonomy OperacionRevision {
+			label = "Operación";
+			ontology = "a36b1986-599a-4883-88bd-b5fbd8c0296b";
+			feature = ref DataStoreIncidencia.OperacionesRevision.Nombre;
+		}
+
+		["mpwl8sg"]
+		view Vista {
+			show {
+				olap {
+					folder {
+						label = "Evolución del trabajo pendiente";
+						indicator = ref EvolucionTrabajosPendiente;
+					}
+					folder {
+						label = "Trabajos correctivos";
+						indicator = ref IncidenciasTramitadas;
+						indicator = ref IncidenciasVerificadas;
+						indicator = ref IncidenciasCorregidas;
+						indicator = ref IncidenciasInspeccionadas;
+						indicator = ref IncidenciasCerradas;
+						indicator = ref IncidenciasCanceladas;
+//						indicator = ref IncidenciasAbiertas;
+					}
+					folder {
+						label = "Número de Operaciones";
+						indicator = ref OperacionesRevision;
+						indicator = ref OperacionesControl;
+					}
+					folder {
+						label = "Análisis predictivo";
+						indicator = ref OperacionesControlPredictivas;
+					}
+				}
+			}
+		}
+
+		["mgurlrq"]
+
+		definition DataStoreIncidencia is datastore {
+			label = "Almacen de datos";
+
+			["mddkqag"]
+			dimension Incidencias {
+				label = "Incidencias";
+				ontology = "628d24be-0f99-4879-9f5f-342bf23349ee";
+
+				["miwzp4w"]
+				feature Codigo {
+					label = "Codigo";
+					type = STRING;
+				}
+
+				["mbkmjga"]
+				feature Origen {
+					label = "Origen";
+					type = STRING;
+				}
+			}
+
+			["m9irljq"]
+			dimension ObjetosActuacion {
+				label = "Objetos de actuación";
+				ontology = "caf7834b-ec7d-49a2-8e71-a88d6f542d6d";
+
+				["mol9ecq"]
+				feature Codigo {
+					label = "Código";
+					type = STRING;
+				}
+
+				["mudknpg"]
+				feature Nombre {
+					label = "Objeto de actuación";
+					type = TERM;
+					source = ref coordinacion.TesauroObjetosActuacion;
+				}
+
+				["meennrw"]
+				feature Localizacion {
+					label = "Localización";
+					type = TERM;
+				}
+			}
+
+			["m1a6now"]
+			dimension TiposIncidencia {
+				label = "Tipos de incidencia";
+				ontology = "5c5c0395-cfbe-44f8-9b02-f93c53446a49";
+
+				["mwdjqig"]
+				feature TipoIncidencia {
+					label = "Tipo de incidencia";
+					type = STRING;
+				}
+			}
+
+			["m50bnpw"]
+			dimension OperacionesControl {
+				label = "Operaciones de control";
+				ontology = "82057f9a-8915-4953-8f6a-cc70c6225a29";
+
+				["mkvauha"]
+				feature Nombre {
+					label = "Nombre";
+					type = TERM;
+				}
+
+				["mma4asa"]
+				feature Unidad {
+					label = "Unidad";
+					type = STRING;
+				}
+			}
+
+			["mf_6_pq"]
+			dimension OperacionesRevision {
+				label = "Operaciones de revisión";
+				ontology = "6842a400-d63a-43d9-9773-bc73addf425f";
+
+				["ml_ryuq"]
+				feature Nombre {
+					label = "Nombre";
+					type = TERM;
+				}
+			}
+
+			["mt7j7gg"]
+			dimension TipoTrabajo {
+				label = "Tipo de trabajo";
+				ontology = "567ca2b8-e3cf-4e81-9f61-3aec5e9da4a8";
+
+				["m7kj2gq"]
+				feature Nombre {
+					label = "Nombre";
+					type = STRING;
+				}
+			}
+
+			["mkj1o0w"]
+			dimension Proveedores {
+				label = "Proveedores";
+				ontology = "90143f53-b9a6-473b-829f-4bf7cf3eb587";
+
+				["m0cw_nq"]
+				feature Nombre {
+					label = "Nombre";
+					type = STRING;
+				}
+			}
+
+			["moabfma"]
+			cube CuboIncidenciasTramitadas {
+				label = "Incidencias tramitadas";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref Proveedores;
+				use = ref TiposIncidencia;
+
+				["mld4qrg"]
+				metric Metrica {
+					label = "incidencias";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}
+
+			["mkc_0cg"]
+			cube CuboIncidenciasVerificadas {
+				label = "Incidencias verificadas";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref Proveedores;
+				use = ref TiposIncidencia;
+
+				["mld4qrg"]
+				metric Metrica {
+					label = "incidencias";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}
+
+			["mv03hla"]
+			cube CuboIncidenciasCorregidas {
+				label = "Incidencias ejecutadas";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref Proveedores;
+				use = ref TiposIncidencia;
+
+				["mld4qrg"]
+				metric Metrica {
+					label = "incidencias";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}
+
+			["mcgyzna"]
+			cube CuboIncidenciasInspeccionadas {
+				label = "Incidencias inspeccionadas";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref Proveedores;
+				use = ref TiposIncidencia;
+
+				["mld4qrg"]
+				metric Metrica {
+					label = "incidencias";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}
+
+			["m2pbasg"]
+			cube CuboIncidenciasCerradas {
+				label = "Incidencias cerradas";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref Proveedores;
+				use = ref TiposIncidencia;
+
+				["mld4qrg"]
+				metric Metrica {
+					label = "incidencias";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}
+
+			["mwkbitg"]
+			cube CuboIncidenciasCanceladas {
+				label = "Incidencias canceladas";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref TiposIncidencia;
+
+				["markljw"]
+				metric Metrica {
+					label = "número";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}
+
+			["miqm_pa"]
+			cube CuboOperacionesControl {
+				label = "Operaciones de control";
+				resolution = DAYS;
+				use = ref OperacionesControl;
+				use = ref ObjetosActuacion;
+				use = ref TipoTrabajo;
+				use = ref Proveedores;
+
+				["dmarkljw"]
+				metric Metrica {
+					label = "número";
+					scale = ref MedidaOperaciones.unidad;
+				}
+
+				["mygaxpq"]
+				metric MetricaPredictiva {
+					label = "Medida";
+					scale = ref MedidaOperacionesPredictivas.unidad;
+				}
+			}
+
+			["mtiawma"]
+			cube CuboOperacionesRevision {
+				label = "Operaciones de revisión";
+				resolution = DAYS;
+				use = ref OperacionesRevision;
+				use = ref ObjetosActuacion;
+				use = ref TipoTrabajo;
+				use = ref Proveedores;
+
+				["mwrdzvg"]
+				metric Metrica {
+					label = "número";
+					scale = ref MedidaOperaciones.unidad;
+				}
+			}
+			
+			["mlvasqg"]
+			cube CuboEvolucionTrabajosPendiente {
+				label = "Evolución del trabajo pendiente";
+				resolution = DAYS;
+				use = ref Incidencias;
+				use = ref ObjetosActuacion;
+				use = ref Proveedores;
+				["mlnqhvw"]
+				metric Metrica {
+					label = "incidencias";
+					scale = ref MedidaIncidencia.unidad;
+				}
+			}			
+
+			["magccug"]
+			definition MedidaOperaciones is measure-unit {
+				label = "Medida";
+
+				["malvrsg"]
+				scale unidad {
+					label = "operaciones";
+					max = 1000.0;
+					factor = 1.0;
+				}
+
+				["mefhfra"]
+				scale millar {
+					label = "k operaciones";
+					max = 1000000.0;
+					factor = 0.001;
+				}
+
+			}
+
+			["m0jng4g"]
+			definition MedidaOperacionesPredictivas is measure-unit {
+				label = "Medida";
+
+				["m8dzgbw"]
+				scale unidad {
+					label = "valor";
+					max = 1000.0;
+					factor = 1.0;
+				}
+
+			}
+
+			["mxbx8ug"]
+			definition MedidaIncidencia is measure-unit {
+				label = "número";
+
+				["mnejnww"]
+				scale unidad {
+					label = "incidencias";
+					max = 1000.0;
+					factor = 1.0;
+				}
+
+				["mbdgyja"]
+				scale millar {
+					label = "k incidencias";
+					max = 1000000.0;
+					factor = 0.001;
+				}
+
+			}
+
+		}
+
+	}
+}

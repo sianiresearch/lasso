@@ -1,0 +1,88 @@
+package coordinacion.modulos.controlcalidad {
+
+	["mnkdxug"]
+	definition Configuracion is form {
+		label = "Configuración";
+		is-component;
+		
+		properties {  
+			calculate() {
+				var nodo = this.^node;
+				nodo.setLabel("Control de calidad");
+			}
+		}
+
+		["mipo46a"]
+		field-number PorcentajeVariable {
+			label = "Porcentaje de prestación variable";
+			format = "### %";
+		}
+
+		["mqquiia"]
+		field-composite SeccionIndicadores {
+			label = "Configuración de indicador";
+			is-multiple;
+
+			["mruw_ka"]
+			field-select Nombre {
+				label = "Indicador";
+				source = ref coordinacion.TesauroTiposIncidencia;
+			}
+
+			["mknda5w"]
+			field-number Porcentaje {
+				label = "Porcentaje sobre el variable";
+				format = "### %";
+			}
+
+//			["mpyqfmg"]
+//			field-number Ponderacion {
+//				label = "Ponderación de cumplimiento";
+//				format = "### %";
+//			}
+
+			["m6arvpg"]
+			field-select TipoPonderacion {
+				label = "Tipo de ponderación de cumplimiento";
+				terms {
+					term {
+						label = "Descuento";
+						key = "tp001";
+					}
+					term {
+						label = "Incremento";
+						key = "tp002";
+					}
+				}
+			}
+			view {  
+				mode = EXPANDED;
+				show {  
+					field = ref Nombre;
+					field = ref Porcentaje;
+//					field = ref Ponderacion;
+					field = ref TipoPonderacion;
+				}
+			}
+		}
+		
+		["mj5sgiq"]
+		operation GenerarIcc {
+			label = "Actualizar Icc";
+			execute() {
+				this.seccionIndicadoresField
+			
+			}
+		}
+
+		["mtkrjlg"]
+		view Vista {
+			label = "Cofiguracion";
+			show {
+				field = ref PorcentajeVariable;
+				field = ref SeccionIndicadores;
+			}
+		}
+
+	}
+}

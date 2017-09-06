@@ -1,0 +1,58 @@
+package coordinacion.procesos.cori {
+
+	["mvsmvrq"]
+	definition ConfiguracionEncargo is form {
+		label = "Configuración de un encargo de un trabajo correctivo";
+
+		["mvrwtkw"]
+		field-date FechaInicio {
+			label = "Fecha de inicio propuesta";
+		}
+
+		["m7vewhg"]
+		field-date FechaFinLimite {
+			label = "Fecha fin límite de realización";
+		}
+
+		["my__kmq"]
+		field-memo Observaciones {
+			label = "Observaciones";
+		}
+
+		["mss7omw"]
+		field-select Prioridad {
+			label = "Prioridad";
+			terms {
+				term {
+					key = "p001";
+					label = "Alta";
+				}
+				term {
+					key = "p002";
+					label = "Media";
+				}
+				term {
+					key = "p003";
+					label = "Baja";
+				}
+			}
+			select {
+				is-embedded;
+			}
+		}
+
+		["mvqfkjg"]
+		view Ficha {
+			is-default;
+			
+			show {
+				field = ref FechaInicio;
+				field = ref FechaFinLimite;
+				field = ref Prioridad;
+				field = ref Observaciones;
+			}
+		}
+
+	}
+}
+  

@@ -1,0 +1,119 @@
+package coordinacion.procesos.infi {
+
+	["mfe5jgw"]
+	definition InformeIncidenciasEnviadas is document {
+		label = "InformeIncidenciasEnviadas";
+		template = template InformeIncidenciasEnviadas;
+
+		schema {
+			FechaInforme Date;
+			FechaInicioFiltrado Date;
+			FechaFinFiltrado Date;
+			UnidadFiltrado String;
+			many Incidencias{
+				Codigo String;
+				Lugar String;
+				Zona String;
+				Objeto String;
+				FechaEnvio Date;
+				Tipo String;
+				Descripcion String;
+				Unidad String;
+				Origen String;
+			}
+		}
+
+		["mhocglq"]
+		definition Exporter is exporter {
+			label = "exporter";
+			target = ref InformeIncidenciasEnviadas;
+			
+			onExportItem(coordinacion.procesos.infi.informeincidenciasenviadas.Schema i) {
+				var Expression expresion = null;
+				var incidencias = coordinacion::incidencias::Coleccion::getInstance();
+				var ficha = this.scope as coordinacion.modulos.informes.incidencia.Ficha;
+				
+				expresion = coordinacion :: modulos :: utilidades :: Filtros :: filtrarEnviadas(ficha);
+				
+				var org.monet.bpi.OrderExpression orden = new org.monet.bpi.OrderExpression();
+				var Param datoOrdenar = ordenarPor(ficha);
+				orden.^add(datoOrdenar);
+
+				var listaIncidencias = incidencias.getAll(orden);
+				if (expresion != null)
+					listaIncidencias = incidencias.get(expresion, orden);
+
+				for (referencia : listaIncidencias){
+			  		var incidenciaInforme = new coordinacion.procesos.infi.informeincidenciasenviadas.^schema.Incidencias;
+			  		rellenarInformeIncidencia(incidenciaInforme, referencia);
+			  		i.incidencias.^add(incidenciaInforme);
+				}
+
+				i.setFechaInforme(ficha.fechaInforme);
+				i.setFechaInicioFiltrado(ficha.fechaInicio);
+				i.setFechaFinFiltrado(ficha.fechaFin);
+				if (ficha.unidad != null)
+					i.setUnidadFiltrado(ficha.unidad.getLabel());
+			}
+			
+			function ordenarPor(coordinacion.modulos.informes.incidencia.Ficha ficha) : Param {
+
+				if (ficha.ordenacionEnviadas.^key.equals("o001"))
+					return coordinacion.incidencias.coleccion.Index.LugarObjetoActuacion;
+					
+				if (ficha.ordenacionEnviadas.^key.equals("o002"))
+					return coordinacion.incidencias.coleccion.Index.ZonaObjetoActuacion;
+					
+				if (ficha.ordenacionEnviadas.^key.equals("o003"))
+					return coordinacion.incidencias.coleccion.Index.ObjetoActuacion;
+
+				return coordinacion.incidencias.coleccion.Index.FechaEnvioOtac;
+			}
+			
+			function rellenarInformeIncidencia(coordinacion.procesos.infi.informeincidenciasenviadas.^schema.Incidencias incidenciaInforme,
+				coordinacion.incidencias.coleccion.Index i) {
+
+				if (i.lugarObjetoActuacion != null)
+					incidenciaInforme.setLugar(i.lugarObjetoActuacion);
+					
+				if (i.zonaObjetoActuacion != null)
+					incidenciaInforme.setZona(i.zonaObjetoActuacion);
+					
+				if (i.objetoActuacion != null && i.objetoActuacion.id != null)
+					incidenciaInforme.setObjeto(i.objetoActuacion.^label);
+	
+		  		if (i.codigoIncidencia != null)
+		  			incidenciaInforme.setCodigo(i.codigoIncidencia);
+
+		  		if (i.tipoIncidencia != null && i.tipoIncidencia.^key != null)
+		  			incidenciaInforme.setTipo(i.tiposIncidencia);
+		  			
+		  		if (i.descripcion != null)
+		  			incidenciaInforme.setDescripcion(i.descripcion);
+
+		  		if (i.fechaEnvioOtac != null)
+		  			incidenciaInforme.setFechaEnvio(i.fechaEnvioOtac);
+
+		  		if (i.unidad != null){
+		  			if (i.unidad.equals("Ejecucion") || i.unidad.equals("ejecucion")){
+		  				incidenciaInforme.setUnidad("Ejecución");
+		  			}
+	  			}
+
+		  		if (i.origen != null && i.origen.^key != null)
+		  			incidenciaInforme.setOrigen(i.origen.^label);
+			}
+		}
+
+		["midehyq"]
+		definition Importer is importer {
+			label = "importer";
+			target = ref InformeIncidenciasEnviadas;
+			onImportItem(coordinacion.procesos.infi.informeincidenciasenviadas.Schema item) {
+			
+			}
+		}
+
+	}
+}
+  

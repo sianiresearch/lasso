@@ -1,0 +1,30 @@
+package coordinacion.proveedores {
+
+	["mavw0nq"]
+	definition Proveedor is container {
+		label = "Proveedor";
+		contain {
+			node = ref FichaProveedor;
+			node = ref contactos.Coleccion;
+		}
+
+		["mgx6mqa"]
+		view {
+			label = "Proveedor";
+			show {
+				component = ref FichaProveedor.Vista;
+			}
+		}
+
+		["mp6i29a"]
+		view {
+			label = "Contactos";
+			show {
+				component = ref contactos.Coleccion.Vista;
+			}
+		}
+
+	}
+}
+		
+		

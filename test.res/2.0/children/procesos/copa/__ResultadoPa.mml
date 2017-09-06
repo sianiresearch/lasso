@@ -1,0 +1,173 @@
+package coordinacion.procesos.copa {
+
+	["m__4r5g"]
+	definition ResultadoPa is form {
+		label = "Resultado";
+		is-component;
+
+		["m_Vfsaw"]
+		field-composite SeccionInformacionVisita {
+			label = "Información de la visita";
+
+			["mb92euq"]
+			field-date FechaRealizacion {
+				label = "Fecha de realización";
+				precision = DAYS;
+			}
+
+			["myrevrw"]
+			field-text Cuadrilla {
+				label = "Cuadrilla";
+			}
+
+			["mhtdl9a"]
+			field-text Responsable {
+				label = "Validado por";
+			}
+
+			["mjentsa"]
+			field-picture ImagenFirma {
+				label = "Firma del responsable";
+				size {
+					height = 480;
+					width = 640;
+				}
+			}
+		}
+
+		["m6l_vpq"]
+		field-composite SeccionTrabajos {
+			label = "Trabajos";
+			is-multiple;
+
+			["mdncamq"]
+			field-link ObjetoActuacion {
+				label = "Objeto de actuación";
+				source {
+					index = ref coordinacion.CatalogoObjetosActuacion.Index;
+					view = ref coordinacion.CatalogoObjetosActuacion.Index.VistaLink;
+				}
+			}
+
+			["myt_u0q"]
+			field-text IdExtranjeraObjeto {
+				label = "idExntranjeraObjeto";
+			}
+
+			["mpbuqza"]
+			field-date FechaRealizacionEstimada {
+				label = "Fecha realización estimada";
+				precision = DAYS;
+			}
+
+			["mpyhmnq"]
+			field-check OperacionesRevision {
+				label = "Operaciones de revisión";
+				terms;
+			}
+			["mwbmewq"]
+			field-composite SeccionOperacionesRevision{
+				label = "Operaciones de revisión realizadas";
+				is-multiple;
+				["mm0a5ag"]
+				field-select OperacionRev {
+					label = "Operació";
+					terms;
+				}
+				
+				["m6mn2sq"]
+				field-select OperacionRevPadre {
+					label = "Operación padre";
+					terms;
+				}
+			}
+
+			["mqwpoda"]
+			field-composite SeccionOperaciones {
+				label = "Operaciones";
+				is-multiple;
+
+				["my8ngcg"]
+				field-select Operacion {
+					label = "Operación";
+					terms;
+				}
+
+				["muaqxfa"]
+				field-select OperacionPadre {
+					label = "Operación padre";
+					terms;
+				}
+
+				["mb3_d3q"]
+				field-boolean Realizada {
+					label = "Realizada";
+				}
+
+				["m1iwozw"]
+				field-text Valor {
+					label = "Valor";
+				}
+
+				["mjqm5qw"]
+				field-text Unidad {
+					label = "Unidad";
+				}
+				view {
+					show {
+						field = ref Operacion;
+						field = ref OperacionPadre;
+						field = ref Realizada;
+						field = ref Valor;
+						field = ref Unidad;
+					}
+				}
+			}
+
+			["m_7po0q"]
+			field-text Responsable {
+				label = "Responsable";
+			}
+
+			["mxav4ag"]
+			field-memo Observaciones {
+				label = "Observaciones";
+			}
+			view {
+				mode = COMPACT;
+				summary {
+					field = ref ObjetoActuacion;
+					field = ref FechaRealizacionEstimada;
+				}
+				show {
+					field = ref FechaRealizacionEstimada;
+					field = ref ObjetoActuacion;
+					field = ref IdExtranjeraObjeto;
+					field = ref OperacionesRevision;
+					field = ref SeccionOperaciones;
+					field = ref Responsable;
+					field = ref Observaciones;
+				}
+			}
+		}
+
+		["mztknPg"]
+		view VistaVisita {
+			
+			is-default;
+			show {
+				field = ref SeccionInformacionVisita;
+			}
+		}
+
+		["mueyk0q"]
+		view VistaOperaciones {
+			
+			show {
+				field = ref SeccionTrabajos;
+			}
+		}
+
+	}
+}
+  

@@ -1,0 +1,23 @@
+import coordinacion.proveedores.*
+
+package coordinacion {
+
+	["mi5na9a"]
+	definition TesauroPropiedades is thesaurus {
+		label = "Propiedades";
+
+		ontology = "OntologiaTesauroPropiedades";
+
+		terms {
+			term {
+				label = "Propiedad 1";
+				key = "P001";
+			}
+			term {
+				label = "Propiedad 2";
+				key = "P002";
+			}
+		}
+	}
+}
+  

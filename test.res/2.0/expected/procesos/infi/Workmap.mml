@@ -1,0 +1,197 @@
+package coordinacion.procesos.infi {
+
+	["mvoriiq"]
+	definition Workmap is activity {
+		label = "Informe de incidencias";
+		target = ref coordinacion.modulos.informes.incidencia.Ficha;
+		shortcut shInformeIncidencia;
+		
+		["meynkew"]
+		view {
+			label = "Informe";
+			show {  
+				shortcut = "shInformeIncidencia";
+			}
+		}
+		
+		onAbort() {
+			doGoto(Place :: Terminar, "Informe abortado");
+		}
+		
+		["mw6i1rg"]
+		place Inicio {
+			is-initial;
+			onArrive() {
+				doGoto(Place::IntervaloConfigurado, "Informe iniciado");
+			}
+		}
+		
+		["micdsdg"]
+		place IntervaloConfigurado { 
+			
+			["m2q_kba"]
+			edition {
+				goto = ref TipoInforme;
+				history = "Intervalo del informe de incidencias";
+				label = "Configurar intervalo del informe";
+				use {
+					form = ref coordinacion.modulos.informes.incidencia.ConfigurarIntervalo;
+					with-view = ref coordinacion.modulos.informes.incidencia.ConfigurarIntervalo.Vista;
+				}
+				
+				onValidate(coordinacion.modulos.informes.incidencia.ConfigurarIntervalo f,ValidationResult vr) {
+					if (f.fechaFinal == null){
+						vr.addError("Error en campo fecha", "Introducir fecha final");
+					}	
+					if (f.fechaInicial == null){
+						vr.addError("Error en campo fecha", "Introducir fecha inicial");						
+					}
+				}
+				onSolve(coordinacion.modulos.informes.incidencia.ConfigurarIntervalo f) {
+					var coleccion = coordinacion.modulos.informes.incidencia.Coleccion.instance;
+					var ficha = coordinacion.modulos.informes.incidencia.Ficha.createNew(coleccion);
+					ficha.setFechaInicio(f.fechaInicial);
+					ficha.setFechaFin(f.fechaFinal);
+					ficha.setTipoInforme(f.tipoInforme);
+					ficha.save;
+					this.^target = ficha;
+					this.save;
+				}
+			}
+		}
+		
+		["mn4tq_a"]
+		place TipoInforme {
+			onArrive() {
+				var ficha = this.^target;
+				if (ficha.tipoInforme != null){
+					if (ficha.tipoInforme.^key.equals("i001")){
+						doGoto(Place :: DatosConfigurados,"Informe de incidencias ejecutadas");
+					}
+					if (ficha.tipoInforme.^key.equals("i002")){
+						doGoto(Place :: DatosConfiguradosEnviadas,"Informe de incidencias enviadas");
+					}
+				}
+			}
+		}
+		
+		["mk6ztyw"]
+		place DatosConfigurados {
+			
+			["mcbubsq"]
+			edition {
+				goto = ref Terminar;
+				history = "Datos del informe de incidencias";
+				label = "Configurar datos del informe de incidencias";
+				use {
+					form = ref coordinacion.modulos.informes.incidencia.FiltroDatos;
+					with-view = ref coordinacion.modulos.informes.incidencia.FiltroDatos.VistaEjecutadas;
+				}
+				
+				onSolve(coordinacion.modulos.informes.incidencia.FiltroDatos f) {
+					var ficha = this.^target;
+					capturarDatosFiltrado(f, ficha);
+					ficha.fechaInforme = new Date();
+					ficha.save;
+					
+					var informeIncidencia = coordinacion::procesos::infi::informeincidencia::Exporter.doExportOf(ficha).toNewDocument; 
+					informeIncidencia.consolidate;
+					informeIncidencia.save;
+					ficha.setDocumento(informeIncidencia.toLink);
+					ficha.save;
+					this.shInformeIncidencia = informeIncidencia;
+					this.save;
+				}
+				
+				onValidate(coordinacion.modulos.informes.incidencia.FiltroDatos f,ValidationResult vr) {
+					if (f.resultadoEjecucion == null){
+						vr.addError("Error en campo resultado", "Introducir resultado de la ejecución");						
+					}
+				}
+			}
+		}
+		
+		["mjjsylg"]
+		place DatosConfiguradosEnviadas { 
+			["mvcfgwq"]
+			edition {
+				goto = ref Terminar;
+				history = "Datos del informe de incidencias";
+				label = "Configurar datos del informe de incidencias";
+				use {
+					form = ref coordinacion.modulos.informes.incidencia.FiltroDatos;
+					with-view = ref coordinacion.modulos.informes.incidencia.FiltroDatos.VistaEnviadas;
+				}
+				
+				onSolve(coordinacion.modulos.informes.incidencia.FiltroDatos f) {
+					var ficha = this.^target;
+					capturarDatosFiltradoEnviadas(f, ficha);
+					ficha.fechaInforme = new Date();
+					ficha.save;
+					
+					var informeIncidencia = coordinacion::procesos::infi::informeincidenciasenviadas::Exporter.doExportOf(ficha).toNewDocument; 
+					informeIncidencia.consolidate;
+					informeIncidencia.save;
+					ficha.setDocumento(informeIncidencia.toLink);
+					ficha.save;
+					this.shInformeIncidencia = informeIncidencia;
+					this.save;
+				}
+			}
+		}
+		
+		["mj99goq"]
+		place Terminar {
+			is-final;
+		}
+		
+		function capturarDatosFiltrado(coordinacion.modulos.informes.incidencia.FiltroDatos f, 
+			coordinacion.modulos.informes.incidencia.Ficha ficha) {
+			
+			ficha.setResultadoEjecucion(f.resultadoEjecucion);
+			
+			if (f.estado != null)
+				ficha.setEstado(f.estado);
+			
+			if (f.lugar != null)
+				ficha.setLugar(f.lugar);
+
+			if (f.zona != null)
+				ficha.setZona(f.zona);
+
+			if (f.objeto != null)
+				ficha.setObjeto(f.objeto);
+				
+			if (f.ordenacionEjecutadas != null && !f.ordenacionEjecutadas.^key.empty){
+				ficha.setOrdenacionEjecutadas(f.ordenacionEjecutadas);
+			}
+			else{
+				ficha.setOrdenacionEjecutadas(new Term("o004", "Fecha de ejecución"));
+			}
+		}
+
+		function capturarDatosFiltradoEnviadas(coordinacion.modulos.informes.incidencia.FiltroDatos f, 
+			coordinacion.modulos.informes.incidencia.Ficha ficha) {
+			
+			if (f.lugar != null)
+				ficha.setLugar(f.lugar);
+
+			if (f.zona != null)
+				ficha.setZona(f.zona);
+
+			if (f.objeto != null)
+				ficha.setObjeto(f.objeto);
+
+			if (f.unidad != null && !f.unidad.^key.empty)
+				ficha.setUnidad(f.unidad);
+				
+			if (f.ordenacionEnviadas != null && !f.ordenacionEnviadas.^key.empty){
+				ficha.setOrdenacionEnviadas(f.ordenacionEnviadas);
+			}
+			else{
+				ficha.setOrdenacionEnviadas(new Term("o004", "Fecha de envío"));
+			}
+		}
+	}
+}
+  

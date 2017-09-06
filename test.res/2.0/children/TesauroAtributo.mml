@@ -1,0 +1,22 @@
+import coordinacion.proveedores.*
+
+package coordinacion {
+
+	["mjuuijw"]
+	definition TesauroAtributo is thesaurus {
+		label = "Atributo";
+		ontology = "OntologiaTesauroAtributo";
+		terms {
+			term {
+				label = "Atributo1";
+				key = "A001";
+			}
+			term {
+				label = "Atributo2";
+				key = "A002";
+			}
+		}
+
+	}
+}
+  

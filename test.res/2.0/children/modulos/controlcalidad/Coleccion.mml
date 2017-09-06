@@ -1,0 +1,67 @@
+package coordinacion.modulos.controlcalidad {
+
+	["mrhmfxq"]
+	definition Coleccion is collection {
+		label = "Control de calidad";
+		description = "Cálculo del control de calidad del servicio";
+		is-component;
+		is-readonly;
+		add {
+			node = ref Ficha;
+		}
+		index = ref Index;
+
+		["myrubma"]
+		view Vista{
+			label = "Coleccion";
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.FechaCreacion;
+				}
+			}
+		}
+		
+		["m_spooq"]
+		operation RealizarCertificacion {
+			label = "Realizar certificación";
+			for {
+				role = ref coordinacion.RoleCoordinador;
+			}
+			execute() {
+					var tarea = coordinacion :: procesos :: coca :: Workmap :: createNew();										
+					tarea.resume;					//
+					ClientService :: redirectUserTo(tarea.toMonetLink());				
+			}
+		}
+
+		["maaxwqg"]
+		definition Index is index {
+			label = "Certificación";
+
+			reference {
+
+				["mjzqyoq"]
+				attribute FechaCreacion {
+					label = "Fecha creación";
+					type = DATE;
+				}
+
+				["mnxfvpg"]
+				attribute FechaCertificacion {
+					label = "Fecha de certificación";
+					type = DATE;
+				}
+			}
+
+			["mosldhq"]
+			view Vista {
+				show {
+					line = ref FechaCreacion;
+				}
+			}
+
+		}
+
+	}
+}

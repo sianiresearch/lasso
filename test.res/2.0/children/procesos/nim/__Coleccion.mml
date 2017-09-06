@@ -1,0 +1,237 @@
+package coordinacion.procesos.nim {
+
+	["mcswqeq"]
+	definition Coleccion is collection {
+		label = "Archivo de incidencias mobile";
+		description = "Incidencias que se han producido en el mobile";
+
+		is-singleton;
+		add {
+			node = ref coordinacion.incidencias.Incidencia;
+		}
+
+		["mksyrlq"]
+		view {
+			label = "Incidencias";
+			filter {
+				attribute = ref Index.FiltroEstado;
+				value = "incidencias";
+			}
+			show {
+				index {
+					with-view = ref Index.Vista;
+					sort-by = ref Index.ObjetoActuacion;
+					sort-mode = ASC;
+				}
+			}
+		}
+
+		["m7i0cuw"]
+		definition Index is index {
+			label = "incidencias";
+			reference {
+
+				["msjdkgw"]
+				attribute CodigoIncidencia {
+					label = "Código";
+					type = STRING;
+				}
+
+				["m35uk0q"]
+				attribute FechaCreacion {
+					label = "Fecha de creación";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["mifspra"]
+				attribute TipoIncidencia {
+					label = "Tipo";
+					type = TERM;
+				}
+
+				["m7x7rcq"]
+				attribute TiposIncidencia {
+					label = "Tipos de incidencia";
+					type = STRING;
+				}
+
+				["m34tzew"]
+				attribute ImagenIncidencia {
+					label = "Imagen";
+					type = PICTURE;
+				}
+
+				["m_opr2q"]
+				attribute Descripcion {
+					label = "Descripción";
+					type = STRING;
+				}
+
+				["mz09dzg"]
+				attribute ObjetoActuacion {
+					label = "Objeto de actuación";
+					type = LINK;
+				}
+
+				["mgwqypw"]
+				attribute Estado {
+					label = "Estado";
+					type = TERM;
+					source = ref coordinacion.TesauroEstadosIncidencia;
+				}
+
+				["mrjz2rq"]
+				attribute Origen {
+					label = "Origen";
+					type = TERM;
+				}
+
+				["msfrwra"]
+				attribute Urgente {
+					label = "Urgente";
+					type = BOOLEAN;
+				}
+
+				["mpfwwfa"]
+				attribute Corregida {
+					label = "Corregida";
+					type = BOOLEAN;
+				}
+
+				["mxagr6w"]
+				attribute FechaIncidencia {
+					label = "Fecha de notificación";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["mjwns6g"]
+				attribute FechaEjecucion {
+					label = "Fecha de ejecución";
+					type = DATE;
+					precision = DAYS;
+				}
+
+				["mtho_jw"]
+				attribute FechaCierre {
+					label = "Fecha de cierre";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["m_c4puq"]
+				attribute FechaModificacion {
+					label = "Fecha de modificación";
+					type = DATE;
+					precision = MONTHS;
+				}
+
+				["mqsxxcq"]
+				attribute FechaUltimaOt {
+					label = "Fecha de última OT";
+					type = DATE;
+				}
+
+				["m5q5cna"]
+				attribute TipoIcc {
+					label = "Tipo de ICC";
+					type = STRING;
+				}
+
+				["moikblq"]
+				attribute FiltroEstado {
+					label = "FiltroEstado";
+					type = STRING;
+				}
+
+				["mtjelxa"]
+				attribute Unidad {
+					label = "Unidad destino";
+					type = STRING;
+				}
+
+				["mkgxrmw"]
+				attribute Prioridad {
+					label = "Prioridad";
+					type = TERM;
+				}
+
+				["mxeyv7a"]
+				attribute ObjetoPadre {
+					label = "Objeto de actuación";
+					type = STRING;
+				}
+
+				["mdzx_ia"]
+				attribute LugarObjetoActuacion {
+					label = "Lugar";
+					type = STRING;
+				}
+
+				["motf34w"]
+				attribute ZonaObjetoActuacion {
+					label = "Zona";
+					type = STRING;
+				}
+
+				["md_exug"]
+				attribute LugarComponente {
+					label = "Módulo";
+					type = STRING;
+				}
+
+				["m8v_ita"]
+				attribute ZonaComponente {
+					label = "Sección";
+					type = STRING;
+				}
+
+				["mlt752a"]
+				attribute CreadaPor {
+					label = "Creada por";
+					type = STRING;
+				}
+
+				["mfnzflq"]
+				attribute FechaIcc {
+					label = "Fecha de la primera OTAC";
+					type = DATE;
+				}
+
+				["mdengyg"]
+				attribute ResultadoEjecucion {
+					label = "Resultado de la ejecución";
+					type = STRING;
+				}
+
+				["mpmupbq"]
+				attribute FechaEnvioOtac {
+					label = "Fecha de la última otac enviada";
+					type = DATE;
+					precision = DAYS;
+				}
+			}
+
+			["mk_yxzg"]
+			view Vista {
+				is-default;
+				show {
+					picture = ref ImagenIncidencia;
+					title = ref CodigoIncidencia;
+					line = ref ObjetoActuacion;
+					line = ref TiposIncidencia;
+					line = ref Origen;					
+					line-below = ref FechaIncidencia;
+					line-below = ref FechaEjecucion;
+					line-below = ref FechaCierre;
+					line-below = ref Prioridad;
+					line-below = ref ObjetoPadre;
+					line-below = ref CreadaPor;
+					highlight = ref Estado;
+					highlight = ref ResultadoEjecucion;
+				}
+			}
+		}
+	}
+}

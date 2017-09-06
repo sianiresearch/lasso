@@ -1,0 +1,97 @@
+package coordinacion.objetosactuacion.historial {
+
+	["mvi_dfa"]
+	definition Coleccion is collection {
+		label = "Historial";
+		is-component;
+
+		add {
+			node = ref coordinacion.objetosactuacion.historial.Historia;
+		}
+		index = ref Index;
+
+		["mfind8a"]
+		view Vista {
+			is-default;
+			show {
+				index {
+					sort-by = ref Index.Codigo;
+					sort-mode = ASC;
+					with-view = ref Index.Vista;
+				}
+			}
+			analyze {
+				sorting {
+					attribute = ref Index.Codigo;
+					attribute = ref Index.Fecha;
+					attribute = ref Index.Descripcion;
+					attribute = ref Index.Componente;
+					attribute = ref Index.Inactivo;
+				}
+				dimension {
+					attribute = ref Index.Fecha;
+					attribute = ref Index.Inactivo;
+				}
+			}
+		}
+
+		["mufsbqw"]
+		definition Index is index {
+			label = "Historia";
+			reference {
+
+				["mmrcnrg"]
+				attribute Imagen {
+					label = "Foto";
+					type = PICTURE;
+				}
+
+				["m8gdx7w"]
+				attribute Codigo {
+					type = STRING;
+					label = "Código";
+				}
+
+				["mgjt5ba"]
+				attribute Fecha {
+					precision = MONTHS;
+					type = DATE;
+					label = "Fecha";
+				}
+
+				["my_rjpa"]
+				attribute Descripcion {
+					type = STRING;
+					label = "Descripción";
+				}
+
+				["mgewr8w"]
+				attribute Componente {
+					type = TERM;
+					label = "Instalaciones Componente";
+				}
+
+				["mon03wg"]
+				attribute Inactivo {
+					type = BOOLEAN;
+					label = "Inactivo";
+				}
+			}
+
+			["m0p3asq"]
+			view Vista {
+				is-default;
+				show {
+					picture = ref Imagen;
+					title = ref Componente;
+					line = ref Descripcion;
+					line = ref Inactivo;
+					line = ref Fecha;
+				}
+			}
+
+		}
+
+	}
+}
+  

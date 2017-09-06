@@ -1,0 +1,10 @@
+package coordinacion {
+
+	["me6uqma"]
+	definition RoleInspeccionCorrectivo is role {
+		label = "Inspección correctiva externa";
+		enable-services {
+			ontology = "ServicioInspeccion";
+		}
+	}
+}

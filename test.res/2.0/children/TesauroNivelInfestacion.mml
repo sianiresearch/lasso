@@ -1,0 +1,27 @@
+package coordinacion {
+
+	["mrf4rjq"]
+	definition TesauroNivelInfestacion is thesaurus {
+		label = "Niveles de infestación";
+		ontology = "OntologiaTesauroNivelInfestacion";
+		terms {
+			term {
+				label = "Nulo";
+				key = "t001";
+			}
+			term {
+				label = "Bajo";
+				key = "t002";
+			}
+			term {
+				label = "Medio";
+				key = "t003";
+			}
+			term {
+				label = "Alto";
+				key = "t004";
+			}
+		}
+	}
+}
+ 

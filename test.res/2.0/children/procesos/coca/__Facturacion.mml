@@ -1,0 +1,94 @@
+import coordinacion.modulos.utilidades.*
+package coordinacion.procesos.coca {
+
+	["msegc8g"]
+	definition Facturacion is document {
+		label = "Facturacion";
+		template = template Facturacion;
+
+		schema {
+			FechaCertificacion Date;
+			NombreTecnico String;
+			FechaInicial Date;
+			FechaFinal Date;
+			PorcentajeSobreVariable String;
+			
+			many CalculoIndicadores{
+				Nombre Term;
+				Tipo Term;
+				PorcentajeVariable String;
+				CuantiaMax String;
+				Porcentaje String;
+				Percibir String;
+			}
+//			CuantiaMax1 String;
+//			CuantiaMax2 String;
+//			CuantiaMax3 String;
+//			CuantiaMax4 String;
+			CuantiaMaxTotal String;
+//			Porcentaje1 String;
+//			Porcentaje2 String;
+//			Porcentaje3 String;
+//			Porcentaje4 String;
+//			Percibir1 String;
+//			Percibir2 String;
+//			Percibir3 String;
+//			Percibir4 String;
+			PercibirTotal String;
+			TotalImpuestos String;
+			Total String;
+			many Indicadores{
+				TipoIncidencia String;
+				Icc String;
+				Estado String;
+				FechaNotificacion Date;
+				FechaCierre Date;
+			}
+		}
+				
+		
+
+		["mpey7vg"]
+		definition Exportador is exporter {
+			label = "Exportador";
+			target = ref Facturacion;
+			onExportItem(coordinacion.procesos.coca.facturacion.Schema i) {
+				
+				var ficha = this.scope as coordinacion.modulos.controlcalidad.Ficha;
+				var certificacion = ficha.certificacionField.^node as Certificacion;				
+				var esquema = certificacion.^schema;
+				
+				if (esquema.indicadores != null){
+					for (elemento: esquema.indicadores){
+						var indicadorc = elemento as certificacion.^schema.Indicadores;
+						var indicadorf = new facturacion.^schema.Indicadores;
+						indicadorf.setEstado(indicadorc.getEstado())
+						indicadorf.setFechaCierre(indicadorc.fechaCierre);
+						indicadorf.setFechaNotificacion(indicadorc.fechaNotificacion);
+						indicadorf.setIcc(indicadorc.getIcc());
+						indicadorf.setTipoIncidencia(indicadorc.getTipoIncidencia());
+						i.indicadores.^add(indicadorf);
+					}
+				}
+				
+    		i.fechaInicial = esquema.getFechaInicial();
+    		i.fechaFinal = esquema.getFechaFinal();
+    		ControlCalidad.calcularMultiple(ficha, i);
+    		
+			}
+
+		}
+
+		["my1gn2w"]
+		definition Importador is importer {
+			label = "Importador";
+			target = ref Facturacion;
+			onImportItem(coordinacion.procesos.coca.facturacion.Schema item) {
+			
+			}
+			
+		}
+
+	}
+}
+  
